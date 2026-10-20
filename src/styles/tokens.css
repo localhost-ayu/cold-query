@@ -1,0 +1,91 @@
+/* Tokens do TraceOS. O tema claro é o padrão; o escuro sobrescreve cores. */
+:root {
+  --dur-instant: 80ms;
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+  --dur-slow: 360ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --topbar-height: 34px;
+
+  --bg: #dfe4ee;
+  --text: #182132;
+  --text-muted: #4d5a70;
+  --text-faint: #5a6477;
+  --line: rgb(24 33 50 / 12%);
+  --line-strong: rgb(24 33 50 / 22%);
+  --surface: #f6f7fa;
+  --surface-sunken: #eceff4;
+  --surface-raised: #ffffff;
+  --surface-hover: rgb(24 33 50 / 6%);
+  --chrome: rgb(240 243 248 / 82%);
+  --accent: #3d5bd9;
+  --accent-soft: rgb(61 91 217 / 12%);
+  --on-accent: #ffffff;
+  --danger: #c43c3c;
+  --danger-soft: rgb(196 60 60 / 10%);
+  --warning: #9a6700;
+  --shadow-window:
+    0 18px 48px rgb(20 30 50 / 18%), 0 2px 6px rgb(20 30 50 / 10%);
+  --shadow-window-active:
+    0 28px 70px rgb(20 30 50 / 28%), 0 2px 8px rgb(20 30 50 / 14%);
+
+  --wallpaper:
+    radial-gradient(circle at 18% 22%, rgb(120 146 255 / 42%), transparent 38%),
+    radial-gradient(circle at 82% 74%, rgb(64 199 180 / 30%), transparent 36%),
+    linear-gradient(150deg, #e9edf6 0%, #c9d3ea 52%, #c4dfe0 100%);
+
+  --syntax-keyword: #6d3fc0;
+  --syntax-string: #0a7b55;
+  --syntax-number: #b4510a;
+  --syntax-comment: #7d8798;
+  --syntax-punctuation: #56637a;
+  --syntax-type: #1f6fb2;
+  --editor-active-line: rgb(61 91 217 / 6%);
+  --editor-selection: rgb(61 91 217 / 20%);
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0f1522;
+  --text: #e8edf7;
+  --text-muted: #a3afc4;
+  --text-faint: #8a96ad;
+  --line: rgb(220 230 255 / 10%);
+  --line-strong: rgb(220 230 255 / 20%);
+  --surface: #171e2c;
+  --surface-sunken: #121825;
+  --surface-raised: #1e2737;
+  --surface-hover: rgb(220 230 255 / 6%);
+  --chrome: rgb(13 19 31 / 78%);
+  --accent: #8ea2ff;
+  --accent-soft: rgb(142 162 255 / 14%);
+  --on-accent: #0f1522;
+  --danger: #ff8a80;
+  --danger-soft: rgb(255 138 128 / 10%);
+  --warning: #e8b45a;
+  --shadow-window: 0 20px 56px rgb(0 0 0 / 38%), 0 2px 8px rgb(0 0 0 / 26%);
+  --shadow-window-active:
+    0 30px 80px rgb(0 0 0 / 52%), 0 2px 8px rgb(0 0 0 / 30%);
+
+  --wallpaper:
+    radial-gradient(circle at 20% 25%, rgb(93 118 232 / 42%), transparent 34%),
+    radial-gradient(circle at 78% 68%, rgb(45 195 178 / 26%), transparent 32%),
+    linear-gradient(145deg, #11172a 0%, #232f55 48%, #132f3b 100%);
+
+  --syntax-keyword: #c3a6ff;
+  --syntax-string: #7fd8b0;
+  --syntax-number: #f2b37a;
+  --syntax-comment: #6f7b92;
+  --syntax-punctuation: #a3afc4;
+  --syntax-type: #8cc8ff;
+  --editor-active-line: rgb(142 162 255 / 6%);
+  --editor-selection: rgb(142 162 255 / 24%);
+
+  color-scheme: dark;
+}
