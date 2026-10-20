@@ -8,3 +8,4 @@ coverage/
 .env*
 !.env.example
 public/sqlite/
+next-env.d.ts
