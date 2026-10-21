@@ -91,7 +91,7 @@ const editorTheme = EditorView.theme({
     overflow: 'hidden',
   },
   '.cm-tooltip-autocomplete > ul > li[aria-selected]': {
-    backgroundColor: 'var(--accent)',
+    backgroundColor: 'var(--accent-bg)',
     color: 'var(--on-accent)',
   },
 });

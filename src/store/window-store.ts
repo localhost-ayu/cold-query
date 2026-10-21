@@ -61,7 +61,7 @@ const defaultBounds: Record<AppId, Bounds> = {
   dossier: { x: 300, y: 92, width: 720, height: 520 },
   notes: { x: 250, y: 130, width: 620, height: 460 },
   help: { x: 180, y: 100, width: 660, height: 500 },
-  settings: { x: 340, y: 120, width: 520, height: 380 },
+  settings: { x: 340, y: 110, width: 560, height: 470 },
 };
 
 function boundsOf({ x, y, width, height }: Bounds): Bounds {

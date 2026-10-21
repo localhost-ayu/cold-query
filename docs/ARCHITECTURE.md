@@ -43,12 +43,15 @@ Um store por domínio: preferências, janelas e Terminal; progresso, dossiê e n
 
 ## Shell e janelas
 
-Cada app tem uma janela. A janela guarda geometria, minimizada/maximizada, encaixe lateral, z-index e a geometria para restaurar. Todas as mudanças passam por comandos do store que respeitam a área útil entre a top bar e o dock.
+O TraceOS segue o GNOME do Fedora: barra superior preta, Atividades (overview) no lugar de um dock fixo e janelas no padrão libadwaita.
 
-- Arrastar começa depois de 4 px, para um clique na barra de título não mover nem maximizar nada.
-- Soltar no topo maximiza; nas laterais, encaixa em meia tela. Arrastar uma janela encaixada devolve o tamanho anterior.
-- Atalhos: `Alt+Tab` alterna janelas. `Super` + setas encaixa, maximiza e minimiza; `Alt+Shift` + setas faz o mesmo onde o sistema operacional captura o Super.
-- Com `prefers-reduced-motion`, as janelas só aparecem e somem com fade.
+- **Barra superior:** indicador de áreas de trabalho (abre as Atividades), relógio com notificações e calendário, e o menu do sistema com configurações rápidas (estilo escuro, som, volume, idioma). Estado em `src/store/shell-store.ts`.
+- **Atividades:** as janelas encolhem para uma grade (`src/os/overview/layout.ts`, função pura testada), com busca de apps no topo e o dash embaixo. Abre pelo botão da barra, pelo canto superior esquerdo, por Super ou Alt+F1; fecha com Esc ou clique no fundo.
+- **Notificações:** banner no topo que some sozinho e fica guardado na lista do relógio.
+- **Janelas:** cada app tem uma. A janela guarda geometria, minimizada/maximizada, encaixe lateral, z-index e a geometria para restaurar. Os apps põem botões na header bar por `WindowHeaderItems` (um portal para os encaixes da barra).
+- Arrastar começa depois de 4 px. Soltar no topo maximiza; nas laterais, encaixa em meia tela. Arrastar uma janela encaixada devolve o tamanho anterior.
+- Atalhos: `Alt+Tab` alterna janelas; `Super` + setas (ou `Alt+Shift` + setas) encaixa, maximiza e minimiza.
+- Com `prefers-reduced-motion`, as transições viram fade.
 
 ## Internacionalização
 

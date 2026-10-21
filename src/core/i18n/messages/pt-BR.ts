@@ -3,18 +3,34 @@ export const ptBR = {
   'desktop.mobileTitle': 'Uma investigação pede mais espaço',
   'desktop.mobileBody':
     'Cold Query foi feito para telas de computador ou tablet. Abra numa tela maior para operar o TraceOS.',
-  'desktop.caseLabel': 'Caso em espera',
-  'desktop.caseTitle': 'Nenhum contrato aceito',
-  'desktop.caseBody':
-    'Enquanto a Helena não manda nada, a base de treino está aberta no Terminal.',
 
-  'topbar.secure': 'Ambiente isolado',
-  'topbar.notifications': 'Notificações',
-  'topbar.noNotifications': 'Nenhuma notificação nova',
-  'topbar.theme': 'Tema: {theme}',
+  'topbar.activities': 'Atividades',
+  'topbar.calendar': 'Calendário e notificações',
+  'topbar.unread': 'Há notificações novas',
+  'topbar.system': 'Menu do sistema',
 
-  'dock.label': 'Aplicativos',
-  'dock.running': '{app} (aberto)',
+  'calendar.noNotifications': 'Nenhuma notificação',
+  'calendar.clear': 'Limpar',
+  'calendar.previous': 'Mês anterior',
+  'calendar.next': 'Próximo mês',
+
+  'quick.isolated': 'Sessão isolada',
+  'quick.darkStyle': 'Estilo escuro',
+  'quick.sound': 'Sons',
+  'quick.volume': 'Volume',
+  'quick.settings': 'Ajustes',
+  'quick.language': 'Idioma',
+
+  'overview.search': 'Digite para pesquisar',
+  'overview.dash': 'Aplicativos',
+  'overview.noResults': 'Nenhum aplicativo encontrado',
+  'overview.empty': 'Nenhuma janela aberta. Escolha um aplicativo abaixo.',
+  'overview.running': '{app} (aberto)',
+
+  'notify.dismiss': 'Dispensar',
+  'notify.open': 'Abrir {app}',
+  'notify.trainingBody':
+    'Enquanto não chega contrato, a base de treino está aberta no Terminal. Aproveite para afiar o SQL.',
 
   'window.close': 'Fechar',
   'window.minimize': 'Minimizar',

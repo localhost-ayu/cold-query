@@ -1,88 +1,113 @@
-.icon-button {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--text-muted);
-  transition:
-    background-color var(--dur-fast),
-    color var(--dur-fast);
-}
+/* Controles no padrão libadwaita. */
 
-.icon-button:hover,
-.icon-button[aria-expanded='true'] {
-  background: var(--surface-hover);
-  color: var(--text);
-}
-
-.icon-button svg {
-  width: 16px;
-  height: 16px;
-}
-
-.button {
+.flat-button,
+.dropdown,
+.pill-button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 32px;
-  padding: 0 12px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 600;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  border: 0;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 700;
   transition:
     background-color var(--dur-fast),
     transform var(--dur-instant),
     opacity var(--dur-fast);
 }
 
-.button:active:not(:disabled) {
+.flat-button {
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+}
+
+.flat-button:hover {
+  background: var(--surface-hover);
+}
+
+.flat-button:active {
+  background: var(--surface-active);
+}
+
+.flat-button--icon {
+  width: 34px;
+  padding: 0;
+}
+
+.flat-button svg,
+.pill-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Botão de lista suspensa: parece um botão plano com seta, como o GtkDropDown. */
+.dropdown {
+  max-width: 220px;
+  padding: 0 32px 0 12px;
+  border-radius: var(--radius-sm);
+  background: transparent
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    no-repeat right 10px center / 14px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.dropdown:hover {
+  background-color: var(--surface-hover);
+}
+
+.dropdown option {
+  background: var(--surface-raised);
+  color: var(--text);
+  font-weight: 400;
+}
+
+.pill-button {
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--button);
+}
+
+.pill-button:hover:not(:disabled) {
+  background: var(--surface-active);
+}
+
+.pill-button:active:not(:disabled) {
   transform: scale(0.97);
 }
 
-.button:disabled {
+.pill-button:disabled {
   opacity: 0.5;
 }
 
-.button svg {
-  width: 14px;
-  height: 14px;
-}
-
-.button kbd {
-  padding: 1px 5px;
-  border-radius: 4px;
-  background: rgb(0 0 0 / 20%);
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.button--primary {
-  background: var(--accent);
+.pill-button--suggested {
+  background: var(--accent-bg);
   color: var(--on-accent);
 }
 
-.button--primary:hover:not(:disabled) {
-  filter: brightness(1.08);
+.pill-button--suggested:hover:not(:disabled) {
+  background: #1a5fb4;
 }
 
-.button--danger {
-  background: var(--danger-soft);
-  border-color: var(--danger);
-  color: var(--danger);
+.pill-button--destructive {
+  background: var(--danger-bg);
+  color: white;
 }
 
-/* Botões lado a lado com um selecionado (rádios ou abas). */
+.pill-button--destructive:hover:not(:disabled) {
+  background: #c01c28;
+}
+
+/* Grupo de botões ligados (toggle group): rádios ou abas lado a lado. */
 .segmented {
   display: inline-flex;
+  gap: 3px;
   padding: 3px;
   border-radius: var(--radius-md);
-  background: var(--surface-sunken);
-  border: 1px solid var(--line);
+  background: var(--button);
 }
 
 .segmented label,
@@ -99,29 +124,31 @@
 .segmented label span,
 .segmented button {
   display: block;
-  padding: 5px 12px;
+  padding: 5px 14px;
   border: 0;
-  border-radius: calc(var(--radius-md) - 3px);
+  border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 500;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition:
-    background-color var(--dur-fast),
-    color var(--dur-fast);
+  transition: background-color var(--dur-fast);
 }
 
 .segmented label span:hover,
 .segmented button:hover {
-  color: var(--text);
+  background: var(--surface-hover);
 }
 
 .segmented input:checked + span,
 .segmented button[aria-selected='true'] {
   background: var(--surface-raised);
-  color: var(--text);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
+  box-shadow: 0 1px 3px rgb(0 0 6 / 18%);
+}
+
+:root[data-theme='dark'] .segmented input:checked + span,
+:root[data-theme='dark'] .segmented button[aria-selected='true'] {
+  background: rgb(255 255 255 / 15%);
 }
 
 .segmented input:focus-visible + span {
@@ -136,17 +163,18 @@
 .segmented--compact button {
   flex: 1;
   padding: 4px 8px;
-  font-size: 12px;
+  font-size: 13px;
 }
 
+/* Switch do GNOME: trilho largo e bolinha branca. */
 .switch {
-  appearance: none;
   position: relative;
-  width: 36px;
-  height: 20px;
+  width: 46px;
+  height: 26px;
   margin: 0;
-  border-radius: 10px;
+  border-radius: 999px;
   background: var(--line-strong);
+  appearance: none;
   cursor: pointer;
   transition: background-color var(--dur-fast);
 }
@@ -154,33 +182,29 @@
 .switch::after {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 16px;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: white;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 25%);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 30%);
   transition: transform var(--dur-fast) var(--ease-out);
 }
 
 .switch:checked {
-  background: var(--accent);
+  background: var(--accent-bg);
 }
 
 .switch:checked::after {
-  transform: translateX(16px);
+  transform: translateX(20px);
 }
 
-input[type='range'] {
-  width: 160px;
-  accent-color: var(--accent);
+input[type='range']:not(.shell-range) {
+  width: 180px;
+  accent-color: var(--accent-bg);
 }
 
-select {
-  height: 28px;
-  padding: 0 8px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-sm);
-  background: var(--surface-raised);
+input[type='range']:disabled {
+  opacity: 0.5;
 }

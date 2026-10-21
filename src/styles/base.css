@@ -1,15 +1,44 @@
-/* Fontes servidas pelo próprio site (OFL); variáveis, então um arquivo cobre todos os pesos. */
+/* Adwaita Sans e Adwaita Mono (OFL), subconjunto latino servido pelo próprio site. */
 @font-face {
-  font-family: 'Inter';
-  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
-  font-weight: 100 900;
+  font-family: 'Adwaita Sans';
+  src: url('../assets/fonts/adwaita-sans-latin-400-normal.woff2')
+    format('woff2');
+  font-weight: 400;
   font-display: swap;
 }
-
 @font-face {
-  font-family: 'JetBrains Mono';
-  src: url('../assets/fonts/jetbrains-mono-latin.woff2') format('woff2');
-  font-weight: 100 800;
+  font-family: 'Adwaita Sans';
+  src: url('../assets/fonts/adwaita-sans-latin-500-normal.woff2')
+    format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Adwaita Sans';
+  src: url('../assets/fonts/adwaita-sans-latin-600-normal.woff2')
+    format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Adwaita Sans';
+  src: url('../assets/fonts/adwaita-sans-latin-700-normal.woff2')
+    format('woff2');
+  font-weight: 700 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Adwaita Mono';
+  src: url('../assets/fonts/adwaita-mono-latin-400-normal.woff2')
+    format('woff2');
+  font-weight: 400 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Adwaita Mono';
+  src: url('../assets/fonts/adwaita-mono-latin-700-normal.woff2')
+    format('woff2');
+  font-weight: 600 700;
   font-display: swap;
 }
 

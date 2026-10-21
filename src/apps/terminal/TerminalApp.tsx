@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { MAX_RESULT_ROWS } from '@/core/sql/types';
 import { play } from '@/os/audio';
 import { useLocale, useT } from '@/os/i18n';
+import { WindowHeaderItems } from '@/os/windows/header-slots';
 import { useTerminal, type QueryTab } from '@/store/terminal-store';
 
 import { ResultGrid } from './ResultGrid';
@@ -16,12 +17,14 @@ import {
 import { Sidebar } from './Sidebar';
 import { SqlEditor, type SqlEditorHandle } from './SqlEditor';
 
+/** Barra de abas no estilo Adwaita: só aparece quando há mais de uma consulta. */
 function TabStrip() {
   const t = useT();
   const tabs = useTerminal(terminalStore, (state) => state.tabs);
   const activeTabId = useTerminal(terminalStore, (state) => state.activeTabId);
-  const { selectTab, closeTab, addTab } = terminalStore.getState();
+  const { selectTab, closeTab } = terminalStore.getState();
 
+  if (tabs.length < 2) return null;
   return (
     <div className="query-tabs" role="group" aria-label={t('terminal.tabs')}>
       {tabs.map((tab) => {
@@ -44,28 +47,17 @@ function TabStrip() {
               ) : null}
               {title}
             </button>
-            {tabs.length > 1 ? (
-              <button
-                type="button"
-                className="query-tabs__close"
-                aria-label={t('terminal.closeTab', { tab: title })}
-                onClick={() => closeTab(tab.id)}
-              >
-                <X aria-hidden />
-              </button>
-            ) : null}
+            <button
+              type="button"
+              className="query-tabs__close"
+              aria-label={t('terminal.closeTab', { tab: title })}
+              onClick={() => closeTab(tab.id)}
+            >
+              <X aria-hidden weight="bold" />
+            </button>
           </div>
         );
       })}
-      <button
-        type="button"
-        className="icon-button"
-        aria-label={t('terminal.newTab')}
-        title={t('terminal.newTab')}
-        onClick={addTab}
-      >
-        <Plus aria-hidden />
-      </button>
     </div>
   );
 }
@@ -150,7 +142,7 @@ export function TerminalApp() {
     (state) => state.databases[tab.dbId],
   );
   const history = useTerminal(terminalStore, (state) => state.history);
-  const { setSql, setDatabase, run, stop } = terminalStore.getState();
+  const { setSql, setDatabase, run, stop, addTab } = terminalStore.getState();
   const running = tab.status === 'running';
   const ready = database?.status === 'ready';
 
@@ -170,22 +162,55 @@ export function TerminalApp() {
 
   return (
     <div className="terminal">
-      <div className="terminal__toolbar">
-        <TabStrip />
-        <label className="terminal__db">
-          <span>{t('terminal.database')}</span>
-          <select
-            value={tab.dbId}
-            onChange={(event) => setDatabase(tab.id, event.target.value)}
+      <WindowHeaderItems side="start">
+        <button
+          type="button"
+          className="flat-button flat-button--icon"
+          aria-label={t('terminal.newTab')}
+          title={t('terminal.newTab')}
+          onClick={addTab}
+        >
+          <Plus aria-hidden weight="bold" />
+        </button>
+        <select
+          className="dropdown"
+          aria-label={t('terminal.database')}
+          title={t('terminal.database')}
+          value={tab.dbId}
+          onChange={(event) => setDatabase(tab.id, event.target.value)}
+        >
+          {terminalDatabases.map(({ source, labelKey }) => (
+            <option value={source.id} key={source.id}>
+              {t(labelKey)}
+            </option>
+          ))}
+        </select>
+      </WindowHeaderItems>
+      <WindowHeaderItems side="end">
+        {running ? (
+          <button
+            type="button"
+            className="pill-button pill-button--destructive"
+            onClick={stop}
           >
-            {terminalDatabases.map(({ source, labelKey }) => (
-              <option value={source.id} key={source.id}>
-                {t(labelKey)}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+            <Stop weight="fill" aria-hidden />
+            {t('terminal.stop')}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="pill-button pill-button--suggested"
+            onClick={execute}
+            disabled={!ready}
+            title={`${t('terminal.run')} (${runShortcutLabel()})`}
+          >
+            <Play weight="fill" aria-hidden />
+            {t('terminal.run')}
+          </button>
+        )}
+      </WindowHeaderItems>
+
+      <TabStrip />
 
       <Sidebar
         schema={database?.schema ?? []}
@@ -211,29 +236,6 @@ export function TerminalApp() {
             onChange={(sql) => setSql(tab.id, sql)}
             onRun={execute}
           />
-          <div className="terminal__actions">
-            {running ? (
-              <button
-                type="button"
-                className="button button--danger"
-                onClick={stop}
-              >
-                <Stop weight="fill" aria-hidden />
-                {t('terminal.stop')}
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="button button--primary"
-                onClick={execute}
-                disabled={!ready}
-              >
-                <Play weight="fill" aria-hidden />
-                {t('terminal.run')}
-                <kbd>{runShortcutLabel()}</kbd>
-              </button>
-            )}
-          </div>
         </div>
         <section
           className="terminal__results"

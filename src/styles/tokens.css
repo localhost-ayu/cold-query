@@ -1,5 +1,11 @@
-/* Tokens do TraceOS. O tema claro é o padrão; o escuro sobrescreve cores. */
+/*
+ * Tokens do TraceOS, na linguagem visual do GNOME (Shell + libadwaita).
+ * Tema claro é o padrão; o escuro sobrescreve só as cores.
+ */
 :root {
+  --font-sans: 'Adwaita Sans', system-ui, sans-serif;
+  --font-mono: 'Adwaita Mono', ui-monospace, monospace;
+
   --dur-instant: 80ms;
   --dur-fast: 140ms;
   --dur-base: 220ms;
@@ -7,88 +13,125 @@
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
 
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --topbar-height: 34px;
+  --radius-md: 9px;
+  --radius-lg: 12px;
+  --radius-window: 12px;
+  --topbar-height: 32px;
 
-  --bg: #dfe4ee;
-  --text: #182132;
-  --text-muted: #4d5a70;
-  --text-faint: #5a6477;
-  --line: rgb(24 33 50 / 12%);
-  --line-strong: rgb(24 33 50 / 22%);
-  --surface: #f6f7fa;
-  --surface-sunken: #eceff4;
+  /* Shell: a barra e os menus dela são escuros nos dois temas, como no Fedora. */
+  --panel: #000000;
+  --panel-fg: #ffffff;
+  --panel-hover: rgb(255 255 255 / 14%);
+  --shell-popover: #2a2a2e;
+  --shell-popover-fg: #ffffff;
+  --shell-card: rgb(255 255 255 / 9%);
+  --shell-card-hover: rgb(255 255 255 / 15%);
+  --shell-muted: rgb(255 255 255 / 70%);
+  --overview-backdrop: rgb(16 16 18 / 72%);
+
+  --bg: #deddda;
+  --text: rgb(0 0 6 / 80%);
+  --text-strong: rgb(0 0 6 / 90%);
+  --text-muted: rgb(0 0 6 / 62%);
+  --text-faint: rgb(0 0 6 / 58%);
+  --line: rgb(0 0 6 / 10%);
+  --line-strong: rgb(0 0 6 / 18%);
+  --surface: #fafafb;
+  --headerbar: #ffffff;
+  --surface-sunken: #ebebed;
   --surface-raised: #ffffff;
-  --surface-hover: rgb(24 33 50 / 6%);
-  --chrome: rgb(240 243 248 / 82%);
-  --accent: #3d5bd9;
-  --accent-soft: rgb(61 91 217 / 12%);
+  --surface-hover: rgb(0 0 6 / 7%);
+  --surface-active: rgb(0 0 6 / 14%);
+  --button: rgb(0 0 6 / 8%);
+  --chrome: rgb(250 250 251 / 86%);
+  --accent: #0461be;
+  --accent-bg: #1c71d8;
+  --accent-soft: rgb(28 113 216 / 14%);
   --on-accent: #ffffff;
-  --danger: #c43c3c;
-  --danger-soft: rgb(196 60 60 / 10%);
-  --warning: #9a6700;
+  --danger: #c30000;
+  --danger-bg: #e01b24;
+  --danger-soft: rgb(224 27 36 / 10%);
+  --warning: #905400;
+  --success: #007c3d;
   --shadow-window:
-    0 18px 48px rgb(20 30 50 / 18%), 0 2px 6px rgb(20 30 50 / 10%);
+    0 0 0 1px rgb(0 0 6 / 9%), 0 2px 4px rgb(0 0 6 / 12%),
+    0 8px 24px rgb(0 0 6 / 10%);
   --shadow-window-active:
-    0 28px 70px rgb(20 30 50 / 28%), 0 2px 8px rgb(20 30 50 / 14%);
+    0 0 0 1px rgb(0 0 6 / 12%), 0 4px 10px rgb(0 0 6 / 16%),
+    0 18px 48px rgb(0 0 6 / 20%);
+  --shadow-popover: 0 0 0 1px rgb(0 0 6 / 8%), 0 6px 24px rgb(0 0 6 / 24%);
 
-  --wallpaper:
-    radial-gradient(circle at 18% 22%, rgb(120 146 255 / 42%), transparent 38%),
-    radial-gradient(circle at 82% 74%, rgb(64 199 180 / 30%), transparent 36%),
-    linear-gradient(150deg, #e9edf6 0%, #c9d3ea 52%, #c4dfe0 100%);
+  /* Papel de parede: degradê de fundo e as quatro camadas de ondas. */
+  --wall-top: #c9d6e8;
+  --wall-bottom: #e8ecf2;
+  --wall-1: #a9bedb;
+  --wall-2: #8aa5cc;
+  --wall-3: #5f84b8;
+  --wall-4: #3a5f97;
 
-  --syntax-keyword: #6d3fc0;
-  --syntax-string: #0a7b55;
-  --syntax-number: #b4510a;
-  --syntax-comment: #7d8798;
-  --syntax-punctuation: #56637a;
-  --syntax-type: #1f6fb2;
-  --editor-active-line: rgb(61 91 217 / 6%);
-  --editor-selection: rgb(61 91 217 / 20%);
+  --syntax-keyword: #813d9c;
+  --syntax-string: #26a269;
+  --syntax-number: #c64600;
+  --syntax-comment: #6a6a70;
+  --syntax-punctuation: rgb(0 0 6 / 62%);
+  --syntax-type: #1a5fb4;
+  --editor-active-line: rgb(53 132 228 / 7%);
+  --editor-selection: rgb(53 132 228 / 24%);
 
   color-scheme: light;
 }
 
 :root[data-theme='dark'] {
-  --bg: #0f1522;
-  --text: #e8edf7;
-  --text-muted: #a3afc4;
-  --text-faint: #8a96ad;
-  --line: rgb(220 230 255 / 10%);
-  --line-strong: rgb(220 230 255 / 20%);
-  --surface: #171e2c;
-  --surface-sunken: #121825;
-  --surface-raised: #1e2737;
-  --surface-hover: rgb(220 230 255 / 6%);
-  --chrome: rgb(13 19 31 / 78%);
-  --accent: #8ea2ff;
-  --accent-soft: rgb(142 162 255 / 14%);
-  --on-accent: #0f1522;
-  --danger: #ff8a80;
-  --danger-soft: rgb(255 138 128 / 10%);
-  --warning: #e8b45a;
-  --shadow-window: 0 20px 56px rgb(0 0 0 / 38%), 0 2px 8px rgb(0 0 0 / 26%);
+  --overview-backdrop: rgb(8 8 10 / 76%);
+
+  --bg: #1d1d20;
+  --text: #ffffff;
+  --text-strong: #ffffff;
+  --text-muted: rgb(255 255 255 / 66%);
+  --text-faint: rgb(255 255 255 / 58%);
+  --line: rgb(255 255 255 / 9%);
+  --line-strong: rgb(255 255 255 / 16%);
+  --surface: #222226;
+  --headerbar: #2e2e32;
+  --surface-sunken: #2a2a2e;
+  --surface-raised: #1d1d20;
+  --surface-hover: rgb(255 255 255 / 7%);
+  --surface-active: rgb(255 255 255 / 14%);
+  --button: rgb(255 255 255 / 10%);
+  --chrome: rgb(34 34 38 / 86%);
+  --accent: #78aeed;
+  --accent-bg: #1c71d8;
+  --accent-soft: rgb(120 174 237 / 16%);
+  --on-accent: #ffffff;
+  --danger: #ff7b63;
+  --danger-bg: #c01c28;
+  --danger-soft: rgb(255 123 99 / 12%);
+  --warning: #f8e45c;
+  --success: #8ff0a4;
+  --shadow-window:
+    0 0 0 1px rgb(0 0 0 / 60%), 0 2px 6px rgb(0 0 0 / 30%),
+    0 8px 28px rgb(0 0 0 / 30%);
   --shadow-window-active:
-    0 30px 80px rgb(0 0 0 / 52%), 0 2px 8px rgb(0 0 0 / 30%);
+    0 0 0 1px rgb(0 0 0 / 75%), 0 6px 14px rgb(0 0 0 / 40%),
+    0 20px 56px rgb(0 0 0 / 45%);
+  --shadow-popover: 0 0 0 1px rgb(0 0 0 / 60%), 0 8px 28px rgb(0 0 0 / 45%);
 
-  --wallpaper:
-    radial-gradient(circle at 20% 25%, rgb(93 118 232 / 42%), transparent 34%),
-    radial-gradient(circle at 78% 68%, rgb(45 195 178 / 26%), transparent 32%),
-    linear-gradient(145deg, #11172a 0%, #232f55 48%, #132f3b 100%);
+  --wall-top: #0d1b2e;
+  --wall-bottom: #1a1f2b;
+  --wall-1: #13294a;
+  --wall-2: #18365f;
+  --wall-3: #1f4a80;
+  --wall-4: #2c64a8;
 
-  --syntax-keyword: #c3a6ff;
-  --syntax-string: #7fd8b0;
-  --syntax-number: #f2b37a;
-  --syntax-comment: #6f7b92;
-  --syntax-punctuation: #a3afc4;
-  --syntax-type: #8cc8ff;
-  --editor-active-line: rgb(142 162 255 / 6%);
-  --editor-selection: rgb(142 162 255 / 24%);
+  --syntax-keyword: #dc8add;
+  --syntax-string: #8ff0a4;
+  --syntax-number: #ffa348;
+  --syntax-comment: #9a9aa2;
+  --syntax-punctuation: rgb(255 255 255 / 66%);
+  --syntax-type: #99c1f1;
+  --editor-active-line: rgb(120 174 237 / 7%);
+  --editor-selection: rgb(120 174 237 / 26%);
 
   color-scheme: dark;
 }

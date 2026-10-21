@@ -1,28 +1,14 @@
-import {
-  Bell,
-  CircleHalf,
-  Moon,
-  ShieldCheck,
-  Sun,
-  WifiHigh,
-} from '@phosphor-icons/react';
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { SpeakerHigh, SpeakerSlash, WifiHigh } from '@phosphor-icons/react';
+import { useCallback, useRef, useSyncExternalStore } from 'react';
 
-import { brand } from '@/config/brand';
 import { play } from '@/os/audio';
 import { useLocale, useT } from '@/os/i18n';
-import {
-  usePreferences,
-  type ThemePreference,
-} from '@/store/preferences-store';
+import { usePreferences } from '@/store/preferences-store';
+import { shellStore, useShell } from '@/store/shell-store';
 
-const themeCycle: Record<ThemePreference, ThemePreference> = {
-  system: 'light',
-  light: 'dark',
-  dark: 'system',
-};
-
-const themeIcons = { system: CircleHalf, light: Sun, dark: Moon };
+import { CalendarMenu } from './CalendarMenu';
+import { QuickSettings } from './QuickSettings';
+import { ShellPopover } from './ShellPopover';
 
 const CLOCK_STEP = 15_000;
 
@@ -31,99 +17,129 @@ function subscribeClock(onTick: () => void) {
   return () => window.clearInterval(timer);
 }
 
-function Clock() {
+/**
+ * Indicador de áreas de trabalho do GNOME: a pílula comprida é a área atual e
+ * o ponto é a área vazia seguinte. Clicar abre as Atividades.
+ */
+function ActivitiesButton() {
+  const t = useT();
+  const open = useShell((state) => state.overviewOpen);
+  return (
+    <button
+      type="button"
+      className="panel-button activities"
+      aria-label={t('topbar.activities')}
+      aria-pressed={open}
+      onClick={() => {
+        shellStore.getState().toggleOverview();
+        play('click');
+      }}
+    >
+      <span className="activities__dot activities__dot--active" />
+      <span className="activities__dot" />
+    </button>
+  );
+}
+
+function ClockButton() {
+  const t = useT();
   const locale = useLocale();
+  const anchor = useRef<HTMLButtonElement>(null);
+  const open = useShell((state) => state.popover === 'calendar');
+  const unread = useShell((state) => state.notifications.some((n) => !n.read));
   // O snapshot muda a cada 15 s, e só então o relógio re-renderiza.
   const tick = useSyncExternalStore(subscribeClock, () =>
     Math.floor(Date.now() / CLOCK_STEP),
   );
   const now = new Date(tick * CLOCK_STEP);
+  const close = useCallback(() => shellStore.getState().setPopover(null), []);
 
   return (
-    <time className="topbar__clock" dateTime={now.toISOString()}>
-      {now.toLocaleString(locale, {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
-      })}
-    </time>
-  );
-}
-
-function Notifications() {
-  const t = useT();
-  const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onPointer = (event: PointerEvent) => {
-      if (!root.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('pointerdown', onPointer);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('pointerdown', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
-
-  return (
-    <div className="topbar__popover-anchor" ref={root}>
+    <div className="panel-center">
       <button
-        className="icon-button"
+        ref={anchor}
         type="button"
-        aria-label={t('topbar.notifications')}
+        className="panel-button clock"
+        aria-label={`${now.toLocaleString(locale, { dateStyle: 'full', timeStyle: 'short' })}. ${t('topbar.calendar')}`}
         aria-expanded={open}
-        aria-controls="notifications"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          shellStore.getState().togglePopover('calendar');
+          shellStore.getState().markAllRead();
+        }}
       >
-        <Bell aria-hidden />
+        <time dateTime={now.toISOString()}>
+          {now.toLocaleString(locale, {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+          })}
+          <span className="clock__gap" />
+          {now.toLocaleTimeString(locale, {
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
+        </time>
+        {unread ? (
+          <span className="clock__unread" title={t('topbar.unread')} />
+        ) : null}
       </button>
-      {open ? (
-        <div className="popover" id="notifications" role="status">
-          {t('topbar.noNotifications')}
-        </div>
-      ) : null}
+      <ShellPopover
+        open={open}
+        onClose={close}
+        anchor={anchor}
+        label={t('topbar.calendar')}
+        align="center"
+      >
+        <CalendarMenu />
+      </ShellPopover>
     </div>
   );
 }
 
-export function TopBar() {
+function SystemButton() {
   const t = useT();
-  const theme = usePreferences((state) => state.theme);
-  const setTheme = usePreferences((state) => state.setTheme);
-  const ThemeIcon = themeIcons[theme];
-  const themeLabel = t('topbar.theme', { theme: t(`settings.theme.${theme}`) });
+  const anchor = useRef<HTMLButtonElement>(null);
+  const open = useShell((state) => state.popover === 'quickSettings');
+  const soundEnabled = usePreferences((state) => state.soundEnabled);
+  const close = useCallback(() => shellStore.getState().setPopover(null), []);
 
   return (
-    <header className="topbar">
-      <span className="topbar__brand">{brand.osName}</span>
-      <Clock />
-      <div className="topbar__tray">
-        <span className="topbar__status" title={t('topbar.secure')}>
-          <ShieldCheck weight="fill" aria-hidden />
-          <WifiHigh aria-hidden />
-        </span>
-        <button
-          className="icon-button"
-          type="button"
-          aria-label={themeLabel}
-          title={themeLabel}
-          onClick={() => {
-            setTheme(themeCycle[theme]);
-            play('click');
-          }}
-        >
-          <ThemeIcon aria-hidden />
-        </button>
-        <Notifications />
-      </div>
+    <div className="panel-end">
+      <button
+        ref={anchor}
+        type="button"
+        className="panel-button system"
+        aria-label={t('topbar.system')}
+        aria-expanded={open}
+        onClick={() => shellStore.getState().togglePopover('quickSettings')}
+      >
+        <WifiHigh weight="bold" aria-hidden />
+        {soundEnabled ? (
+          <SpeakerHigh weight="fill" aria-hidden />
+        ) : (
+          <SpeakerSlash weight="fill" aria-hidden />
+        )}
+      </button>
+      <ShellPopover
+        open={open}
+        onClose={close}
+        anchor={anchor}
+        label={t('topbar.system')}
+        align="end"
+      >
+        <QuickSettings />
+      </ShellPopover>
+    </div>
+  );
+}
+
+/** Barra superior do GNOME Shell: Atividades, relógio e menu do sistema. */
+export function TopBar() {
+  return (
+    <header className="panel">
+      <ActivitiesButton />
+      <ClockButton />
+      <SystemButton />
     </header>
   );
 }

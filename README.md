@@ -8,7 +8,7 @@ Code available · Free for noncommercial use · Mods welcome
 
 **A detective game where the only weapon is SQL.** You are a data analyst at Nova Perícia Digital, a small forensics firm. Helena, the coordinator, sends you contracts; each one comes with real databases (badge logs, inventories, timesheets) and a question nobody inside the client company could answer. You open the SQL Terminal, query, pin what matters to your case board and send in a conclusion backed by evidence.
 
-Everything happens inside **TraceOS**, a fictional operating system that runs in the browser: windows, dock, mail, notes. SQLite runs in a Web Worker on your machine. There are no accounts, no servers and nothing to install.
+Everything happens inside **TraceOS**, a fictional GNOME-flavored operating system that runs in the browser: windows, Activities overview, mail, notes. SQLite runs in a Web Worker on your machine. There are no accounts, no servers and nothing to install.
 
 > **Status:** early development. The desktop and the SQL Terminal work against a training database. The first case, mail, case board and saves are next.
 
@@ -44,7 +44,7 @@ React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwin
 
 **Um jogo de detetive em que a única arma é SQL.** Você é analista de dados da Nova Perícia Digital, uma pequena empresa de perícia. A coordenadora, Helena, manda os contratos; cada um vem com bancos de dados de verdade (catracas, inventário, ponto) e uma pergunta que ninguém na empresa cliente conseguiu responder. Você abre o Terminal SQL, consulta, fixa o que importa no dossiê e envia uma conclusão sustentada por evidências.
 
-Tudo acontece dentro do **TraceOS**, um sistema operacional fictício que roda no navegador: janelas, dock, e-mail, notas. O SQLite roda num Web Worker na sua máquina. Não há conta, servidor nem instalação.
+Tudo acontece dentro do **TraceOS**, um sistema operacional fictício, com cara de GNOME, que roda no navegador: janelas, Atividades, e-mail, notas. O SQLite roda num Web Worker na sua máquina. Não há conta, servidor nem instalação.
 
 > **Estado:** início do desenvolvimento. O desktop e o Terminal SQL já funcionam com uma base de treino. O primeiro caso, o Mail, o Dossiê e os saves vêm a seguir.
 

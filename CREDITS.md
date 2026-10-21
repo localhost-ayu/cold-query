@@ -4,10 +4,9 @@ Conteúdo de terceiros usado no Cold Query, com autor, licença e origem.
 
 ## Fontes
 
-- **Inter**, Rasmus Andersson, SIL Open Font License 1.1 — <https://github.com/rsms/inter>
-- **JetBrains Mono**, JetBrains, SIL Open Font License 1.1 — <https://github.com/JetBrains/JetBrainsMono>
+- **Adwaita Sans** e **Adwaita Mono**, The GNOME Project (Adwaita Sans deriva da Inter, de Rasmus Andersson; Adwaita Mono deriva da Iosevka, de Belleve Invis), SIL Open Font License 1.1 — <https://gitlab.gnome.org/GNOME/adwaita-fonts>
 
-Os arquivos WOFF2 (subconjunto latino) vêm dos pacotes Fontsource e são servidos pelo próprio site.
+Os arquivos WOFF2 vêm dos pacotes Fontsource, reduzidos ao subconjunto latino com fonttools, e são servidos pelo próprio site.
 
 ## Ícones
 
@@ -22,4 +21,4 @@ Os arquivos WOFF2 (subconjunto latino) vêm dos pacotes Fontsource e são servid
 
 ## Arte do jogo
 
-Papel de parede, ícones do dock e ruído de fundo são feitos em CSS e SVG para este projeto. Os sons são sintetizados no navegador; não há arquivos de áudio.
+O TraceOS segue a linguagem visual do GNOME (Shell e libadwaita), sem usar arte do projeto: papel de parede, ícones de aplicativo e interface são desenhados em CSS e SVG para o Cold Query. Os sons são sintetizados no navegador; não há arquivos de áudio.

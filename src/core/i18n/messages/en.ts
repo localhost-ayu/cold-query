@@ -4,18 +4,34 @@ export const en: Record<keyof typeof ptBR, string> = {
   'desktop.mobileTitle': 'This investigation needs a bigger screen',
   'desktop.mobileBody':
     'Cold Query is made for computer and tablet screens. Open it on a larger display to run TraceOS.',
-  'desktop.caseLabel': 'No active case',
-  'desktop.caseTitle': 'No contract accepted',
-  'desktop.caseBody':
-    'Until Helena sends something over, the training database is open in the Terminal.',
 
-  'topbar.secure': 'Isolated environment',
-  'topbar.notifications': 'Notifications',
-  'topbar.noNotifications': 'Nothing new',
-  'topbar.theme': 'Theme: {theme}',
+  'topbar.activities': 'Activities',
+  'topbar.calendar': 'Calendar and notifications',
+  'topbar.unread': 'There are new notifications',
+  'topbar.system': 'System menu',
 
-  'dock.label': 'Applications',
-  'dock.running': '{app} (open)',
+  'calendar.noNotifications': 'No notifications',
+  'calendar.clear': 'Clear',
+  'calendar.previous': 'Previous month',
+  'calendar.next': 'Next month',
+
+  'quick.isolated': 'Isolated session',
+  'quick.darkStyle': 'Dark Style',
+  'quick.sound': 'Sounds',
+  'quick.volume': 'Volume',
+  'quick.settings': 'Settings',
+  'quick.language': 'Language',
+
+  'overview.search': 'Type to search',
+  'overview.dash': 'Applications',
+  'overview.noResults': 'No applications found',
+  'overview.empty': 'No open windows. Pick an application below.',
+  'overview.running': '{app} (open)',
+
+  'notify.dismiss': 'Dismiss',
+  'notify.open': 'Open {app}',
+  'notify.trainingBody':
+    'Until a contract comes in, the training database is open in the Terminal. A good time to sharpen your SQL.',
 
   'window.close': 'Close',
   'window.minimize': 'Minimize',
