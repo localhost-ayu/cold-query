@@ -45,7 +45,7 @@
 
 /* Botão de lista suspensa: parece um botão plano com seta, como o GtkDropDown. */
 .dropdown {
-  max-width: 220px;
+  max-width: 300px;
   padding: 0 32px 0 12px;
   border-radius: var(--radius-sm);
   background: transparent
@@ -81,6 +81,12 @@
 
 .pill-button:disabled {
   opacity: 0.5;
+}
+
+.pill-button--small {
+  height: 30px;
+  padding: 0 14px;
+  font-size: 13px;
 }
 
 .pill-button--suggested {

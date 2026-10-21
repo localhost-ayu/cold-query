@@ -1,7 +1,18 @@
-import { Play, Plus, Stop, Warning, X } from '@phosphor-icons/react';
-import { useEffect, useRef } from 'react';
+import {
+  CheckCircle,
+  Play,
+  Plus,
+  PushPin,
+  Stop,
+  Warning,
+  X,
+} from '@phosphor-icons/react';
+import { useEffect, useRef, useState } from 'react';
 
-import { MAX_RESULT_ROWS } from '@/core/sql/types';
+import { gameStore } from '@/apps/shared/game';
+import type { MessageKey } from '@/core/i18n';
+
+import { MAX_RESULT_ROWS, type QueryResult } from '@/core/sql/types';
 import { play } from '@/os/audio';
 import { useLocale, useT } from '@/os/i18n';
 import { WindowHeaderItems } from '@/os/windows/header-slots';
@@ -10,9 +21,11 @@ import { useTerminal, type QueryTab } from '@/store/terminal-store';
 import { ResultGrid } from './ResultGrid';
 import {
   ensureDatabasesOpen,
+  nextDatabaseToSelect,
   runShortcutLabel,
-  terminalDatabases,
   terminalStore,
+  useTerminalDatabases,
+  type TerminalDatabaseEntry,
 } from './session';
 import { Sidebar } from './Sidebar';
 import { SqlEditor, type SqlEditorHandle } from './SqlEditor';
@@ -62,7 +75,156 @@ function TabStrip() {
   );
 }
 
-function ResultArea({ tab }: { tab: QueryTab }) {
+type PinFeedback = { tone: 'ok' | 'warn'; key: MessageKey } | null;
+
+/** Resultado com seleção de linhas e o botão de fixar no dossiê. */
+function ResultView({
+  tab,
+  result,
+  database,
+}: {
+  tab: QueryTab;
+  result: QueryResult;
+  database: TerminalDatabaseEntry | undefined;
+}) {
+  const t = useT();
+  // A seleção vale só para o resultado em que foi feita: rodar de novo a zera.
+  const [selection, setSelection] = useState<{
+    result: QueryResult;
+    rows: Set<number>;
+    anchor: number | null;
+  }>({ result, rows: new Set(), anchor: null });
+  const selected =
+    selection.result === result ? selection.rows : new Set<number>();
+  const [feedback, setFeedback] = useState<PinFeedback>(null);
+  const feedbackTimer = useRef<number | undefined>(undefined);
+  const count = result.rows.length;
+
+  function toggleRow(index: number, range: boolean) {
+    setSelection((current) => {
+      const rows = new Set(current.result === result ? current.rows : []);
+      const anchor = current.result === result ? current.anchor : null;
+      if (range && anchor !== null) {
+        const [from, to] = anchor < index ? [anchor, index] : [index, anchor];
+        for (let row = from; row <= to; row += 1) rows.add(row);
+      } else if (rows.has(index)) rows.delete(index);
+      else rows.add(index);
+      return { result, rows, anchor: index };
+    });
+  }
+
+  function show(next: PinFeedback) {
+    window.clearTimeout(feedbackTimer.current);
+    setFeedback(next);
+    feedbackTimer.current = window.setTimeout(() => setFeedback(null), 3000);
+  }
+
+  function pin() {
+    if (!database?.caseId) return;
+    const rows = selected.size
+      ? [...selected].sort((a, b) => a - b).map((index) => result.rows[index])
+      : result.rows;
+    const outcome = gameStore.getState().pinEvidence({
+      caseId: database.caseId,
+      source: 'query',
+      dbId: database.id,
+      sql: tab.sql.trim(),
+      columns: result.columns,
+      rows,
+    });
+    if (!outcome.ok) {
+      show({
+        tone: 'warn',
+        key:
+          outcome.reason === 'limit'
+            ? 'terminal.pinLimit'
+            : 'terminal.pinInactive',
+      });
+      play('error');
+      return;
+    }
+    show({
+      tone: 'ok',
+      key: outcome.truncated ? 'terminal.pinnedTruncated' : 'terminal.pinned',
+    });
+    play('click');
+    setSelection({ result, rows: new Set(), anchor: null });
+  }
+
+  const canPin = Boolean(database?.caseId);
+
+  return (
+    <div className="result">
+      <div className="result__meta">
+        <span role="status">
+          {count === 1
+            ? t('terminal.rowsOne')
+            : t('terminal.rowsMany', { count })}
+          <span aria-hidden> · </span>
+          {t('terminal.elapsed', { ms: result.elapsedMs })}
+        </span>
+        {result.truncated ? (
+          <span className="result__warning">
+            {t('terminal.truncated', { max: MAX_RESULT_ROWS })}
+          </span>
+        ) : null}
+        <span className="result__actions">
+          {feedback ? (
+            <span
+              className={`result__feedback result__feedback--${feedback.tone}`}
+              role="status"
+            >
+              {feedback.tone === 'ok' ? (
+                <CheckCircle weight="fill" aria-hidden />
+              ) : (
+                <Warning weight="fill" aria-hidden />
+              )}
+              {t(feedback.key)}
+            </span>
+          ) : null}
+          {selected.size > 0 ? (
+            <button
+              type="button"
+              className="flat-button"
+              onClick={() =>
+                setSelection({ result, rows: new Set(), anchor: null })
+              }
+            >
+              {t('terminal.clearSelection')}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className="pill-button pill-button--small"
+            onClick={pin}
+            disabled={!canPin}
+            title={canPin ? undefined : t('terminal.pinTraining')}
+          >
+            <PushPin weight="fill" aria-hidden />
+            {selected.size > 0
+              ? t('terminal.pinSelected', { count: selected.size })
+              : t('terminal.pin')}
+          </button>
+        </span>
+      </div>
+      <ResultGrid
+        result={result}
+        label={t('terminal.results')}
+        selected={selected}
+        onToggleRow={toggleRow}
+        selectLabel={(row) => t('terminal.selectRow', { n: row })}
+      />
+    </div>
+  );
+}
+
+function ResultArea({
+  tab,
+  database,
+}: {
+  tab: QueryTab;
+  database: TerminalDatabaseEntry | undefined;
+}) {
   const t = useT();
 
   if (tab.status === 'running') {
@@ -93,30 +255,10 @@ function ResultArea({ tab }: { tab: QueryTab }) {
   }
 
   if (tab.status === 'done' && tab.result) {
-    const { result } = tab;
-    const count = result.rows.length;
-    if (result.columns.length === 0 || count === 0) {
+    if (tab.result.columns.length === 0 || tab.result.rows.length === 0) {
       return <div className="result-empty">{t('terminal.noRows')}</div>;
     }
-    return (
-      <div className="result">
-        <div className="result__meta" role="status">
-          <span>
-            {count === 1
-              ? t('terminal.rowsOne')
-              : t('terminal.rowsMany', { count })}
-          </span>
-          <span aria-hidden>·</span>
-          <span>{t('terminal.elapsed', { ms: result.elapsedMs })}</span>
-          {result.truncated ? (
-            <span className="result__warning">
-              {t('terminal.truncated', { max: MAX_RESULT_ROWS })}
-            </span>
-          ) : null}
-        </div>
-        <ResultGrid result={result} label={t('terminal.results')} />
-      </div>
-    );
+    return <ResultView tab={tab} result={tab.result} database={database} />;
   }
 
   return (
@@ -142,11 +284,19 @@ export function TerminalApp() {
     (state) => state.databases[tab.dbId],
   );
   const history = useTerminal(terminalStore, (state) => state.history);
+  const entries = useTerminalDatabases();
+  const entry = entries.find((item) => item.id === tab.dbId);
   const { setSql, setDatabase, run, stop, addTab } = terminalStore.getState();
   const running = tab.status === 'running';
   const ready = database?.status === 'ready';
 
-  useEffect(ensureDatabasesOpen, []);
+  useEffect(() => ensureDatabasesOpen(entries), [entries]);
+
+  // Quando um caso é aceito, a aba ativa passa para o banco dele (uma vez por banco).
+  useEffect(() => {
+    const fresh = nextDatabaseToSelect(entries);
+    if (fresh) setDatabase(tab.id, fresh);
+  }, [entries, setDatabase, tab.id]);
 
   // Erros soam uma vez por execução, não a cada render.
   const lastStatus = useRef(tab.status);
@@ -179,9 +329,9 @@ export function TerminalApp() {
           value={tab.dbId}
           onChange={(event) => setDatabase(tab.id, event.target.value)}
         >
-          {terminalDatabases.map(({ source, labelKey }) => (
-            <option value={source.id} key={source.id}>
-              {t(labelKey)}
+          {entries.map((item) => (
+            <option value={item.id} key={item.id}>
+              {item.label(locale)}
             </option>
           ))}
         </select>
@@ -237,10 +387,7 @@ export function TerminalApp() {
             onRun={execute}
           />
         </div>
-        <section
-          className="terminal__results"
-          aria-label={t('terminal.results')}
-        >
+        <div className="terminal__results">
           {database?.status === 'loading' ? (
             <div className="result-empty" role="status">
               <span className="spinner" aria-hidden />
@@ -259,9 +406,9 @@ export function TerminalApp() {
               </div>
             </div>
           ) : (
-            <ResultArea tab={tab} />
+            <ResultArea tab={tab} database={entry} />
           )}
-        </section>
+        </div>
       </div>
     </div>
   );

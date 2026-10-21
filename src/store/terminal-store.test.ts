@@ -31,7 +31,9 @@ function fakeEngine(
 describe('terminal store', () => {
   it('loads a database and exposes its schema', async () => {
     const store = createTerminalStore(fakeEngine(), 'training');
-    const loading = store.getState().openDatabase({ id: 'training', sql: '' });
+    const loading = store
+      .getState()
+      .openDatabase('training', async () => 'CREATE TABLE t (a)');
     expect(store.getState().databases.training.status).toBe('loading');
     await loading;
     expect(store.getState().databases.training).toMatchObject({

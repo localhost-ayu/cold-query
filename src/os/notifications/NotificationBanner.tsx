@@ -59,7 +59,7 @@ export function NotificationBanner() {
               <AppIcon appId={notification.appId} size={36} />
               <span className="banner__text">
                 <strong>{notification.sender}</strong>
-                <span>{t(notification.bodyKey, notification.bodyParams)}</span>
+                <span>{notification.body}</span>
               </span>
             </button>
             <button

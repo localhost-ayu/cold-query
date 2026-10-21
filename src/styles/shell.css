@@ -2,7 +2,9 @@
   position: relative;
   width: 100vw;
   height: 100dvh;
-  overflow: hidden;
+  /* clip, e não hidden: hidden ainda deixa o navegador rolar a área por script
+     (foco, scrollIntoView), e o dock escondido fica abaixo da tela. */
+  overflow: clip;
   isolation: isolate;
 }
 

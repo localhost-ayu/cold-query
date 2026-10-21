@@ -5,7 +5,7 @@ import { NOTIFICATION_LIMIT, createShellStore } from './shell-store';
 const note = {
   appId: 'mail' as const,
   sender: 'Helena Duarte',
-  bodyKey: 'notify.trainingBody' as const,
+  body: 'Contrato 112: notebook sumido na Vantara Logística',
 };
 
 describe('shell store', () => {

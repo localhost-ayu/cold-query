@@ -6,6 +6,8 @@
 @import './controls.css';
 @import './apps.css';
 @import './terminal.css';
+@import './mail.css';
+@import './dossier.css';
 
 /* Expõe os tokens às utilidades do Tailwind (bg-surface, text-muted etc.). */
 @theme inline {

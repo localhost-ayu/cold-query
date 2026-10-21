@@ -2,7 +2,7 @@ import { useT } from '@/os/i18n';
 
 import { AppIcon } from './AppIcon';
 
-type PlaceholderId = 'mail' | 'dossier' | 'notes' | 'help';
+type PlaceholderId = 'notes' | 'help';
 
 /** Página de status (padrão Adwaita) dos apps que ainda não existem: diz o que vai morar ali. */
 export function PlaceholderApp({ appId }: { appId: PlaceholderId }) {

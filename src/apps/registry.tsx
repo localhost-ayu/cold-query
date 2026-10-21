@@ -3,7 +3,9 @@ import { lazy, type ComponentType } from 'react';
 
 import type { AppId } from '@/store/window-store';
 
+import { DossierApp } from './dossier/DossierApp';
 import { appIcons } from './icons';
+import { MailApp } from './mail/MailApp';
 import { PlaceholderApp } from './PlaceholderApp';
 import { SettingsApp } from './settings/SettingsApp';
 import { TerminalLoading } from './terminal/TerminalLoading';
@@ -24,22 +26,14 @@ export interface AppDefinition {
 }
 
 export const apps: AppDefinition[] = [
-  {
-    id: 'mail',
-    icon: appIcons.mail,
-    component: () => <PlaceholderApp appId="mail" />,
-  },
+  { id: 'mail', icon: appIcons.mail, component: MailApp },
   {
     id: 'terminal',
     icon: appIcons.terminal,
     component: TerminalApp,
     fallback: TerminalLoading,
   },
-  {
-    id: 'dossier',
-    icon: appIcons.dossier,
-    component: () => <PlaceholderApp appId="dossier" />,
-  },
+  { id: 'dossier', icon: appIcons.dossier, component: DossierApp },
   {
     id: 'notes',
     icon: appIcons.notes,

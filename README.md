@@ -10,7 +10,7 @@ Code available · Free for noncommercial use · Mods welcome
 
 Everything happens inside **TraceOS**, a fictional GNOME-flavored operating system that runs in the browser: windows, Activities overview, mail, notes. SQLite runs in a Web Worker on your machine. There are no accounts, no servers and nothing to install.
 
-> **Status:** early development. The desktop and the SQL Terminal work against a training database. The first case, mail, case board and saves are next.
+> **Status:** early development. Case 001 is playable end to end: Mail, SQL Terminal and case board. Progress is not saved yet.
 
 ## Running locally
 
@@ -23,6 +23,7 @@ bun run test
 bun run lint
 bun run typecheck
 bun run build      # static site in dist/
+bun run validate-cases
 ```
 
 ## Deploying
@@ -46,7 +47,7 @@ React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwin
 
 Tudo acontece dentro do **TraceOS**, um sistema operacional fictício, com cara de GNOME, que roda no navegador: janelas, Atividades, e-mail, notas. O SQLite roda num Web Worker na sua máquina. Não há conta, servidor nem instalação.
 
-> **Estado:** início do desenvolvimento. O desktop e o Terminal SQL já funcionam com uma base de treino. O primeiro caso, o Mail, o Dossiê e os saves vêm a seguir.
+> **Estado:** início do desenvolvimento. O caso 001 já dá para jogar do começo ao fim: Mail, Terminal SQL e Dossiê. O progresso ainda não é salvo.
 
 ### Rodando localmente
 
@@ -59,6 +60,7 @@ bun run test
 bun run lint
 bun run typecheck
 bun run build      # site estático em dist/
+bun run validate-cases
 ```
 
 ### Publicando

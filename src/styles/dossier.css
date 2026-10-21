@@ -1,0 +1,221 @@
+/* ── Dossiê ──────────────────────────────────────────────── */
+.dossier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.dossier__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px 14px;
+}
+
+.dossier__client {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dossier__header h2 {
+  color: var(--text-strong);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.dossier__count {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--button);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dossier__board {
+  columns: 340px auto;
+  column-gap: 14px;
+  padding: 0 22px 80px;
+}
+
+.evidence {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 1px 3px rgb(0 0 6 / 8%);
+  break-inside: avoid;
+}
+
+:root[data-theme='dark'] .evidence {
+  background: rgb(255 255 255 / 7%);
+  box-shadow: none;
+}
+
+.evidence__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.evidence__header time {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.evidence__pin {
+  width: 16px;
+  height: 16px;
+  color: #c64600;
+}
+
+:root[data-theme='dark'] .evidence__pin {
+  color: #ffa348;
+}
+
+.evidence__sql summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.evidence__sql summary svg {
+  width: 14px;
+  height: 14px;
+}
+
+.evidence__sql pre {
+  margin: 8px 0 0;
+  padding: 10px;
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.evidence__table {
+  max-height: 260px;
+  overflow: auto;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.evidence__table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.evidence__table th,
+.evidence__table td {
+  padding: 4px 8px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.evidence__table th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.evidence__table tr + tr td {
+  border-top: 1px solid var(--line);
+}
+
+.evidence__table td[data-number] {
+  text-align: right;
+}
+
+.evidence__table td[data-null] {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.evidence__note textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--button);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  resize: vertical;
+}
+
+.evidence__note textarea:focus-visible {
+  outline: 2px solid var(--accent-bg);
+  outline-offset: 0;
+}
+
+.status-page__glyph {
+  width: 72px;
+  height: 72px;
+  color: var(--text-faint);
+}
+
+.status-page--inline {
+  flex: 1;
+  min-height: 0;
+}
+
+.status-page--inline h3 {
+  color: var(--text-strong);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Toast do libadwaita: aparece embaixo, com ação. */
+.toast {
+  position: sticky;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  margin: 0 auto 16px;
+  padding: 6px 6px 6px 16px;
+  border-radius: 999px;
+  background: rgb(30 30 34 / 94%);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 30%);
+  color: white;
+  font-size: 14px;
+  animation: popover-up var(--dur-base) var(--ease-out);
+}
+
+.toast .flat-button {
+  color: #99c1f1;
+}
+
+.toast .flat-button:hover {
+  background: rgb(255 255 255 / 12%);
+}
+
+@keyframes popover-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

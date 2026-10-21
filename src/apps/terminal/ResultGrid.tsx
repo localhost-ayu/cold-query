@@ -44,10 +44,23 @@ function Cell({ value }: { value: SqlValue }) {
 interface ResultGridProps {
   result: QueryResult;
   label: string;
+  /** Linhas marcadas para fixar no dossiê (índices). */
+  selected: ReadonlySet<number>;
+  /** `range`: Shift pressionado, marca do último clique até aqui. */
+  onToggleRow: (index: number, range: boolean) => void;
+  selectLabel: (row: number) => string;
 }
 
+const INDEX_COLUMN = 72;
+
 /** Tabela virtualizada: só as linhas visíveis existem no DOM, então 1000 linhas rolam liso. */
-export function ResultGrid({ result, label }: ResultGridProps) {
+export function ResultGrid({
+  result,
+  label,
+  selected,
+  onToggleRow,
+  selectLabel,
+}: ResultGridProps) {
   const scroller = useRef<HTMLDivElement>(null);
   const widths = useMemo(() => columnWidths(result), [result]);
   // Coluna numérica (primeiro valor não nulo é número) alinha o cabeçalho à direita, junto dos valores.
@@ -60,8 +73,9 @@ export function ResultGrid({ result, label }: ResultGridProps) {
       ),
     [result],
   );
-  const template = `48px ${widths.map((width) => `${width}px`).join(' ')}`;
-  const totalWidth = 48 + widths.reduce((sum, width) => sum + width, 0);
+  const template = `${INDEX_COLUMN}px ${widths.map((width) => `${width}px`).join(' ')}`;
+  const totalWidth =
+    INDEX_COLUMN + widths.reduce((sum, width) => sum + width, 0);
 
   // eslint-disable-next-line react-hooks/incompatible-library -- o virtualizador é a fonte das medidas, não precisa de memo do compilador
   const virtualizer = useVirtualizer({
@@ -104,17 +118,37 @@ export function ResultGrid({ result, label }: ResultGridProps) {
           style={{ height: virtualizer.getTotalSize(), position: 'relative' }}
         >
           {virtualizer.getVirtualItems().map((virtualRow) => (
+            // O clique na linha é atalho de mouse; pelo teclado, a caixa de seleção faz o mesmo.
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/interactive-supports-focus
             <div
               key={virtualRow.key}
               className="grid__row"
               role="row"
               aria-rowindex={virtualRow.index + 2}
+              data-selected={selected.has(virtualRow.index) || undefined}
               style={{
                 gridTemplateColumns: template,
                 transform: `translateY(${virtualRow.start}px)`,
               }}
+              // Clicar na linha também marca; a caixa é o caminho pelo teclado.
+              onClick={(event) => {
+                if ((event.target as HTMLElement).closest('input')) return;
+                onToggleRow(virtualRow.index, event.shiftKey);
+              }}
             >
               <span className="grid__cell grid__cell--index" role="cell">
+                <input
+                  type="checkbox"
+                  className="grid__check"
+                  checked={selected.has(virtualRow.index)}
+                  aria-label={selectLabel(virtualRow.index + 1)}
+                  onChange={(event) =>
+                    onToggleRow(
+                      virtualRow.index,
+                      (event.nativeEvent as MouseEvent).shiftKey ?? false,
+                    )
+                  }
+                />
                 {virtualRow.index + 1}
               </span>
               {result.rows[virtualRow.index].map((value, index) => (

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 
+import { gameStore } from '@/apps/shared/game';
 import { brand } from '@/config/brand';
 import { configureAudio } from '@/os/audio';
 import { AutoHideDock } from '@/os/dash/AutoHideDock';
@@ -19,7 +20,7 @@ function viewport() {
 }
 
 /**
- * Primeira pintura: abre o Terminal e a Helena dá as boas-vindas.
+ * Primeira pintura: abre o Mail e o primeiro contrato chega.
  * Depois, mantém idioma e som em dia com as preferências.
  */
 function useBoot() {
@@ -29,18 +30,12 @@ function useBoot() {
 
   useEffect(() => {
     if (windowStore.getState().windows.length === 0) {
-      windowStore.getState().openApp('terminal', viewport());
+      windowStore.getState().openApp('mail', viewport());
     }
-    // Um respiro antes do banner, para ele chegar depois da janela. Em dev, o
-    // StrictMode roda o efeito duas vezes: a limpeza cancela o primeiro timer.
-    const timer = window.setTimeout(() => {
-      if (shellStore.getState().notifications.length > 0) return;
-      shellStore.getState().notify({
-        appId: 'mail',
-        sender: 'Helena Duarte',
-        bodyKey: 'notify.trainingBody',
-      });
-    }, 900);
+    // Um respiro antes do primeiro e-mail, para ele chegar depois da janela.
+    // Em dev, o StrictMode roda o efeito duas vezes: a limpeza cancela o
+    // primeiro timer, e start() só entrega uma vez.
+    const timer = window.setTimeout(() => gameStore.getState().start(), 900);
     return () => window.clearTimeout(timer);
   }, []);
 

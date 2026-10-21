@@ -42,7 +42,8 @@ interface TerminalState {
   history: HistoryEntry[];
   databases: Record<string, TerminalDatabase>;
   nextNumber: number;
-  openDatabase: (source: DatabaseSource) => Promise<void>;
+  /** Carrega o SQL (pode vir de um import sob demanda) e abre o banco no motor. */
+  openDatabase: (id: string, load: () => Promise<string>) => Promise<void>;
   addTab: () => void;
   closeTab: (id: string) => void;
   selectTab: (id: string) => void;
@@ -99,12 +100,14 @@ export function createTerminalStore(
       databases: {},
       nextNumber: 2,
 
-      openDatabase: async (source) => {
+      openDatabase: async (id, load) => {
+        const status = get().databases[id]?.status;
+        if (status === 'loading' || status === 'ready') return;
         set((state) => ({
           databases: {
             ...state.databases,
-            [source.id]: {
-              id: source.id,
+            [id]: {
+              id,
               status: 'loading',
               schema: [],
               error: null,
@@ -112,12 +115,13 @@ export function createTerminalStore(
           },
         }));
         try {
+          const source: DatabaseSource = { id, sql: await load() };
           const schema = await engine.open(source);
           set((state) => ({
             databases: {
               ...state.databases,
-              [source.id]: {
-                id: source.id,
+              [id]: {
+                id,
                 status: 'ready',
                 schema,
                 error: null,
@@ -128,8 +132,8 @@ export function createTerminalStore(
           set((state) => ({
             databases: {
               ...state.databases,
-              [source.id]: {
-                id: source.id,
+              [id]: {
+                id,
                 status: 'error',
                 schema: [],
                 error: errorInfo(error),

@@ -34,6 +34,15 @@ As dependências vão da UI para o núcleo, nunca ao contrário. Os stores chama
 - **Tempo e tamanho.** Cada consulta tem 5 s. Passou disso, o worker é encerrado e um novo nasce no pedido seguinte, reabrindo os bancos a partir dos scripts guardados. O botão _Interromper_ faz o mesmo. Resultados param em 1000 linhas, com aviso.
 - **Erros traduzidos.** `errors.ts` transforma a mensagem do SQLite num código (`noTable`, `syntax`, `timeout`...) com parâmetros; a UI mostra o texto no idioma do jogador e a mensagem original como detalhe.
 
+## Casos e resolução
+
+- Os casos ficam em `cases/<NNN-slug>/` (formato em [CASE_FORMAT.md](CASE_FORMAT.md)). No build, o plugin `cold-query-cases` do `vite.config.ts` lê a pasta com `scripts/cases.ts`, valida tudo com os schemas zod de `src/core/case-schema/`, converte o Markdown em HTML e expõe o módulo `virtual:cases`. O SQL de cada banco vira um import sob demanda: só baixa quando o jogador aceita o contrato.
+- O HTML dos e-mails passa pelo DOMPurify antes de ir para a tela.
+- `src/core/resolution` tem as regras do jogo em funções puras: matchers, fatos descobertos, opções liberadas (só aumentam), veredito por hash sha256 e estrelas.
+- `src/store/game-store.ts` guarda caixa de entrada, progresso de cada caso, dossiê e notas, e entrega os e-mails pelos gatilhos `caseAccepted`, `emailRead:<id>` e `answerCorrect:<caso>`.
+- `bun run validate-cases` roda cada `verifyQuery` no SQLite, confere que toda opção pode ser liberada e que existe exatamente uma combinação correta. Os mesmos testes rodam no Vitest.
+- Bancos grandes são gerados por scripts determinísticos em `tools/` (`bun run cases:generate`), e o `.sql` resultante é versionado.
+
 ## Estado
 
 Um store por domínio: preferências, janelas e Terminal; progresso, dossiê e notas chegam com os casos. Seletores finos evitam renders globais.

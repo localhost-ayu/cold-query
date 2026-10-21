@@ -1,16 +1,15 @@
 import { useStore } from 'zustand';
 import { createStore } from 'zustand/vanilla';
 
-import type { MessageKey, MessageParams } from '@/core/i18n';
 import type { AppId } from './window-store';
 
 export interface ShellNotification {
   id: string;
   appId: AppId;
-  /** Quem manda (nome próprio, não traduzido) ou uma chave de título. */
+  /** Quem manda (nome próprio, não traduzido). */
   sender: string;
-  bodyKey: MessageKey;
-  bodyParams?: MessageParams;
+  /** Texto já no idioma certo, como o assunto de um e-mail. */
+  body: string;
   createdAt: number;
   read: boolean;
 }

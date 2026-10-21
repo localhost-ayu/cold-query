@@ -133,7 +133,7 @@ function NotificationList() {
                       })}
                     </time>
                   </span>
-                  <span>{t(item.bodyKey, item.bodyParams)}</span>
+                  <span>{item.body}</span>
                 </span>
               </button>
             </li>
