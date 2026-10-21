@@ -5,20 +5,11 @@ import { useEffect, useRef } from 'react';
 import { AppIcon } from '@/apps/AppIcon';
 import { apps } from '@/apps/registry';
 import { translate } from '@/core/i18n';
-import { play } from '@/os/audio';
+import { Dash, launchApp } from '@/os/dash/Dash';
 import { useLocale, useT } from '@/os/i18n';
 import { motionTokens } from '@/os/motion';
 import { shellStore, useShell } from '@/store/shell-store';
-import { windowStore, useWindowStore, type AppId } from '@/store/window-store';
-
-function launch(appId: AppId) {
-  const existed = windowStore.getState().windows.some((w) => w.id === appId);
-  windowStore
-    .getState()
-    .openApp(appId, { width: window.innerWidth, height: window.innerHeight });
-  shellStore.getState().setOverview(false);
-  play(existed ? 'click' : 'open');
-}
+import { useWindowStore } from '@/store/window-store';
 
 /** Remove acentos e caixa para "notas" achar "Notas" e "ajuda" achar "Ajuda". */
 function normalize(text: string) {
@@ -26,34 +17,6 @@ function normalize(text: string) {
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
     .toLowerCase();
-}
-
-function Dash() {
-  const t = useT();
-  const windows = useWindowStore((state) => state.windows);
-  return (
-    <nav className="dash" aria-label={t('overview.dash')}>
-      {apps.map(({ id }) => {
-        const running = windows.some((w) => w.id === id);
-        const name = t(`app.${id}`);
-        return (
-          <button
-            key={id}
-            type="button"
-            className="dash__item"
-            aria-label={running ? t('overview.running', { app: name }) : name}
-            onClick={() => launch(id)}
-          >
-            <AppIcon appId={id} size={52} />
-            <span className="dash__tooltip" aria-hidden>
-              {name}
-            </span>
-            {running ? <span className="dash__running" aria-hidden /> : null}
-          </button>
-        );
-      })}
-    </nav>
-  );
 }
 
 function SearchResults({ query }: { query: string }) {
@@ -77,7 +40,7 @@ function SearchResults({ query }: { query: string }) {
           <button
             type="button"
             className="search-results__item"
-            onClick={() => launch(id)}
+            onClick={() => launchApp(id)}
           >
             <AppIcon appId={id} size={72} />
             <span>{t(`app.${id}`)}</span>
@@ -156,7 +119,7 @@ export function Overview() {
           ) : !hasWindows ? (
             <p className="overview__empty">{t('overview.empty')}</p>
           ) : null}
-          <Dash />
+          <Dash className="dash dash--overview" />
         </m.div>
       ) : null}
     </AnimatePresence>

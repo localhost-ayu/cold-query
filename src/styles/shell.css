@@ -627,17 +627,66 @@
 }
 
 .dash {
-  position: absolute;
-  bottom: 22px;
-  left: 50%;
-  z-index: 9000;
   display: flex;
   gap: 4px;
   padding: 8px;
   border-radius: 26px;
   background: rgb(255 255 255 / 14%);
+}
+
+.dash--overview {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  z-index: 9000;
   translate: -50% 0;
   animation: dash-in var(--dur-slow) var(--ease-out);
+}
+
+/* Dock escondido (Dash to Dock): fica abaixo da tela até ser chamado. */
+.dock-region {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 9500;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 12px;
+  pointer-events: none;
+}
+
+.dock-region__edge {
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  pointer-events: auto;
+}
+
+.dash--dock {
+  background: rgb(30 30 34 / 82%);
+  box-shadow:
+    0 8px 28px rgb(0 0 0 / 35%),
+    0 0 0 1px rgb(255 255 255 / 8%);
+  backdrop-filter: blur(16px);
+  transform: translateY(calc(100% + 24px));
+  transition: transform var(--dur-base) var(--ease-in);
+}
+
+.dock-region[data-visible] .dash--dock {
+  pointer-events: auto;
+  transform: none;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash--dock {
+    opacity: 0;
+    transform: none;
+    transition: opacity var(--dur-fast);
+  }
+
+  .dock-region[data-visible] .dash--dock {
+    opacity: 1;
+  }
 }
 
 @keyframes dash-in {

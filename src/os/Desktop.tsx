@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { brand } from '@/config/brand';
 import { configureAudio } from '@/os/audio';
+import { AutoHideDock } from '@/os/dash/AutoHideDock';
 import { useT } from '@/os/i18n';
 import { NotificationBanner } from '@/os/notifications/NotificationBanner';
 import { Overview } from '@/os/overview/Overview';
@@ -82,6 +83,7 @@ export function Desktop() {
       <HotCorner />
       <Overview />
       <WindowManager />
+      <AutoHideDock />
       <NotificationBanner />
       <section className="small-screen">
         <span className="small-screen__mark">{brand.osName}</span>
