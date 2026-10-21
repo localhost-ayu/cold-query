@@ -1,0 +1,224 @@
+{
+  "facts": [
+    {
+      "id": "f_audit",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": ["NB-0417", "2026-03-13 17:30:00", "Caio Mendes"]
+      },
+      "verifyQuery": "SELECT asset_tag, status, last_audit_at, last_audit_by FROM assets WHERE asset_tag = 'NB-0417'"
+    },
+    {
+      "id": "f_denise_entry",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [9002, "ALMOX_TI", "IN", "2026-03-13 19:05:22"]
+      },
+      "verifyQuery": "SELECT * FROM badge_events WHERE gate = 'ALMOX_TI' AND event_time BETWEEN '2026-03-13 17:30:00' AND '2026-03-16 08:10:00' ORDER BY event_time"
+    },
+    {
+      "id": "f_guard_entry",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [9100, "ALMOX_TI", "IN", "2026-03-14 03:10:31"]
+      },
+      "verifyQuery": "SELECT * FROM badge_events WHERE gate = 'ALMOX_TI' AND event_time BETWEEN '2026-03-13 17:30:00' AND '2026-03-16 08:10:00' ORDER BY event_time"
+    },
+    {
+      "id": "f_caio_monday",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [2210, "ALMOX_TI", "IN", "2026-03-16 08:05:14"]
+      },
+      "verifyQuery": "SELECT * FROM badge_events WHERE gate = 'ALMOX_TI' AND event_time BETWEEN '2026-03-13 17:30:00' AND '2026-03-16 08:10:00' ORDER BY event_time"
+    },
+    {
+      "id": "f_rafael_entry",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [4471, "ALMOX_TI", "IN", "2026-03-13 22:47:03"]
+      },
+      "verifyQuery": "SELECT * FROM badge_events WHERE gate = 'ALMOX_TI' AND event_time BETWEEN '2026-03-13 17:30:00' AND '2026-03-16 08:10:00' ORDER BY event_time"
+    },
+    {
+      "id": "f_rafael_id",
+      "bonus": false,
+      "matcher": { "type": "rowHasValues", "values": [4471, "Rafael Tavares"] },
+      "verifyQuery": "SELECT id, name, department, badge_id FROM employees WHERE badge_id = 4471"
+    },
+    {
+      "id": "b_denise_routine",
+      "bonus": true,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [9002, "ALMOX_TI", "IN"],
+        "min": 6
+      },
+      "verifyQuery": "SELECT * FROM badge_events WHERE badge_id = 9002 AND gate = 'ALMOX_TI' ORDER BY event_time"
+    },
+    {
+      "id": "b_guard_routine",
+      "bonus": true,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [9100, "ALMOX_TI", "IN"],
+        "min": 6
+      },
+      "verifyQuery": "SELECT * FROM badge_events WHERE badge_id = 9100 AND gate = 'ALMOX_TI' ORDER BY event_time"
+    },
+    {
+      "id": "b_caio_audit_entry",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [2210, "ALMOX_TI", "IN", "2026-03-13 17:12:40"]
+      },
+      "verifyQuery": "SELECT * FROM badge_events WHERE badge_id = 2210 AND event_time LIKE '2026-03-13%' ORDER BY event_time"
+    },
+    {
+      "id": "b_rafael_floor",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [4471, "ANDAR_4", "IN", "2026-03-13 22:44:30"]
+      },
+      "verifyQuery": "SELECT * FROM badge_events WHERE badge_id = 4471 AND event_time LIKE '2026-03-13%' ORDER BY event_time"
+    },
+    {
+      "id": "b_clockout",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [9, "2026-03-13", "18:04:00"]
+      },
+      "verifyQuery": "SELECT * FROM timesheet WHERE employee_id = 9 AND work_date = '2026-03-13'"
+    },
+    {
+      "id": "b_motive",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": ["NB-0409", "MANUTENCAO", 9]
+      },
+      "verifyQuery": "SELECT * FROM assets WHERE assigned_to = 9"
+    },
+    {
+      "id": "b_policy",
+      "bonus": true,
+      "matcher": {
+        "type": "snippet",
+        "pageId": "politica-acesso",
+        "anchor": "p-almox"
+      }
+    }
+  ],
+  "report": {
+    "slots": [
+      {
+        "id": "who",
+        "label": {
+          "pt-BR": "Quem levou o NB-0417?",
+          "en": "Who took NB-0417?"
+        },
+        "options": [
+          {
+            "id": "w2",
+            "label": {
+              "pt-BR": "Denise Rocha, da limpeza",
+              "en": "Denise Rocha, cleaning staff"
+            },
+            "requires": { "all": ["f_denise_entry"] }
+          },
+          {
+            "id": "w3",
+            "label": {
+              "pt-BR": "Wagner Prado, vigilante noturno",
+              "en": "Wagner Prado, night guard"
+            },
+            "requires": { "all": ["f_guard_entry"] }
+          },
+          {
+            "id": "w4",
+            "label": {
+              "pt-BR": "Caio Mendes, da TI",
+              "en": "Caio Mendes, IT"
+            },
+            "requires": { "any": ["f_audit", "f_caio_monday"] }
+          },
+          {
+            "id": "w1",
+            "label": {
+              "pt-BR": "Rafael Tavares, do Financeiro",
+              "en": "Rafael Tavares, Finance"
+            },
+            "requires": { "all": ["f_rafael_entry", "f_rafael_id"] }
+          },
+          {
+            "id": "w5",
+            "label": {
+              "pt-BR": "Os dados não permitem apontar ninguém",
+              "en": "The data does not point to anyone"
+            },
+            "requires": { "minFacts": 3 }
+          }
+        ]
+      },
+      {
+        "id": "when",
+        "label": {
+          "pt-BR": "Quando o notebook saiu do almoxarifado?",
+          "en": "When did the laptop leave the storeroom?"
+        },
+        "options": [
+          {
+            "id": "t1",
+            "label": {
+              "pt-BR": "Sexta, 13/03, entre 19:00 e 19:30",
+              "en": "Friday, Mar 13, between 7:00 and 7:30 PM"
+            },
+            "requires": { "all": ["f_denise_entry"] }
+          },
+          {
+            "id": "t2",
+            "label": {
+              "pt-BR": "Sexta, 13/03, entre 22:30 e 23:00",
+              "en": "Friday, Mar 13, between 10:30 and 11:00 PM"
+            },
+            "requires": { "all": ["f_rafael_entry"] }
+          },
+          {
+            "id": "t3",
+            "label": {
+              "pt-BR": "Sábado, 14/03, entre 03:00 e 03:30",
+              "en": "Saturday, Mar 14, between 3:00 and 3:30 AM"
+            },
+            "requires": { "all": ["f_guard_entry"] }
+          },
+          {
+            "id": "t4",
+            "label": {
+              "pt-BR": "Segunda, 16/03, entre 08:00 e 08:15",
+              "en": "Monday, Mar 16, between 8:00 and 8:15 AM"
+            },
+            "requires": { "all": ["f_caio_monday"] }
+          }
+        ]
+      }
+    ]
+  },
+  "answerHashes": {
+    "who": "ab578a8082433c275324a8e2a491d815ac20c6dcadc5d5b8a5ad541602cc3520",
+    "when": "5554f292487aa76c892f8261bb2cdf869f3ba5d0d823057e3296963c1c22c2ab"
+  },
+  "outcomes": {
+    "correct": "e90-correto",
+    "partial": "e91-parcial",
+    "wrong": "e92-errado",
+    "failed": "e93-falhou"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "001",
+  "order": 1,
+  "title": {
+    "pt-BR": "O Notebook do Almoxarifado",
+    "en": "The Storeroom Laptop"
+  },
+  "summary": {
+    "pt-BR": "Um notebook sumiu do almoxarifado de TI da Vantara Logística entre a auditoria de sexta e a manhã de segunda. O inventário jura que ele ainda está lá.",
+    "en": "A laptop vanished from Vantara Logística's IT storeroom between Friday's audit and Monday morning. The inventory swears it is still there."
+  },
+  "difficulty": 1,
+  "sqlConcepts": ["SELECT", "WHERE", "ORDER BY", "LIMIT", "LIKE", "BETWEEN"],
+  "estimatedMinutes": 25,
+  "author": "Nathã Grazzioli Botelho",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "client": "Vantara Logística",
+  "databases": [
+    {
+      "id": "main",
+      "file": "db/vantara_acessos.sql",
+      "label": {
+        "pt-BR": "Vantara — acessos e patrimônio",
+        "en": "Vantara — access and assets"
+      },
+      "readOnly": true
+    }
+  ],
+  "startEmail": "e01-contrato",
+  "maxAttempts": 3,
+  "hints": [
+    {
+      "id": "h1",
+      "text": {
+        "pt-BR": "Comece pelo último momento em que alguém viu o notebook. A tabela assets guarda quando e por quem cada item foi auditado.",
+        "en": "Start with the last time anyone saw the laptop. The assets table records when and by whom each item was audited."
+      }
+    },
+    {
+      "id": "h2",
+      "text": {
+        "pt-BR": "Com esse horário em mãos, filtre badge_events pelo portão ALMOX_TI e pelo intervalo até segunda de manhã. BETWEEN ajuda.",
+        "en": "With that time in hand, filter badge_events by the ALMOX_TI gate and the window up to Monday morning. BETWEEN helps."
+      }
+    },
+    {
+      "id": "h3",
+      "text": {
+        "pt-BR": "Algumas pessoas entram no almoxarifado toda noite, no mesmo horário. Compare cada entrada suspeita com a rotina do crachá: quem apareceu uma vez só?",
+        "en": "Some people enter the storeroom every night at the same time. Compare each suspicious entry with that badge's routine: who showed up only once?"
+      }
+    }
+  ]
+}

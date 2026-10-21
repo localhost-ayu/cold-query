@@ -39,6 +39,7 @@ Paths são relativos à raiz do caso, usam `/`, não contêm `..` e diferenciam 
   "estimatedMinutes": 20,
   "author": "Autor",
   "license": "PolyForm-Noncommercial-1.0.0",
+  "client": "Empresa Exemplo",
   "databases": [
     {
       "id": "main",
@@ -121,6 +122,8 @@ attachments:
 Corpo em Markdown sem HTML executável.
 ```
 
+`client` é o nome do cliente, mostrado no Dossiê e no relatório.
+
 Para o e-mail inicial, `unlockedBy` pode ser omitido; ele é referenciado por `startEmail`. Valores válidos posteriores: `caseAccepted`, `emailRead:<id>` e `answerCorrect:<caseId>`. Attachments precisam existir dentro do pacote.
 
 ## Sites Markdown
@@ -148,6 +151,6 @@ Cada arquivo SQL cria e popula um banco SQLite do zero. Tabelas de domínio deve
 
 ## Validação
 
-O script `validate-cases` confere JSON e frontmatter, IDs duplicados, referências, e-mails órfãos, banco e chaves primárias, todos os `verifyQuery`, hashes, matchers, opções alcançáveis e se existe pelo menos uma combinação correta alcançável. O script `case:hash` recebe caso, slot e opção e devolve `sha256(caseId|slotId|optionId)`.
+O script `validate-cases` confere JSON e frontmatter, IDs duplicados, referências, e-mails órfãos, banco e chaves primárias, todos os `verifyQuery`, hashes, matchers, opções alcançáveis e se existe pelo menos uma combinação correta alcançável. Rode com `bun run validate-cases`. O script `case:hash` (`bun run case:hash 001 who w1`) recebe caso, slot e opção e devolve `sha256(caseId|slotId|optionId)`.
 
 Um caso pode ter só pt-BR; os textos em inglês que faltarem caem no português.
