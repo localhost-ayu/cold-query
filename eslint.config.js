@@ -7,6 +7,10 @@ import tseslint from 'typescript-eslint';
 export default tseslint.config(
   { ignores: ['dist', 'coverage'] },
   {
+    files: ['scripts/**', 'tools/**', 'vite.config.ts'],
+    languageOptions: { globals: globals.node },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
@@ -19,7 +23,7 @@ export default tseslint.config(
       // Regiões roláveis (a tabela de resultados) precisam de foco para rolar pelo teclado.
       'jsx-a11y/no-noninteractive-tabindex': [
         'error',
-        { roles: ['tabpanel', 'table'] },
+        { roles: ['tabpanel', 'table', 'region'] },
       ],
     },
   },
