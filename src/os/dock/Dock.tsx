@@ -1,5 +1,3 @@
-'use client';
-
 import { apps } from '@/apps/registry';
 import { play } from '@/os/audio';
 import { useT } from '@/os/i18n';

@@ -1,5 +1,3 @@
-'use client';
-
 import { useId } from 'react';
 
 import { locales, type Locale } from '@/core/i18n';

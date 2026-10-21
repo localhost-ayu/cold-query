@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Bell,
   CircleHalf,
@@ -35,18 +33,15 @@ function subscribeClock(onTick: () => void) {
 
 function Clock() {
   const locale = useLocale();
-  // O snapshot muda a cada 15 s; no HTML estático ele é null, porque o horário
-  // do build não pode aparecer para quem abre a página depois.
-  const tick = useSyncExternalStore(
-    subscribeClock,
-    () => Math.floor(Date.now() / CLOCK_STEP),
-    () => null,
+  // O snapshot muda a cada 15 s, e só então o relógio re-renderiza.
+  const tick = useSyncExternalStore(subscribeClock, () =>
+    Math.floor(Date.now() / CLOCK_STEP),
   );
-  const now = tick === null ? null : new Date();
+  const now = new Date(tick * CLOCK_STEP);
 
   return (
-    <time className="topbar__clock" dateTime={now?.toISOString()}>
-      {now?.toLocaleString(locale, {
+    <time className="topbar__clock" dateTime={now.toISOString()}>
+      {now.toLocaleString(locale, {
         weekday: 'short',
         day: 'numeric',
         month: 'short',

@@ -1,6 +1,4 @@
-.next
-out
+dist
 coverage
 node_modules
 bun.lock
-public/sqlite/

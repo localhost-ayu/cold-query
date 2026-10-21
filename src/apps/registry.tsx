@@ -1,8 +1,5 @@
-'use client';
-
 import type { Icon } from '@phosphor-icons/react';
-import dynamic from 'next/dynamic';
-import type { ComponentType } from 'react';
+import { lazy, type ComponentType } from 'react';
 
 import type { AppId } from '@/store/window-store';
 
@@ -12,18 +9,18 @@ import { SettingsApp } from './settings/SettingsApp';
 import { TerminalLoading } from './terminal/TerminalLoading';
 
 // O Terminal traz CodeMirror e o SQLite: só baixa quando a janela abre.
-const TerminalApp = dynamic(
-  () => import('./terminal/TerminalApp').then((module) => module.TerminalApp),
-  {
-    ssr: false,
-    loading: TerminalLoading,
-  },
+const TerminalApp = lazy(() =>
+  import('./terminal/TerminalApp').then((module) => ({
+    default: module.TerminalApp,
+  })),
 );
 
 export interface AppDefinition {
   id: AppId;
   icon: Icon;
   component: ComponentType;
+  /** O que aparece enquanto um app carregado sob demanda baixa. */
+  fallback?: ComponentType;
 }
 
 export const apps: AppDefinition[] = [
@@ -32,7 +29,12 @@ export const apps: AppDefinition[] = [
     icon: appIcons.mail,
     component: () => <PlaceholderApp appId="mail" />,
   },
-  { id: 'terminal', icon: appIcons.terminal, component: TerminalApp },
+  {
+    id: 'terminal',
+    icon: appIcons.terminal,
+    component: TerminalApp,
+    fallback: TerminalLoading,
+  },
   {
     id: 'dossier',
     icon: appIcons.dossier,

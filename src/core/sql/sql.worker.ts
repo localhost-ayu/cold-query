@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-import type { Database, Sqlite3Static } from '@sqlite.org/sqlite-wasm';
+import sqlite3InitModule, { type Database } from '@sqlite.org/sqlite-wasm';
 
 import { createDatabase, readSchema, runQuery } from './database';
 import { toSqlError } from './errors';
@@ -12,22 +12,9 @@ import { SqlError, type QueryResult, type SchemaTable } from './types';
   debug: () => {},
 };
 
-/**
- * O SQLite vem de public/sqlite/ (ver scripts/copy-sqlite.mjs), importado em
- * tempo de execução e fora do bundler. Carrega uma vez por worker; se o worker
- * morrer por timeout, o próximo recomeça daqui.
- */
-async function loadSqlite(): Promise<Sqlite3Static> {
-  const url = `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/sqlite/index.mjs`;
-  const sqliteModule = (await import(
-    /* webpackIgnore: true */ /* turbopackIgnore: true */ url
-  )) as {
-    default: () => Promise<Sqlite3Static>;
-  };
-  return sqliteModule.default();
-}
-
-const ready = loadSqlite();
+// O módulo WASM carrega uma vez por worker; se o worker morrer por timeout,
+// o próximo recomeça daqui.
+const ready = sqlite3InitModule();
 const databases = new Map<string, Database>();
 
 function database(dbId: string): Database {

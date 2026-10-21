@@ -1,7 +1,5 @@
-'use client';
-
 import { AnimatePresence, MotionConfig } from 'framer-motion';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 
 import { appById } from '@/apps/registry';
 import { useWindowStore, windowStore } from '@/store/window-store';
@@ -50,14 +48,16 @@ export function WindowManager() {
         {windows
           .filter((item) => !item.minimized)
           .map((item) => {
-            const App = appById[item.id].component;
+            const { component: App, fallback: Fallback } = appById[item.id];
             return (
               <FloatingWindow
                 key={item.id}
                 window={item}
                 active={item.id === activeId}
               >
-                <App />
+                <Suspense fallback={Fallback ? <Fallback /> : null}>
+                  <App />
+                </Suspense>
               </FloatingWindow>
             );
           })}

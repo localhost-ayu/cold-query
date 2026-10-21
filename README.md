@@ -18,22 +18,22 @@ Requires [Bun](https://bun.sh) 1.3+ (or Node.js 22+ with npm).
 
 ```sh
 bun install
-bun run dev        # http://localhost:3000
+bun run dev        # http://localhost:5173
 bun run test
 bun run lint
 bun run typecheck
-bun run build      # static site in out/
+bun run build      # static site in dist/
 ```
 
 ## Deploying
 
-`bun run build` produces a static site in `out/`. Any static host works: Vercel and Netlify detect the project with no setup; on Cloudflare Pages, use `out` as the output directory. To serve from a subfolder, such as a GitHub Pages project site, build with `NEXT_PUBLIC_BASE_PATH=/cold-query`.
+`bun run build` produces a static site in `dist/`. Any static host works: Vercel, Netlify and Cloudflare Pages detect Vite projects with no setup. To serve from a subfolder, such as a GitHub Pages project site, build with `BASE_PATH=/cold-query/`.
 
 The game can be embedded in an iframe (`sandbox="allow-scripts allow-same-origin"`). It needs no COOP/COEP headers.
 
 ## How it is built
 
-Next.js (static export) · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwind CSS. Details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Case packages are plain JSON, Markdown and SQL, described in [docs/CASE_FORMAT.md](docs/CASE_FORMAT.md) and [docs/RESOLUTION_SYSTEM.md](docs/RESOLUTION_SYSTEM.md).
+React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwind CSS. Details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Case packages are plain JSON, Markdown and SQL, described in [docs/CASE_FORMAT.md](docs/CASE_FORMAT.md) and [docs/RESOLUTION_SYSTEM.md](docs/RESOLUTION_SYSTEM.md).
 
 <a id="portugues"></a>
 
@@ -54,22 +54,22 @@ Requer [Bun](https://bun.sh) 1.3+ (ou Node.js 22+ com npm).
 
 ```sh
 bun install
-bun run dev        # http://localhost:3000
+bun run dev        # http://localhost:5173
 bun run test
 bun run lint
 bun run typecheck
-bun run build      # site estático em out/
+bun run build      # site estático em dist/
 ```
 
 ### Publicando
 
-`bun run build` gera um site estático em `out/`. Serve em qualquer hospedagem estática: Vercel e Netlify detectam o projeto sozinhas; no Cloudflare Pages, use `out` como diretório de saída. Para publicar numa subpasta, como um site de projeto do GitHub Pages, faça o build com `NEXT_PUBLIC_BASE_PATH=/cold-query`.
+`bun run build` gera um site estático em `dist/`. Serve em qualquer hospedagem estática: Vercel, Netlify e Cloudflare Pages detectam projetos Vite sozinhas. Para publicar numa subpasta, como um site de projeto do GitHub Pages, faça o build com `BASE_PATH=/cold-query/`.
 
 O jogo pode ser embutido num iframe (`sandbox="allow-scripts allow-same-origin"`). Não precisa de cabeçalhos COOP/COEP.
 
 ### Como é feito
 
-Next.js (export estático) · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwind CSS. Detalhes em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Os casos são JSON, Markdown e SQL, descritos em [docs/CASE_FORMAT.md](docs/CASE_FORMAT.md) e [docs/RESOLUTION_SYSTEM.md](docs/RESOLUTION_SYSTEM.md).
+React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwind CSS. Detalhes em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Os casos são JSON, Markdown e SQL, descritos em [docs/CASE_FORMAT.md](docs/CASE_FORMAT.md) e [docs/RESOLUTION_SYSTEM.md](docs/RESOLUTION_SYSTEM.md).
 
 </details>
 

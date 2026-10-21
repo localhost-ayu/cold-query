@@ -1,5 +1,3 @@
-'use client';
-
 import { useT } from '@/os/i18n';
 
 import { appIcons } from './icons';

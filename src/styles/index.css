@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './base.css';
+@import './shell.css';
+@import './window.css';
+@import './controls.css';
+@import './apps.css';
+@import './terminal.css';
+
+/* Expõe os tokens às utilidades do Tailwind (bg-surface, text-muted etc.). */
+@theme inline {
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-muted: var(--text-muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+}

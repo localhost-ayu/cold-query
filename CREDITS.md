@@ -17,7 +17,7 @@ Os arquivos WOFF2 (subconjunto latino) vêm dos pacotes Fontsource e são servid
 
 - **SQLite**, domínio público — <https://sqlite.org>; build WebAssembly `@sqlite.org/sqlite-wasm`, Apache 2.0
 - **CodeMirror 6**, Marijn Haverbeke e colaboradores, MIT — <https://codemirror.net>
-- **Next.js** e **React**, MIT
+- **React** e **Vite**, MIT
 - **Zustand**, MIT · **Framer Motion**, MIT · **TanStack Virtual**, MIT · **Tailwind CSS**, MIT
 
 ## Arte do jogo

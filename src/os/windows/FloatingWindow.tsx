@@ -1,5 +1,3 @@
-'use client';
-
 import { CornersIn, CornersOut, Minus, X } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 import {

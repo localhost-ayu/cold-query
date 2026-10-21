@@ -29,10 +29,19 @@ interface PreferencesState extends Preferences {
 /** Mesma chave lida pelo script de tema no <head>, antes do React. */
 export const PREFERENCES_STORAGE_KEY = 'cold-query:preferences';
 
+/** Quem pede menos movimento ao sistema começa sem som; dá para ligar em Ajustes. */
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+}
+
 export const defaultPreferences: Preferences = {
   locale: defaultLocale,
   theme: 'system',
-  soundEnabled: true,
+  soundEnabled: !prefersReducedMotion(),
   volume: 0.6,
 };
 
@@ -77,9 +86,6 @@ export function createPreferencesStore(initial: Partial<Preferences> = {}) {
         name: PREFERENCES_STORAGE_KEY,
         version: 1,
         storage: createJSONStorage(() => safeLocalStorage),
-        // A página estática nasce com os padrões; o salvo entra depois de montar,
-        // senão o HTML do servidor e o primeiro render do cliente divergem.
-        skipHydration: true,
         partialize: ({ locale, theme, soundEnabled, volume }) => ({
           locale,
           theme,

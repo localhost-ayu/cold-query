@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect } from 'react';
 
 import { brand } from '@/config/brand';
@@ -9,39 +7,20 @@ import { useT } from '@/os/i18n';
 import { ThemeController } from '@/os/theme/ThemeController';
 import { TopBar } from '@/os/topbar/TopBar';
 import { WindowManager } from '@/os/windows/WindowManager';
-import {
-  PREFERENCES_STORAGE_KEY,
-  preferencesStore,
-  usePreferences,
-} from '@/store/preferences-store';
+import { usePreferences } from '@/store/preferences-store';
 import { windowStore } from '@/store/window-store';
 
 function viewport() {
   return { width: window.innerWidth, height: window.innerHeight };
 }
 
-/** Carrega as preferências salvas e abre o Terminal na primeira pintura do cliente. */
+/** Abre o Terminal na primeira pintura e mantém idioma e som em dia com as preferências. */
 function useBoot() {
   const locale = usePreferences((state) => state.locale);
   const soundEnabled = usePreferences((state) => state.soundEnabled);
   const volume = usePreferences((state) => state.volume);
 
   useEffect(() => {
-    let firstVisit = true;
-    try {
-      firstVisit =
-        window.localStorage.getItem(PREFERENCES_STORAGE_KEY) === null;
-    } catch {
-      /* sem storage, toda visita é a primeira */
-    }
-    void preferencesStore.persist.rehydrate();
-    // Quem pede menos movimento ao sistema começa sem som; dá para ligar em Ajustes.
-    if (
-      firstVisit &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    ) {
-      preferencesStore.getState().setSoundEnabled(false);
-    }
     if (windowStore.getState().windows.length === 0) {
       windowStore.getState().openApp('terminal', viewport());
     }

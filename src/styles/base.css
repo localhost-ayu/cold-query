@@ -1,3 +1,18 @@
+/* Fontes servidas pelo próprio site (OFL); variáveis, então um arquivo cobre todos os pesos. */
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../assets/fonts/jetbrains-mono-latin.woff2') format('woff2');
+  font-weight: 100 800;
+  font-display: swap;
+}
+
 *,
 *::before,
 *::after {
@@ -20,7 +35,7 @@ html {
 body {
   color: var(--text);
   background: var(--bg);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
@@ -48,7 +63,7 @@ button:disabled {
 
 code,
 kbd {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-mono);
 }
 
 h1,

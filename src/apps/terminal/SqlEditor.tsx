@@ -1,5 +1,3 @@
-'use client';
-
 import {
   autocompletion,
   closeBrackets,
@@ -68,7 +66,7 @@ const highlight = HighlightStyle.define([
 const editorTheme = EditorView.theme({
   '&': { height: '100%', fontSize: '13px', backgroundColor: 'transparent' },
   '.cm-scroller': {
-    fontFamily: 'var(--font-mono), monospace',
+    fontFamily: 'var(--font-mono)',
     lineHeight: '1.6',
   },
   '.cm-content': { caretColor: 'var(--accent)', padding: '10px 0' },

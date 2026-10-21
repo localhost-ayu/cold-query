@@ -274,7 +274,7 @@
     padding: 7px 12px;
     border: 1px solid var(--line-strong);
     border-radius: var(--radius-md);
-    font-family: var(--font-mono), monospace;
+    font-family: var(--font-mono);
     font-size: 12px;
   }
 

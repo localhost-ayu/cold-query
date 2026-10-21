@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cold Query — TraceOS</title>
+    <meta
+      name="description"
+      content="Um jogo de detetive em SQL que roda inteiro no navegador."
+    />
+    <meta name="theme-color" content="#1e1e1e" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!--
+      Aplica o tema salvo (ou o do sistema) antes da primeira pintura, para a
+      página não piscar no tema errado. A chave é a mesma do preferences-store.
+    -->
+    <script>
+      (function () {
+        var theme = 'system';
+        try {
+          var saved = JSON.parse(
+            localStorage.getItem('cold-query:preferences') || 'null',
+          );
+          if (saved && saved.state && saved.state.theme)
+            theme = saved.state.theme;
+        } catch (error) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript
+      >Cold Query precisa de JavaScript para rodar. · Cold Query needs
+      JavaScript to run.</noscript
+    >
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

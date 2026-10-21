@@ -1,5 +1,3 @@
-'use client';
-
 import { Play, Plus, Stop, Warning, X } from '@phosphor-icons/react';
 import { useEffect, useRef } from 'react';
 
