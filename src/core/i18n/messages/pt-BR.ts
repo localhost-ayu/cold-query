@@ -113,6 +113,37 @@ export const ptBR = {
   'settings.soundEnabled': 'Efeitos sonoros',
   'settings.volume': 'Volume',
 
+  'settings.saves': 'Progresso',
+  'settings.autosave': 'Salvamento automático',
+  'settings.savedAt': 'Salvo às {time}',
+  'settings.notSaved': 'Nada salvo ainda',
+  'settings.saveUnavailable':
+    'Este navegador não deixa salvar (aba privada?). Exporte o save para não perder o progresso.',
+  'settings.export': 'Exportar save',
+  'settings.exportHint': 'Baixa um arquivo .json com todo o progresso.',
+  'settings.exportAction': 'Exportar',
+  'settings.import': 'Importar save',
+  'settings.importHint': 'Troca o progresso atual pelo do arquivo.',
+  'settings.importAction': 'Importar',
+  'settings.importTitle': 'Substituir o progresso atual?',
+  'settings.importBody':
+    'O progresso deste navegador será trocado pelo do arquivo. Exporte antes se quiser guardar o atual.',
+  'settings.importConfirm': 'Substituir',
+  'settings.imported': 'Save importado.',
+  'settings.importInvalid': 'Esse arquivo não é um save do Cold Query.',
+  'settings.importNewer': 'Esse save é de uma versão mais nova do jogo.',
+  'settings.importTooLarge': 'Arquivo grande demais para ser um save.',
+  'settings.reset': 'Apagar progresso',
+  'settings.resetHint': 'Recomeça do zero. As preferências ficam.',
+  'settings.resetAction': 'Apagar',
+  'settings.resetTitle': 'Apagar todo o progresso?',
+  'settings.resetBody':
+    'Casos, e-mails, dossiê, notas e consultas serão apagados. Exporte antes se quiser guardar.',
+  'settings.resetConfirm': 'Apagar',
+  'settings.resetDone':
+    'Progresso apagado. O primeiro contrato chegou de novo no Mail.',
+  'settings.cancel': 'Cancelar',
+
   'terminal.database': 'Banco',
   'terminal.db.training': 'Base de treino',
   'terminal.run': 'Executar',

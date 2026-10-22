@@ -8,6 +8,8 @@ import {
   type ThemePreference,
 } from '@/store/preferences-store';
 
+import { SavesSection } from './SavesSection';
+
 const themes: ThemePreference[] = ['system', 'light', 'dark'];
 
 /** Nome de cada idioma escrito nele mesmo, como em qualquer seletor de idioma. */
@@ -95,6 +97,8 @@ export function SettingsApp() {
           />
         </div>
       </section>
+
+      <SavesSection />
     </div>
   );
 }
