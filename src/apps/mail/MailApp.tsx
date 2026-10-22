@@ -3,18 +3,25 @@ import {
   ArrowBendUpLeft,
   CheckCircle,
   Database,
+  GraduationCap,
   EnvelopeSimpleOpen,
   Star,
 } from '@phosphor-icons/react';
 import { useState } from 'react';
 
-import { caseById, gameStore, useGameState } from '@/apps/shared/game';
+import {
+  caseById,
+  gameStore,
+  resolveMail,
+  useGameState,
+} from '@/apps/shared/game';
 import { sanitizeCaseHtml } from '@/apps/shared/sanitize';
+import { tutorialChallenges } from '@/content/tutorial';
 import { completeness } from '@/core/resolution';
 import { play } from '@/os/audio';
 import { useLocale, useT } from '@/os/i18n';
 import { WindowHeaderItems } from '@/os/windows/header-slots';
-import { findEmail, type InboxItem } from '@/store/game-store';
+import type { InboxItem } from '@/store/game-store';
 import { windowStore } from '@/store/window-store';
 
 import { ReportDialog } from './ReportDialog';
@@ -81,6 +88,51 @@ function VerdictCard({ item }: { item: InboxItem }) {
   );
 }
 
+/** Botões do e-mail de boas-vindas: começar, continuar ou pular o treinamento. */
+function TutorialActions() {
+  const t = useT();
+  const tutorial = useGameState((state) => state.tutorial);
+  if (tutorial.status === 'done' || tutorial.status === 'skipped') {
+    return (
+      <div className="message__actions">
+        <span className="message__accepted">
+          <CheckCircle weight="fill" aria-hidden />
+          {t(
+            tutorial.status === 'done'
+              ? 'tutorial.finished'
+              : 'tutorial.skipped',
+          )}
+        </span>
+      </div>
+    );
+  }
+  const total = tutorialChallenges.length;
+  return (
+    <div className="message__actions">
+      <button
+        type="button"
+        className="pill-button pill-button--suggested"
+        onClick={() => {
+          gameStore.getState().startTutorial();
+          openTerminal();
+        }}
+      >
+        <GraduationCap weight="bold" aria-hidden />
+        {tutorial.status === 'active'
+          ? t('tutorial.continue', { step: tutorial.step + 1, total })
+          : t('tutorial.start')}
+      </button>
+      <button
+        type="button"
+        className="pill-button"
+        onClick={() => gameStore.getState().skipTutorial()}
+      >
+        {t('tutorial.skip')}
+      </button>
+    </div>
+  );
+}
+
 function MessageView({
   item,
   onReply,
@@ -90,13 +142,12 @@ function MessageView({
 }) {
   const t = useT();
   const locale = useLocale();
-  const bundle = caseById.get(item.caseId);
   const progress = useGameState((state) => state.cases[item.caseId]);
-  const email = bundle ? findEmail(bundle, item.emailId, locale) : undefined;
-  if (!bundle || !email || !progress) return null;
+  const email = resolveMail(item, locale);
+  if (!email) return null;
 
-  const isBrief = email.kind === 'brief';
-  const accepted = progress.status !== 'available';
+  const isBrief = email.kind === 'brief' && progress !== undefined;
+  const accepted = progress !== undefined && progress.status !== 'available';
 
   return (
     <article className="message" aria-labelledby={`subject-${item.id}`}>
@@ -160,6 +211,8 @@ function MessageView({
         </section>
       ) : null}
 
+      {email.tutorial === 'welcome' ? <TutorialActions /> : null}
+
       <div className="message__actions">
         {isBrief && !accepted ? (
           <button
@@ -179,13 +232,13 @@ function MessageView({
             {t('mail.accepted')}
           </span>
         ) : null}
-        {isBrief && progress.status === 'active' ? (
+        {isBrief && progress?.status === 'active' ? (
           <button type="button" className="pill-button" onClick={onReply}>
             <ArrowBendUpLeft weight="bold" aria-hidden />
             {t('mail.reply')}
           </button>
         ) : null}
-        {item.verdict === 'failed' && progress.status === 'failed' ? (
+        {item.verdict === 'failed' && progress?.status === 'failed' ? (
           <button
             type="button"
             className="pill-button"
@@ -241,10 +294,7 @@ export function MailApp() {
         ) : (
           <ul>
             {inbox.map((item) => {
-              const bundle = caseById.get(item.caseId);
-              const email = bundle
-                ? findEmail(bundle, item.emailId, locale)
-                : undefined;
+              const email = resolveMail(item, locale);
               if (!email) return null;
               return (
                 <li key={item.id}>
@@ -282,7 +332,13 @@ export function MailApp() {
         )}
       </nav>
 
-      <div className="mail__reader">
+      {/* Área rolável: tabIndex deixa rolar a mensagem pelo teclado. */}
+      <div
+        className="mail__reader"
+        tabIndex={0}
+        role="region"
+        aria-label={t('mail.reader')}
+      >
         {current ? (
           <MessageView
             item={current}

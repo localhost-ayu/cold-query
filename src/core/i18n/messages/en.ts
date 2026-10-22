@@ -33,6 +33,7 @@ export const en: Record<keyof typeof ptBR, string> = {
 
   'mail.inbox': 'Inbox',
   'mail.empty': 'No messages.',
+  'mail.reader': 'Message',
   'mail.select': 'Pick a message to read.',
   'mail.unread': 'Unread',
   'mail.attachments': 'Attachments',
@@ -87,6 +88,20 @@ export const en: Record<keyof typeof ptBR, string> = {
   'terminal.pinLimit': 'The case board is full (100 pieces of evidence).',
   'terminal.selectRow': 'Select row {n}',
   'terminal.clearSelection': 'Clear selection',
+
+  'tutorial.label': 'Training',
+  'tutorial.start': 'Start training',
+  'tutorial.continue': 'Continue training ({step} of {total})',
+  'tutorial.skip': 'I know SQL, skip',
+  'tutorial.skipShort': 'Skip training',
+  'tutorial.finished': 'Training complete',
+  'tutorial.skipped': 'Training skipped',
+  'tutorial.progress': 'Exercise {step} of {total}',
+  'tutorial.solvedCount': '{count} of {total} solved',
+  'tutorial.showHint': 'Show hint',
+  'tutorial.hideHint': 'Hide hint',
+  'tutorial.needTraining': 'The exercises use the training database.',
+  'tutorial.useTraining': 'Use the training database',
 
   'window.close': 'Close',
   'window.minimize': 'Minimize',

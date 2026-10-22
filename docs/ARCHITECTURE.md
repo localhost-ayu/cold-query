@@ -41,6 +41,7 @@ As dependências vão da UI para o núcleo, nunca ao contrário. Os stores chama
 - `src/core/resolution` tem as regras do jogo em funções puras: matchers, fatos descobertos, opções liberadas (só aumentam), veredito por hash sha256 e estrelas.
 - `src/store/game-store.ts` guarda caixa de entrada, progresso de cada caso, dossiê e notas, e entrega os e-mails pelos gatilhos `caseAccepted`, `emailRead:<id>` e `answerCorrect:<caso>`.
 - `bun run validate-cases` roda cada `verifyQuery` no SQLite, confere que toda opção pode ser liberada e que existe exatamente uma combinação correta. Os mesmos testes rodam no Vitest.
+- **Treinamento:** antes do primeiro contrato, a Helena manda um e-mail com cinco exercícios na base de treino (`src/content/tutorial.ts`). O Terminal confere cada resultado com `src/core/tutorial` (basta uma coluna do resultado bater com a resposta, então tanto `SELECT *` quanto `SELECT id` valem). Quem já sabe SQL pula e recebe o contrato na hora.
 - Bancos grandes são gerados por scripts determinísticos em `tools/` (`bun run cases:generate`), e o `.sql` resultante é versionado.
 
 ## Estado

@@ -62,7 +62,7 @@ export const MIN_HEIGHT = 240;
 
 /** Tamanho e posição de quando o app abre pela primeira vez. */
 const defaultBounds: Record<AppId, Bounds> = {
-  mail: { x: 72, y: 64, width: 780, height: 520 },
+  mail: { x: 72, y: 56, width: 820, height: 620 },
   terminal: { x: 120, y: 58, width: 1040, height: 640 },
   dossier: { x: 300, y: 92, width: 720, height: 520 },
   notes: { x: 250, y: 130, width: 620, height: 460 },
