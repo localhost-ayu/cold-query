@@ -48,13 +48,21 @@ export type PinResult =
   | { ok: true; truncated: boolean }
   | { ok: false; reason: 'limit' | 'inactive' };
 
-interface GameState {
+/** O que vai para o save. Ações e estado derivado ficam de fora. */
+export interface GameSnapshot {
   cases: Record<string, CaseProgress>;
   inbox: InboxItem[];
   evidence: Evidence[];
   notes: Record<string, string>;
   started: boolean;
+}
+
+interface GameState extends GameSnapshot {
   start: () => void;
+  /** Restaura um save. Casos que o save não conhece começam do zero. */
+  hydrate: (snapshot: GameSnapshot) => void;
+  /** Apaga todo o progresso, como num jogo novo. */
+  reset: () => void;
   readEmail: (inboxId: string) => void;
   acceptCase: (caseId: string) => void;
   pinEvidence: (input: PinInput) => PinResult;
@@ -103,7 +111,12 @@ export function createGameStore(
   { onDeliver, now = Date.now }: GameStoreOptions = {},
 ) {
   const byId = new Map(bundles.map((bundle) => [bundle.manifest.id, bundle]));
-  let counter = 0;
+  // Ids aleatórios: continuam únicos depois de restaurar um save.
+  const newId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
+  const freshCases = () =>
+    Object.fromEntries(
+      bundles.map((bundle) => [bundle.manifest.id, freshProgress()]),
+    );
 
   return createStore<GameState>((set, get) => {
     /** Entrega e-mails (ids únicos por e-mail de pt-BR) e avisa quem estiver ouvindo. */
@@ -115,9 +128,8 @@ export function createGameStore(
       const bundle = byId.get(caseId);
       if (!bundle || emailIds.length === 0) return;
       const items = emailIds.map((emailId): InboxItem => {
-        counter += 1;
         return {
-          id: `m-${counter}`,
+          id: newId('m'),
           caseId,
           emailId,
           deliveredAt: now(),
@@ -179,13 +191,37 @@ export function createGameStore(
     }
 
     return {
-      cases: Object.fromEntries(
-        bundles.map((bundle) => [bundle.manifest.id, freshProgress()]),
-      ),
+      cases: freshCases(),
       inbox: [],
       evidence: [],
       notes: {},
       started: false,
+
+      hydrate: (snapshot) => {
+        const known = (caseId: string) => byId.has(caseId);
+        // Dados de casos que não existem mais (mod removido) são descartados.
+        set({
+          cases: {
+            ...freshCases(),
+            ...Object.fromEntries(
+              Object.entries(snapshot.cases).filter(([id]) => known(id)),
+            ),
+          },
+          inbox: snapshot.inbox.filter((item) => known(item.caseId)),
+          evidence: snapshot.evidence.filter((item) => known(item.caseId)),
+          notes: snapshot.notes,
+          started: snapshot.started,
+        });
+      },
+
+      reset: () =>
+        set({
+          cases: freshCases(),
+          inbox: [],
+          evidence: [],
+          notes: {},
+          started: false,
+        }),
 
       start: () => {
         if (get().started) return;
@@ -222,10 +258,9 @@ export function createGameStore(
           (item) => item.caseId === input.caseId,
         ).length;
         if (count >= MAX_EVIDENCE) return { ok: false, reason: 'limit' };
-        counter += 1;
         const evidence: Evidence = {
           ...input,
-          id: `ev-${counter}`,
+          id: newId('ev'),
           rows: input.rows.slice(0, MAX_EVIDENCE_ROWS),
           pinnedAt: new Date(now()).toISOString(),
         };

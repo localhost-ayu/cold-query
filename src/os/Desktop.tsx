@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import { gameStore } from '@/apps/shared/game';
+import { currentViewport, persistence } from '@/apps/shared/persistence';
 import { brand } from '@/config/brand';
 import { configureAudio } from '@/os/audio';
 import { AutoHideDock } from '@/os/dash/AutoHideDock';
@@ -15,12 +16,9 @@ import { usePreferences } from '@/store/preferences-store';
 import { shellStore } from '@/store/shell-store';
 import { windowStore } from '@/store/window-store';
 
-function viewport() {
-  return { width: window.innerWidth, height: window.innerHeight };
-}
-
 /**
- * Primeira pintura: abre o Mail e o primeiro contrato chega.
+ * Primeira pintura: restaura o save (ou abre o Mail e entrega o primeiro
+ * contrato) e liga o autosave.
  * Depois, mantém idioma e som em dia com as preferências.
  */
 function useBoot() {
@@ -29,14 +27,36 @@ function useBoot() {
   const volume = usePreferences((state) => state.volume);
 
   useEffect(() => {
-    if (windowStore.getState().windows.length === 0) {
-      windowStore.getState().openApp('mail', viewport());
-    }
-    // Um respiro antes do primeiro e-mail, para ele chegar depois da janela.
-    // Em dev, o StrictMode roda o efeito duas vezes: a limpeza cancela o
-    // primeiro timer, e start() só entrega uma vez.
-    const timer = window.setTimeout(() => gameStore.getState().start(), 900);
-    return () => window.clearTimeout(timer);
+    // Em dev o StrictMode monta duas vezes: só a montagem que sobrevive liga o autosave.
+    let cancelled = false;
+    let stopAutosave: (() => void) | undefined;
+    let timer: number | undefined;
+
+    void persistence.load(currentViewport()).then((result) => {
+      if (cancelled) return;
+      if (windowStore.getState().windows.length === 0) {
+        windowStore.getState().openApp('mail', currentViewport());
+      }
+      stopAutosave = persistence.startAutosave();
+      // Jogo novo: um respiro antes do primeiro e-mail, para ele chegar depois
+      // da janela. Num save restaurado, start() não faz nada.
+      if (result !== 'restored') {
+        timer = window.setTimeout(() => gameStore.getState().start(), 900);
+      }
+    });
+
+    // Fechar ou esconder a aba grava o que estiver pendente.
+    const flush = () => void persistence.flush();
+    const onVisibility = () => document.hidden && flush();
+    window.addEventListener('pagehide', flush);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      cancelled = true;
+      stopAutosave?.();
+      window.clearTimeout(timer);
+      window.removeEventListener('pagehide', flush);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
   }, []);
 
   useEffect(() => {
