@@ -72,16 +72,15 @@
   box-shadow: none;
 }
 
-.settings__group > .settings__row:first-of-type {
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+/* "1 of .settings__row" conta só as linhas, ignorando título, avisos e diálogos. */
+.settings__group > :nth-child(1 of .settings__row) {
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
 }
 
-.settings__group > .settings__row:last-child {
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-
-.settings__group > .settings__row:only-of-type {
-  border-radius: var(--radius-lg);
+.settings__group > :nth-last-child(1 of .settings__row) {
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
 }
 
 .settings__group > .settings__row + .settings__row {
@@ -96,4 +95,35 @@
 
 .settings__row legend + * {
   margin-left: auto;
+}
+
+.settings__label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.settings__label small {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.settings__label small[data-warning] {
+  color: var(--warning);
+}
+
+.settings__feedback {
+  margin: 10px 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.settings__feedback--ok {
+  color: var(--success);
+}
+
+.settings__feedback--error {
+  color: var(--danger);
 }

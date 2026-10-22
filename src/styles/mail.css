@@ -457,3 +457,33 @@
   margin: 0;
   accent-color: var(--accent-bg);
 }
+
+/* Pergunta de confirmação (AdwAlertDialog): título, texto e dois botões. */
+.adw-dialog--alert {
+  width: min(380px, 90vw);
+}
+
+.alert {
+  padding: 26px 26px 18px;
+  text-align: center;
+}
+
+.alert h2 {
+  margin-bottom: 10px;
+  color: var(--text-strong);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.alert p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.alert__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 22px 22px;
+}

@@ -10,7 +10,7 @@ Code available · Free for noncommercial use · Mods welcome
 
 Everything happens inside **TraceOS**, a fictional GNOME-flavored operating system that runs in the browser: windows, Activities overview, mail, notes. SQLite runs in a Web Worker on your machine. There are no accounts, no servers and nothing to install.
 
-> **Status:** early development. Case 001 is playable end to end: Mail, SQL Terminal and case board. Progress is not saved yet.
+> **Status:** early development. Case 001 is playable end to end: Mail, SQL Terminal and case board. Progress is saved in the browser and can be exported.
 
 ## Running locally
 
@@ -47,7 +47,7 @@ React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwin
 
 Tudo acontece dentro do **TraceOS**, um sistema operacional fictício, com cara de GNOME, que roda no navegador: janelas, Atividades, e-mail, notas. O SQLite roda num Web Worker na sua máquina. Não há conta, servidor nem instalação.
 
-> **Estado:** início do desenvolvimento. O caso 001 já dá para jogar do começo ao fim: Mail, Terminal SQL e Dossiê. O progresso ainda não é salvo.
+> **Estado:** início do desenvolvimento. O caso 001 já dá para jogar do começo ao fim: Mail, Terminal SQL e Dossiê. O progresso fica salvo no navegador e pode ser exportado.
 
 ### Rodando localmente
 

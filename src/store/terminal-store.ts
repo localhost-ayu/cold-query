@@ -36,6 +36,14 @@ export interface TerminalDatabase {
   error: SqlErrorInfo | null;
 }
 
+/** O que vai para o save: o texto das abas e o histórico. Resultados não (rodam de novo). */
+export interface TerminalSnapshot {
+  tabs: Array<Pick<QueryTab, 'id' | 'number' | 'sql' | 'dbId'>>;
+  activeTabId: string;
+  history: HistoryEntry[];
+  nextNumber: number;
+}
+
 interface TerminalState {
   tabs: QueryTab[];
   activeTabId: string;
@@ -51,6 +59,8 @@ interface TerminalState {
   setDatabase: (id: string, dbId: string) => void;
   run: (id: string) => Promise<void>;
   stop: () => void;
+  hydrate: (snapshot: TerminalSnapshot) => void;
+  reset: () => void;
 }
 
 export const HISTORY_LIMIT = 50;
@@ -207,6 +217,33 @@ export function createTerminalStore(
       },
 
       stop: () => engine.interrupt(),
+
+      hydrate: (snapshot) => {
+        if (snapshot.tabs.length === 0) return;
+        const tabs = snapshot.tabs.map((tab) => ({
+          ...blankTab(tab.number, tab.dbId, tab.sql),
+          id: tab.id,
+        }));
+        set({
+          tabs,
+          activeTabId: tabs.some((tab) => tab.id === snapshot.activeTabId)
+            ? snapshot.activeTabId
+            : tabs[0].id,
+          history: snapshot.history.slice(0, HISTORY_LIMIT),
+          nextNumber: Math.max(
+            snapshot.nextNumber,
+            ...tabs.map((tab) => tab.number + 1),
+          ),
+        });
+      },
+
+      reset: () =>
+        set({
+          tabs: [blankTab(1, defaultDbId, starterSql)],
+          activeTabId: 'tab-1',
+          history: [],
+          nextNumber: 2,
+        }),
     };
   });
 }

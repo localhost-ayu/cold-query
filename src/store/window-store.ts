@@ -47,9 +47,15 @@ interface WindowState {
   resizeWindow: (id: AppId, bounds: Bounds, viewport: Viewport) => void;
   snapWindow: (id: AppId, side: SnapSide, viewport: Viewport) => void;
   cycleFocus: () => void;
+  /** Reabre as janelas de um save, encaixadas no tamanho de tela atual. */
+  restore: (
+    windows: TraceWindow[],
+    activeId: AppId | null,
+    viewport: Viewport,
+  ) => void;
 }
 
-export const TOP_BAR_HEIGHT = 34;
+export const TOP_BAR_HEIGHT = 32;
 export const DOCK_SPACE = 92;
 export const MIN_WIDTH = 360;
 export const MIN_HEIGHT = 240;
@@ -61,7 +67,7 @@ const defaultBounds: Record<AppId, Bounds> = {
   dossier: { x: 300, y: 92, width: 720, height: 520 },
   notes: { x: 250, y: 130, width: 620, height: 460 },
   help: { x: 180, y: 100, width: 660, height: 500 },
-  settings: { x: 340, y: 110, width: 560, height: 470 },
+  settings: { x: 340, y: 90, width: 580, height: 620 },
 };
 
 function boundsOf({ x, y, width, height }: Bounds): Bounds {
@@ -251,6 +257,34 @@ export function createWindowStore(initial: TraceWindow[] = []) {
           },
           true,
         ),
+
+      restore: (windows, activeId, viewport) => {
+        const restored = windows
+          .filter((item) => appIds.includes(item.id))
+          .map((item) => {
+            const area = desktopArea(viewport);
+            // Maximizada e encaixada são recalculadas para a tela nova.
+            if (item.maximized) return { ...item, ...area };
+            if (item.snap) {
+              const half = Math.floor(area.width / 2);
+              return {
+                ...item,
+                x: item.snap === 'left' ? 0 : half,
+                y: area.y,
+                width: item.snap === 'left' ? half : area.width - half,
+                height: area.height,
+              };
+            }
+            return { ...item, ...constrain(item, viewport) };
+          });
+        set({
+          windows: restored,
+          activeId:
+            activeId && restored.some((item) => item.id === activeId)
+              ? activeId
+              : topmostVisible(restored),
+        });
+      },
 
       cycleFocus: () =>
         set((state) => {

@@ -221,9 +221,11 @@ function ResultView({
 function ResultArea({
   tab,
   database,
+  example,
 }: {
   tab: QueryTab;
   database: TerminalDatabaseEntry | undefined;
+  example: string;
 }) {
   const t = useT();
 
@@ -266,7 +268,7 @@ function ResultArea({
       <p className="result-empty__title">
         {t('terminal.emptyTitle', { keys: runShortcutLabel() })}
       </p>
-      <p>{t('terminal.emptyHint', { example: 'SELECT * FROM analysts;' })}</p>
+      <p>{t('terminal.emptyHint', { example })}</p>
     </div>
   );
 }
@@ -286,6 +288,8 @@ export function TerminalApp() {
   const history = useTerminal(terminalStore, (state) => state.history);
   const entries = useTerminalDatabases();
   const entry = entries.find((item) => item.id === tab.dbId);
+  // Exemplo da dica com uma tabela que existe no banco escolhido.
+  const example = `SELECT * FROM ${database?.schema[0]?.name ?? 'analysts'} LIMIT 10;`;
   const { setSql, setDatabase, run, stop, addTab } = terminalStore.getState();
   const running = tab.status === 'running';
   const ready = database?.status === 'ready';
@@ -381,7 +385,7 @@ export function TerminalApp() {
             schema={database?.schema ?? []}
             label={t('terminal.editor')}
             placeholder={t('terminal.emptyHint', {
-              example: 'SELECT * FROM analysts;',
+              example,
             })}
             onChange={(sql) => setSql(tab.id, sql)}
             onRun={execute}
@@ -406,7 +410,7 @@ export function TerminalApp() {
               </div>
             </div>
           ) : (
-            <ResultArea tab={tab} database={entry} />
+            <ResultArea tab={tab} database={entry} example={example} />
           )}
         </div>
       </div>

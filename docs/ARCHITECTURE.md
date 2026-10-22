@@ -48,7 +48,9 @@ As dependências vão da UI para o núcleo, nunca ao contrário. Os stores chama
 Um store por domínio: preferências, janelas e Terminal; progresso, dossiê e notas chegam com os casos. Seletores finos evitam renders globais.
 
 - **Preferências** (idioma, tema, som) ficam no `localStorage`, com leitura e escrita protegidas: aba privada ou armazenamento bloqueado não quebram o jogo. Um script no `<head>` do `index.html` aplica o tema antes da primeira pintura, para não piscar.
-- **Progresso do jogo** vai para IndexedDB, num formato próprio com `saveVersion` e migrações. É o próximo passo depois dos casos.
+- **Progresso do jogo** vai para o IndexedDB (`src/core/save/storage.ts`) com autosave: qualquer mudança no jogo, no Terminal ou nas janelas agenda uma gravação 800 ms depois, e esconder ou fechar a aba grava na hora. O save guarda caixa de entrada, progresso dos casos, dossiê, notas, abas e histórico do Terminal e a posição das janelas; resultados de consulta não (rodam de novo).
+- **Formato do save** (`src/core/save/schema.ts`): JSON com `app`, `saveVersion` e os dados acima, validado com zod tanto ao carregar quanto ao importar um arquivo. Ao mudar o formato, a versão sobe e uma função em `migrations` converte o save anterior, um passo por vez. Saves de uma versão mais nova do jogo são recusados. O validador (e o zod) só carrega quando há um save para ler.
+- **Ajustes > Progresso**: exportar o save como arquivo, importar (com confirmação) e apagar o progresso. Sem IndexedDB (aba privada), o jogo funciona e avisa que é bom exportar.
 
 ## Shell e janelas
 
