@@ -97,6 +97,13 @@ export const saveSchema = z.object({
     evidence: z.array(evidenceSchema).max(2000),
     notes: z.record(id, z.string().max(100_000)),
     started: z.boolean(),
+    // Opcional: saves de antes do treinamento não têm o campo.
+    tutorial: z
+      .object({
+        status: z.enum(['pending', 'active', 'done', 'skipped']),
+        step: z.number().int().min(0).max(100),
+      })
+      .optional(),
   }),
   terminal: z
     .object({

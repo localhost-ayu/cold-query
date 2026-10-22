@@ -150,3 +150,61 @@ describe('game store', () => {
     expect(findEmail(case001, 'e01-contrato', 'en')?.locale).toBe('pt-BR');
   });
 });
+
+describe('training day', () => {
+  function withTutorial() {
+    const onDeliver = vi.fn();
+    const store = createGameStore([case001], {
+      onDeliver,
+      tutorialSteps: 3,
+      now: () => 1000,
+    });
+    store.getState().start();
+    return { store, onDeliver };
+  }
+  const ids = (store: ReturnType<typeof withTutorial>['store']) =>
+    store.getState().inbox.map((item) => `${item.caseId}:${item.emailId}`);
+
+  it('starts with the welcome e-mail instead of the contract', () => {
+    const { store } = withTutorial();
+    expect(ids(store)).toEqual(['tutorial:welcome']);
+    expect(store.getState().tutorial).toEqual({ status: 'pending', step: 0 });
+  });
+
+  it('skipping delivers the contract right away, once', () => {
+    const { store } = withTutorial();
+    store.getState().skipTutorial();
+    store.getState().skipTutorial();
+    expect(ids(store)).toEqual(['001:e01-contrato', 'tutorial:welcome']);
+    expect(store.getState().tutorial.status).toBe('skipped');
+  });
+
+  it('advances one exercise at a time and finishes with the contract', () => {
+    const { store } = withTutorial();
+    store.getState().startTutorial();
+    store.getState().completeTutorialStep(1); // fora de ordem: ignorado
+    expect(store.getState().tutorial.step).toBe(0);
+    store.getState().completeTutorialStep(0);
+    store.getState().completeTutorialStep(1);
+    expect(ids(store)).toEqual(['tutorial:welcome']);
+    store.getState().completeTutorialStep(2);
+    expect(store.getState().tutorial).toEqual({ status: 'done', step: 3 });
+    expect(ids(store)).toEqual([
+      '001:e01-contrato',
+      'tutorial:done',
+      'tutorial:welcome',
+    ]);
+  });
+
+  it('treats older saves without the field as already past the training', () => {
+    const { store } = withTutorial();
+    store.getState().hydrate({
+      cases: {},
+      inbox: [],
+      evidence: [],
+      notes: {},
+      started: true,
+    });
+    expect(store.getState().tutorial.status).toBe('skipped');
+  });
+});
