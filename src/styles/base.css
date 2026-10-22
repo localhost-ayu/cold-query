@@ -146,3 +146,15 @@ p {
     animation-duration: 1.6s;
   }
 }
+
+/* O reset do Tailwind tira marcadores de toda lista; em texto corrido eles voltam. */
+.message__body ol,
+.help__steps,
+.help__hints,
+.report__hints ol {
+  list-style: decimal;
+}
+
+.message__body ul {
+  list-style: disc;
+}

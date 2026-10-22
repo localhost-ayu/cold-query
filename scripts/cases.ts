@@ -50,12 +50,13 @@ function splitFrontmatter(text: string, file: string) {
 
 /**
  * Parágrafos terminados em {#id} viram âncoras que o jogador pode fixar:
- * <p id="id" data-anchor="id">. Devolve o HTML e a lista de âncoras.
+ * <p id="id" data-anchor="id">. O `(?!<\/p>)` impede que um parágrafo sem
+ * âncora seja engolido junto com o seguinte. Devolve o HTML e as âncoras.
  */
 function renderSite(body: string): { html: string; anchors: string[] } {
   const anchors: string[] = [];
   const html = (marked.parse(body, { async: false }) as string).replace(
-    /<p>([\s\S]*?)\s*\{#([\w-]+)\}<\/p>/g,
+    /<p>((?:(?!<\/p>)[\s\S])*?)\s*\{#([\w-]+)\}<\/p>/g,
     (_, content: string, anchor: string) => {
       anchors.push(anchor);
       return `<p id="${anchor}" data-anchor="${anchor}">${content}</p>`;
