@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { appIds } from '@/store/window-store';
+
 import { CURRENT_SAVE_VERSION, MAX_SAVE_BYTES } from './version';
 
 /**
@@ -59,7 +61,7 @@ const historySchema = z.object({
 });
 
 const windowSchema = z.object({
-  id: z.enum(['mail', 'terminal', 'dossier', 'notes', 'help', 'settings']),
+  id: z.enum(appIds),
   x: z.number(),
   y: z.number(),
   width: z.number().positive(),

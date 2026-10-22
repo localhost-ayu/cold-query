@@ -5,6 +5,8 @@ export const appIds = [
   'mail',
   'terminal',
   'dossier',
+  'browser',
+  'files',
   'notes',
   'help',
   'settings',
@@ -64,9 +66,11 @@ export const MIN_HEIGHT = 240;
 const defaultBounds: Record<AppId, Bounds> = {
   mail: { x: 72, y: 56, width: 820, height: 620 },
   terminal: { x: 120, y: 58, width: 1040, height: 640 },
-  dossier: { x: 300, y: 92, width: 720, height: 520 },
-  notes: { x: 250, y: 130, width: 620, height: 460 },
-  help: { x: 180, y: 100, width: 660, height: 500 },
+  dossier: { x: 300, y: 80, width: 760, height: 600 },
+  browser: { x: 200, y: 70, width: 900, height: 620 },
+  files: { x: 260, y: 110, width: 760, height: 500 },
+  notes: { x: 280, y: 90, width: 700, height: 560 },
+  help: { x: 180, y: 70, width: 860, height: 620 },
   settings: { x: 340, y: 90, width: 580, height: 620 },
 };
 
