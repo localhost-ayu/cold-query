@@ -11,16 +11,16 @@ pacotes de caso ──► validação ──► estado do jogo ──► apps do
 
 ## Camadas
 
-| Pasta          | O que faz                                               | O que não pode conhecer  |
-| -------------- | ------------------------------------------------------- | ------------------------ |
-| `src/main.tsx` | ponto de entrada: monta o desktop                       | regras de caso           |
-| `src/os`       | shell: top bar, dock, janelas, tema, áudio, i18n        | respostas dos casos      |
-| `src/apps`     | Terminal, Ajustes e, depois, Mail, Dossiê, Notas, Ajuda | persistência concreta    |
-| `src/core`     | SQL, i18n, contratos de caso, matchers, veredito        | React e Zustand          |
-| `src/store`    | estado e comandos (Zustand)                             | DOM e detalhes do SQLite |
-| `src/content`  | conteúdo que acompanha o jogo (base de treino)          | código de UI             |
-| `cases/`       | casos declarativos: JSON, Markdown e SQL                | código executável        |
-| `scripts/`     | tarefas de build                                        | runtime do jogador       |
+| Pasta          | O que faz                                                           | O que não pode conhecer  |
+| -------------- | ------------------------------------------------------------------- | ------------------------ |
+| `src/main.tsx` | ponto de entrada: monta o desktop                                   | regras de caso           |
+| `src/os`       | shell: top bar, dock, janelas, tema, áudio, i18n                    | respostas dos casos      |
+| `src/apps`     | Mail, Terminal, Dossiê, Navegador, Arquivos, Notas, Ajuda e Ajustes | persistência concreta    |
+| `src/core`     | SQL, i18n, contratos de caso, matchers, veredito                    | React e Zustand          |
+| `src/store`    | estado e comandos (Zustand)                                         | DOM e detalhes do SQLite |
+| `src/content`  | conteúdo que acompanha o jogo (base de treino)                      | código de UI             |
+| `cases/`       | casos declarativos: JSON, Markdown e SQL                            | código executável        |
+| `scripts/`     | tarefas de build                                                    | runtime do jogador       |
 
 As dependências vão da UI para o núcleo, nunca ao contrário. Os stores chamam funções puras de `src/core`; Worker e armazenamento ficam atrás de adaptadores, e por isso dá para testar tudo com dublês.
 
@@ -33,6 +33,13 @@ As dependências vão da UI para o núcleo, nunca ao contrário. Os stores chama
 - **Somente leitura em três camadas.** (1) `guard.ts` recusa `ATTACH`, `DETACH`, `VACUUM` e pragmas de escrita antes do envio, só para dar uma mensagem clara. (2) Depois de rodar o script do caso, o banco recebe `PRAGMA query_only = ON`. (3) Um _authorizer_ do SQLite nega `ATTACH`, `DETACH` e qualquer pragma fora da lista de leitura, e `sqlite3_limit` limita strings e blobs a 8 MiB. A camada 1 é conveniência; a segurança está nas camadas 2 e 3.
 - **Tempo e tamanho.** Cada consulta tem 5 s. Passou disso, o worker é encerrado e um novo nasce no pedido seguinte, reabrindo os bancos a partir dos scripts guardados. O botão _Interromper_ faz o mesmo. Resultados param em 1000 linhas, com aviso.
 - **Erros traduzidos.** `errors.ts` transforma a mensagem do SQLite num código (`noTable`, `syntax`, `timeout`...) com parâmetros; a UI mostra o texto no idioma do jogador e a mensagem original como detalhe.
+
+## Apps
+
+- **Navegador** (`src/apps/browser`): só abre páginas `.example` dos casos aceitos. Cada página vira um documento num `<iframe sandbox="allow-same-origin">`: sem `allow-scripts`, nada da página executa, e o jogo ainda alcança o DOM para ligar links internos e os botões "Fixar no dossiê" dos parágrafos com âncora. O HTML passa pelo DOMPurify antes. Endereços e histórico ficam em `src/core/browser` e `src/store/browser-store.ts`.
+- **Arquivos**: lista os bancos (treino e casos aceitos) e as páginas da intranet; abrir leva ao Terminal ou ao Navegador.
+- **Notas**: um caderno Markdown por caso, mais um geral. A prévia carrega o `marked` sob demanda.
+- **Ajuda**: guia de SQL com um tópico por conceito do currículo, liberado conforme os contratos; os exemplos abrem numa aba nova do Terminal, na base de treino. Também traz como jogar, as dicas já reveladas e os atalhos.
 
 ## Casos e resolução
 

@@ -6,11 +6,24 @@ import type { AppId } from '@/store/window-store';
 import { DossierApp } from './dossier/DossierApp';
 import { appIcons } from './icons';
 import { MailApp } from './mail/MailApp';
-import { PlaceholderApp } from './PlaceholderApp';
 import { SettingsApp } from './settings/SettingsApp';
 import { TerminalLoading } from './terminal/TerminalLoading';
 
-// O Terminal traz CodeMirror e o SQLite: só baixa quando a janela abre.
+// Apps que não abrem no boot só baixam quando a janela abre. O Terminal é o
+// maior deles (CodeMirror e SQLite).
+const BrowserApp = lazy(() =>
+  import('./browser/BrowserApp').then((m) => ({ default: m.BrowserApp })),
+);
+const FilesApp = lazy(() =>
+  import('./files/FilesApp').then((m) => ({ default: m.FilesApp })),
+);
+const NotesApp = lazy(() =>
+  import('./notes/NotesApp').then((m) => ({ default: m.NotesApp })),
+);
+const HelpApp = lazy(() =>
+  import('./help/HelpApp').then((m) => ({ default: m.HelpApp })),
+);
+
 const TerminalApp = lazy(() =>
   import('./terminal/TerminalApp').then((module) => ({
     default: module.TerminalApp,
@@ -34,16 +47,10 @@ export const apps: AppDefinition[] = [
     fallback: TerminalLoading,
   },
   { id: 'dossier', icon: appIcons.dossier, component: DossierApp },
-  {
-    id: 'notes',
-    icon: appIcons.notes,
-    component: () => <PlaceholderApp appId="notes" />,
-  },
-  {
-    id: 'help',
-    icon: appIcons.help,
-    component: () => <PlaceholderApp appId="help" />,
-  },
+  { id: 'browser', icon: appIcons.browser, component: BrowserApp },
+  { id: 'files', icon: appIcons.files, component: FilesApp },
+  { id: 'notes', icon: appIcons.notes, component: NotesApp },
+  { id: 'help', icon: appIcons.help, component: HelpApp },
   { id: 'settings', icon: appIcons.settings, component: SettingsApp },
 ];
 

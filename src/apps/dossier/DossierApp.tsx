@@ -22,15 +22,20 @@ function EvidenceCard({
   const t = useT();
   const locale = useLocale();
   const count = evidence.rows.length;
+  // Trecho de site: guarda [url, texto] na primeira linha.
+  const isSite = evidence.source === 'site';
+  const [url, passage] = (evidence.rows[0] ?? []) as [string?, string?];
 
   return (
     <article className="evidence">
       <header className="evidence__header">
         <PushPin weight="fill" aria-hidden className="evidence__pin" />
         <span>
-          {count === 1
-            ? t('terminal.rowsOne')
-            : t('terminal.rowsMany', { count })}
+          {isSite
+            ? t('dossier.passage')
+            : count === 1
+              ? t('terminal.rowsOne')
+              : t('terminal.rowsMany', { count })}
         </span>
         <time dateTime={evidence.pinnedAt}>
           {t('dossier.pinnedAt', {
@@ -63,39 +68,46 @@ function EvidenceCard({
         </details>
       ) : null}
 
-      <div
-        className="evidence__table"
-        tabIndex={0}
-        role="region"
-        aria-label={t('dossier.evidence', { n: position })}
-      >
-        <table>
-          <thead>
-            <tr>
-              {evidence.columns.map((column, index) => (
-                <th key={`${column}-${index}`} scope="col">
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {evidence.rows.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {row.map((cell, cellIndex) => (
-                  <td
-                    key={cellIndex}
-                    data-null={cell === null || undefined}
-                    data-number={typeof cell === 'number' || undefined}
-                  >
-                    {cell === null ? 'NULL' : String(cell)}
-                  </td>
+      {isSite ? (
+        <blockquote className="evidence__quote">
+          <p>{passage}</p>
+          <cite>{url}</cite>
+        </blockquote>
+      ) : (
+        <div
+          className="evidence__table"
+          tabIndex={0}
+          role="region"
+          aria-label={t('dossier.evidence', { n: position })}
+        >
+          <table>
+            <thead>
+              <tr>
+                {evidence.columns.map((column, index) => (
+                  <th key={`${column}-${index}`} scope="col">
+                    {column}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {evidence.rows.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                  {row.map((cell, cellIndex) => (
+                    <td
+                      key={cellIndex}
+                      data-null={cell === null || undefined}
+                      data-number={typeof cell === 'number' || undefined}
+                    >
+                      {cell === null ? 'NULL' : String(cell)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       <label className="evidence__note">
         <span className="sr-only">{t('dossier.note')}</span>

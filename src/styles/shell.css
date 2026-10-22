@@ -795,6 +795,17 @@
   --icon-bottom: #ff7800;
   --icon-edge: #c64600;
 }
+.app-icon--browser {
+  --icon-top: #99c1f1;
+  --icon-bottom: #62a0ea;
+  --icon-edge: #1c71d8;
+}
+.app-icon--files {
+  --icon-top: #8ff0a4;
+  --icon-bottom: #57e389;
+  --icon-edge: #2ec27e;
+  --icon-glyph: #26553b;
+}
 .app-icon--notes {
   --icon-top: #f8e45c;
   --icon-bottom: #f6d32d;

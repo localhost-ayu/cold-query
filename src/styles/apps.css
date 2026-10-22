@@ -27,16 +27,6 @@
   line-height: 1.5;
 }
 
-.status-page__tag {
-  margin-top: 8px;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--button);
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 700;
-}
-
 /* ── ajustes (lista em caixa, como as preferências GNOME) ── */
 .settings {
   display: flex;

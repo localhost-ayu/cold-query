@@ -70,6 +70,7 @@ export const ptBR = {
   'dossier.countOne': '1 evidência',
   'dossier.countMany': '{count} evidências',
   'dossier.evidence': 'Evidência {n}',
+  'dossier.passage': 'Trecho de página',
   'dossier.note': 'Anotação',
   'dossier.notePlaceholder': 'Por que isto importa?',
   'dossier.remove': 'Remover do dossiê',
@@ -101,6 +102,70 @@ export const ptBR = {
   'tutorial.needTraining': 'Os exercícios usam a base de treino.',
   'tutorial.useTraining': 'Usar a base de treino',
 
+  'notes.notebook': 'Caderno',
+  'notes.general': 'Notas gerais',
+  'notes.mode': 'Modo',
+  'notes.edit': 'Editar',
+  'notes.preview': 'Visualizar',
+  'notes.editorLabel': 'Notas: {notebook}',
+  'notes.placeholder':
+    'Escreva em Markdown: # título, - listas, **negrito**, `código`.',
+  'notes.emptyTitle': 'Caderno vazio',
+  'notes.emptyBody': 'Volte para Editar e anote o que for descobrindo.',
+  'browser.back': 'Voltar',
+  'browser.forward': 'Avançar',
+  'browser.home': 'Página inicial',
+  'browser.address': 'Endereço',
+  'browser.addressPlaceholder': 'Digite um endereço .example',
+  'browser.bookmarks': 'Favoritos',
+  'browser.emptyTitle': 'Nenhuma página por aqui',
+  'browser.emptyBody':
+    'As intranets dos clientes aparecem quando você aceita um contrato.',
+  'browser.notFoundTitle': 'Página não encontrada',
+  'browser.notFoundBody':
+    'Não existe nada em {url}. Confira o endereço ou volte aos Favoritos.',
+  'browser.externalBody':
+    'O TraceOS só abre endereços .example da rede interna; {url} fica de fora.',
+  'browser.pin': 'Fixar no dossiê',
+  'browser.pinned': 'Trecho fixado no dossiê.',
+  'files.places': 'Lugares',
+  'files.databases': 'Bancos de dados',
+  'files.pages': 'Páginas da intranet',
+  'files.emptyTitle': 'Pasta vazia',
+  'files.emptyBody':
+    'Os arquivos dos clientes aparecem quando você aceita um contrato.',
+  'files.openTerminal': 'Abrir no Terminal SQL',
+  'files.openBrowser': 'Abrir no Navegador',
+  'help.contents': 'Conteúdo',
+  'help.page': 'Página da ajuda',
+  'help.how': 'Como jogar',
+  'help.hints': 'Dicas do caso',
+  'help.keys': 'Atalhos de teclado',
+  'help.guide': 'Guia de SQL',
+  'help.lockedHint': 'Liberado num contrato futuro',
+  'help.tryIt': 'Testar no Terminal',
+  'help.tryItHint': 'Abre numa aba nova, na base de treino.',
+  'help.noHints':
+    'Nenhuma dica revelada. Elas ficam no relatório de cada caso e custam estrelas.',
+  'help.keyRun': 'Executar a consulta',
+  'help.keyOverview': 'Abrir e fechar as Atividades',
+  'help.keyCycle': 'Alternar entre janelas',
+  'help.keySnap': 'Encaixar a janela à esquerda ou à direita',
+  'help.keyMaximize': 'Maximizar ou minimizar a janela',
+  'help.keyEscape': 'Fechar menus, diálogos e as Atividades',
+  'help.step1':
+    'Leia o contrato no Mail e aceite. O banco do cliente aparece no Terminal SQL.',
+  'help.step2':
+    'Investigue com consultas. O painel Schema mostra tabelas e colunas.',
+  'help.step3':
+    'Quando um resultado provar algo, marque as linhas e use Fixar no dossiê.',
+  'help.step4':
+    'No Navegador, trechos das intranets também podem ir para o dossiê.',
+  'help.step5':
+    'Responda o contrato com o relatório: as respostas possíveis aparecem conforme o dossiê as sustenta.',
+  'help.stars':
+    'Acertar de primeira e sem dicas vale 3 estrelas. A porcentagem de fatos mostra quanto do caso você encontrou, bônus incluídos.',
+
   'window.close': 'Fechar',
   'window.minimize': 'Minimizar',
   'window.maximize': 'Maximizar',
@@ -109,14 +174,11 @@ export const ptBR = {
   'app.mail': 'Mail',
   'app.terminal': 'Terminal SQL',
   'app.dossier': 'Dossiê',
+  'app.browser': 'Navegador',
+  'app.files': 'Arquivos',
   'app.notes': 'Notas',
   'app.help': 'Ajuda',
   'app.settings': 'Ajustes',
-
-  'placeholder.eyebrow': 'Ainda não instalado',
-  'placeholder.notes': 'Um caderno em Markdown para cada caso.',
-  'placeholder.help':
-    'O guia de SQL cresce junto com os casos que você resolve.',
 
   'settings.appearance': 'Aparência',
   'settings.theme': 'Tema',
