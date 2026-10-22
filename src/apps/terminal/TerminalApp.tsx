@@ -10,6 +10,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 
 import { gameStore } from '@/apps/shared/game';
+import { trainingDatabase } from '@/content/databases/training';
 import type { MessageKey } from '@/core/i18n';
 
 import { MAX_RESULT_ROWS, type QueryResult } from '@/core/sql/types';
@@ -29,6 +30,7 @@ import {
 } from './session';
 import { Sidebar } from './Sidebar';
 import { SqlEditor, type SqlEditorHandle } from './SqlEditor';
+import { TutorialBanner } from './TutorialBanner';
 
 /** Barra de abas no estilo Adwaita: só aparece quando há mais de uma consulta. */
 function TabStrip() {
@@ -377,6 +379,11 @@ export function TerminalApp() {
       />
 
       <div className="terminal__main">
+        <TutorialBanner
+          dbId={tab.dbId}
+          result={tab.status === 'done' ? tab.result : null}
+          onUseTraining={() => setDatabase(tab.id, trainingDatabase.id)}
+        />
         <div className="terminal__editor">
           <SqlEditor
             key={`${tab.id}:${locale}`}

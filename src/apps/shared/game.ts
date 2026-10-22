@@ -1,13 +1,16 @@
 import { cases, databaseLoaders } from 'virtual:cases';
 
+import { tutorialChallenges, tutorialEmails } from '@/content/tutorial';
 import type { CaseBundle, LocalizedText } from '@/core/case-schema';
 import type { Locale } from '@/core/i18n';
 import { play } from '@/os/audio';
 import {
+  TUTORIAL_CASE_ID,
   createGameStore,
   findEmail,
   useGame,
   type GameStore,
+  type InboxItem,
 } from '@/store/game-store';
 import { preferencesStore } from '@/store/preferences-store';
 import { shellStore } from '@/store/shell-store';
@@ -23,17 +26,14 @@ export const caseById = new Map(
 );
 
 export const gameStore: GameStore = createGameStore(caseBundles, {
-  onDeliver: (item, bundle) => {
-    const email = findEmail(
-      bundle,
-      item.emailId,
-      preferencesStore.getState().locale,
-    );
-    if (!email) return;
+  tutorialSteps: tutorialChallenges.length,
+  onDeliver: (item) => {
+    const mail = resolveMail(item, preferencesStore.getState().locale);
+    if (!mail) return;
     shellStore.getState().notify({
       appId: 'mail',
-      sender: email.from.name,
-      body: email.subject,
+      sender: mail.from.name,
+      body: mail.subject,
     });
     play('mail');
   },
@@ -43,6 +43,59 @@ export function useGameState<T>(
   selector: (state: ReturnType<GameStore['getState']>) => T,
 ): T {
   return useGame(gameStore, selector);
+}
+
+/** Uma mensagem pronta para o Mail, venha de um caso ou do treinamento. */
+export interface MailView {
+  from: { name: string; address: string; role: string };
+  subject: string;
+  /** Data fictícia da história (ISO com fuso). */
+  date: string;
+  html: string;
+  kind: 'brief' | 'info' | 'outcome';
+  attachments: string[];
+  /** Presente nos e-mails do treinamento. */
+  tutorial?: 'welcome' | 'done';
+}
+
+// As mensagens do treinamento chegam na manhã do primeiro contrato.
+const tutorialDates = {
+  welcome: '2026-03-16T09:30:00-03:00',
+  done: '2026-03-16T10:05:00-03:00',
+};
+
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+export function resolveMail(item: InboxItem, locale: Locale): MailView | null {
+  if (item.caseId === TUTORIAL_CASE_ID) {
+    const email = tutorialEmails[item.emailId as 'welcome' | 'done'];
+    if (!email) return null;
+    return {
+      from: { ...email.from, role: localized(email.from.role, locale) },
+      subject: localized(email.subject, locale),
+      date: tutorialDates[email.id],
+      html: email.paragraphs
+        .map(
+          (paragraph) => `<p>${escapeHtml(localized(paragraph, locale))}</p>`,
+        )
+        .join(''),
+      kind: 'info',
+      attachments: [],
+      tutorial: email.id,
+    };
+  }
+  const bundle = caseById.get(item.caseId);
+  const email = bundle ? findEmail(bundle, item.emailId, locale) : undefined;
+  if (!email) return null;
+  return {
+    from: email.from,
+    subject: email.subject,
+    date: email.date,
+    html: email.html,
+    kind: email.kind,
+    attachments: email.attachments,
+  };
 }
 
 /** Texto do caso no idioma do jogador, com pt-BR de reserva. */

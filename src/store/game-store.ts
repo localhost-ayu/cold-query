@@ -49,18 +49,34 @@ export type PinResult =
   | { ok: false; reason: 'limit' | 'inactive' };
 
 /** O que vai para o save. Ações e estado derivado ficam de fora. */
+/** Caixa de entrada do treinamento: e-mails do jogo, não de um caso. */
+export const TUTORIAL_CASE_ID = 'tutorial';
+
+export interface TutorialProgress {
+  status: 'pending' | 'active' | 'done' | 'skipped';
+  /** Próximo exercício a resolver (0 = primeiro). */
+  step: number;
+}
+
 export interface GameSnapshot {
   cases: Record<string, CaseProgress>;
   inbox: InboxItem[];
   evidence: Evidence[];
   notes: Record<string, string>;
   started: boolean;
+  tutorial: TutorialProgress;
 }
 
 interface GameState extends GameSnapshot {
   start: () => void;
+  startTutorial: () => void;
+  skipTutorial: () => void;
+  /** Marca o exercício `step` como resolvido; o último conclui o treinamento. */
+  completeTutorialStep: (step: number) => void;
   /** Restaura um save. Casos que o save não conhece começam do zero. */
-  hydrate: (snapshot: GameSnapshot) => void;
+  hydrate: (
+    snapshot: Omit<GameSnapshot, 'tutorial'> & { tutorial?: TutorialProgress },
+  ) => void;
   /** Apaga todo o progresso, como num jogo novo. */
   reset: () => void;
   readEmail: (inboxId: string) => void;
@@ -78,8 +94,14 @@ interface GameState extends GameSnapshot {
 
 export interface GameStoreOptions {
   /** Chamado a cada e-mail entregue (banner, som). */
-  onDeliver?: (item: InboxItem, bundle: CaseBundle) => void;
+  onDeliver?: (item: InboxItem) => void;
+  /** Quantos exercícios tem o treinamento. 0 desliga: o jogo começa direto no primeiro caso. */
+  tutorialSteps?: number;
   now?: () => number;
+}
+
+function freshTutorial(tutorialSteps = 1): TutorialProgress {
+  return { status: tutorialSteps > 0 ? 'pending' : 'skipped', step: 0 };
 }
 
 function freshProgress(): CaseProgress {
@@ -108,7 +130,7 @@ export function findEmail(
 
 export function createGameStore(
   bundles: CaseBundle[],
-  { onDeliver, now = Date.now }: GameStoreOptions = {},
+  { onDeliver, now = Date.now, tutorialSteps = 0 }: GameStoreOptions = {},
 ) {
   const byId = new Map(bundles.map((bundle) => [bundle.manifest.id, bundle]));
   // Ids aleatórios: continuam únicos depois de restaurar um save.
@@ -125,8 +147,11 @@ export function createGameStore(
       emailIds: string[],
       verdict?: InboxItem['verdict'],
     ) {
-      const bundle = byId.get(caseId);
-      if (!bundle || emailIds.length === 0) return;
+      if (
+        (caseId !== TUTORIAL_CASE_ID && !byId.has(caseId)) ||
+        emailIds.length === 0
+      )
+        return;
       const items = emailIds.map((emailId): InboxItem => {
         return {
           id: newId('m'),
@@ -138,7 +163,7 @@ export function createGameStore(
         };
       });
       set((state) => ({ inbox: [...items, ...state.inbox] }));
-      for (const item of items) onDeliver?.(item, bundle);
+      for (const item of items) onDeliver?.(item);
     }
 
     /** E-mails liberados por um gatilho ("caseAccepted", "emailRead:x"...), entregues uma vez só. */
@@ -162,6 +187,20 @@ export function createGameStore(
         ];
         deliver(caseId, due);
       }
+    }
+
+    /** Contrato do primeiro caso, entregue uma vez só. */
+    function deliverFirstCase() {
+      const first = [...bundles].sort(
+        (a, b) => a.manifest.order - b.manifest.order,
+      )[0];
+      if (!first) return;
+      const already = get().inbox.some(
+        (item) =>
+          item.caseId === first.manifest.id &&
+          item.emailId === first.manifest.startEmail,
+      );
+      if (!already) deliver(first.manifest.id, [first.manifest.startEmail]);
     }
 
     function patchCase(caseId: string, patch: Partial<CaseProgress>) {
@@ -196,9 +235,11 @@ export function createGameStore(
       evidence: [],
       notes: {},
       started: false,
+      tutorial: freshTutorial(tutorialSteps),
 
       hydrate: (snapshot) => {
-        const known = (caseId: string) => byId.has(caseId);
+        const known = (caseId: string) =>
+          caseId === TUTORIAL_CASE_ID || byId.has(caseId);
         // Dados de casos que não existem mais (mod removido) são descartados.
         set({
           cases: {
@@ -211,6 +252,12 @@ export function createGameStore(
           evidence: snapshot.evidence.filter((item) => known(item.caseId)),
           notes: snapshot.notes,
           started: snapshot.started,
+          // Saves de antes do treinamento: quem já tinha começado não volta para ele.
+          tutorial:
+            snapshot.tutorial ??
+            (snapshot.started
+              ? { status: 'skipped', step: 0 }
+              : freshTutorial(tutorialSteps)),
         });
       },
 
@@ -221,15 +268,43 @@ export function createGameStore(
           evidence: [],
           notes: {},
           started: false,
+          tutorial: freshTutorial(tutorialSteps),
         }),
 
       start: () => {
         if (get().started) return;
         set({ started: true });
-        const first = [...bundles].sort(
-          (a, b) => a.manifest.order - b.manifest.order,
-        )[0];
-        if (first) deliver(first.manifest.id, [first.manifest.startEmail]);
+        if (get().tutorial.status === 'pending') {
+          deliver(TUTORIAL_CASE_ID, ['welcome']);
+          return;
+        }
+        deliverFirstCase();
+      },
+
+      startTutorial: () => {
+        const { tutorial } = get();
+        if (tutorial.status !== 'pending') return;
+        set({ tutorial: { status: 'active', step: 0 } });
+      },
+
+      skipTutorial: () => {
+        const { tutorial } = get();
+        if (tutorial.status !== 'pending' && tutorial.status !== 'active')
+          return;
+        set({ tutorial: { ...tutorial, status: 'skipped' } });
+        deliverFirstCase();
+      },
+
+      completeTutorialStep: (step) => {
+        const { tutorial } = get();
+        if (tutorial.status !== 'active' || tutorial.step !== step) return;
+        if (step + 1 < tutorialSteps) {
+          set({ tutorial: { status: 'active', step: step + 1 } });
+          return;
+        }
+        set({ tutorial: { status: 'done', step: step + 1 } });
+        deliver(TUTORIAL_CASE_ID, ['done']);
+        deliverFirstCase();
       },
 
       readEmail: (inboxId) => {

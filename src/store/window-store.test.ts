@@ -72,10 +72,10 @@ describe('window store', () => {
       snap: 'right',
     });
 
-    store.getState().moveWindow('mail', 100, 100, viewport);
+    store.getState().moveWindow('mail', 100, 40, viewport);
     expect(find(store, 'mail')).toMatchObject({
       x: 100,
-      y: 100,
+      y: 40,
       width: before.width,
       height: before.height,
       snap: null,

@@ -92,6 +92,7 @@ export function createPersistence({
         evidence: g.evidence,
         notes: g.notes,
         started: g.started,
+        tutorial: g.tutorial,
       },
       terminal: {
         tabs: t.tabs.map(({ id, number, sql, dbId }) => ({

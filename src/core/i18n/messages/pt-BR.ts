@@ -32,6 +32,7 @@ export const ptBR = {
 
   'mail.inbox': 'Caixa de entrada',
   'mail.empty': 'Nenhuma mensagem.',
+  'mail.reader': 'Mensagem',
   'mail.select': 'Escolha uma mensagem para ler.',
   'mail.unread': 'Não lida',
   'mail.attachments': 'Anexos',
@@ -85,6 +86,20 @@ export const ptBR = {
   'terminal.pinLimit': 'O dossiê chegou ao limite de 100 evidências.',
   'terminal.selectRow': 'Selecionar linha {n}',
   'terminal.clearSelection': 'Limpar seleção',
+
+  'tutorial.label': 'Treinamento',
+  'tutorial.start': 'Começar treinamento',
+  'tutorial.continue': 'Continuar treinamento ({step} de {total})',
+  'tutorial.skip': 'Já sei SQL, pular',
+  'tutorial.skipShort': 'Pular treinamento',
+  'tutorial.finished': 'Treinamento concluído',
+  'tutorial.skipped': 'Treinamento pulado',
+  'tutorial.progress': 'Exercício {step} de {total}',
+  'tutorial.solvedCount': '{count} de {total} resolvidos',
+  'tutorial.showHint': 'Mostrar dica',
+  'tutorial.hideHint': 'Esconder dica',
+  'tutorial.needTraining': 'Os exercícios usam a base de treino.',
+  'tutorial.useTraining': 'Usar a base de treino',
 
   'window.close': 'Fechar',
   'window.minimize': 'Minimizar',
