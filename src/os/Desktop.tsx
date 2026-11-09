@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react';
 
 import { gameStore } from '@/apps/shared/game';
+import {
+  deliverImportedContracts,
+  loadInstalledCases,
+} from '@/apps/shared/mods';
 import { currentViewport, persistence } from '@/apps/shared/persistence';
 import { brand } from '@/config/brand';
 import { configureAudio } from '@/os/audio';
@@ -32,18 +36,24 @@ function useBoot() {
     let stopAutosave: (() => void) | undefined;
     let timer: number | undefined;
 
-    void persistence.load(currentViewport()).then((result) => {
-      if (cancelled) return;
-      if (windowStore.getState().windows.length === 0) {
-        windowStore.getState().openApp('mail', currentViewport());
-      }
-      stopAutosave = persistence.startAutosave();
-      // Jogo novo: um respiro antes do primeiro e-mail, para ele chegar depois
-      // da janela. Num save restaurado, start() não faz nada.
-      if (result !== 'restored') {
-        timer = window.setTimeout(() => gameStore.getState().start(), 900);
-      }
-    });
+    // Casos importados entram antes do save, para o progresso deles ser reconhecido.
+    void loadInstalledCases()
+      .then(() => persistence.load(currentViewport()))
+      .then((result) => {
+        if (cancelled) return;
+        if (windowStore.getState().windows.length === 0) {
+          windowStore.getState().openApp('mail', currentViewport());
+        }
+        stopAutosave = persistence.startAutosave();
+        // Jogo novo: um respiro antes do primeiro e-mail, para ele chegar depois
+        // da janela. Num save restaurado, start() não faz nada.
+        if (result !== 'restored') {
+          timer = window.setTimeout(() => {
+            gameStore.getState().start();
+            deliverImportedContracts();
+          }, 900);
+        }
+      });
 
     // Fechar ou esconder a aba grava o que estiver pendente.
     const flush = () => void persistence.flush();

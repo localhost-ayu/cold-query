@@ -19,11 +19,43 @@ import { shellStore } from '@/store/shell-store';
  * Liga o estado do jogo ao resto do TraceOS: os casos vêm do build
  * (`virtual:cases`) e cada e-mail entregue vira banner e som de e-mail.
  */
-export const caseBundles: CaseBundle[] = cases;
+export const caseBundles: CaseBundle[] = [...cases];
 
 export const caseById = new Map(
   caseBundles.map((bundle) => [bundle.manifest.id, bundle]),
 );
+
+/** Ids dos casos que vêm com o jogo; um caso importado não pode usar nenhum deles. */
+export const officialCaseIds = new Set(
+  cases.map((bundle) => bundle.manifest.id),
+);
+
+/** SQL dos bancos de casos importados, por "caso:banco". */
+const importedDatabases = new Map<string, string>();
+
+/** Põe um caso importado no jogo (ou troca a versão anterior dele). */
+export function registerCase(
+  bundle: CaseBundle,
+  databases: Record<string, { sql: string }>,
+) {
+  const id = bundle.manifest.id;
+  const index = caseBundles.findIndex((item) => item.manifest.id === id);
+  if (index >= 0) caseBundles[index] = bundle;
+  else caseBundles.push(bundle);
+  caseById.set(id, bundle);
+  for (const [dbId, { sql }] of Object.entries(databases))
+    importedDatabases.set(caseDatabaseId(id, dbId), sql);
+  gameStore.getState().addCases([bundle]);
+}
+
+export function unregisterCase(caseId: string) {
+  const index = caseBundles.findIndex((item) => item.manifest.id === caseId);
+  if (index >= 0) caseBundles.splice(index, 1);
+  caseById.delete(caseId);
+  for (const key of [...importedDatabases.keys()])
+    if (key.startsWith(`${caseId}:`)) importedDatabases.delete(key);
+  gameStore.getState().removeCase(caseId);
+}
 
 export const gameStore: GameStore = createGameStore(caseBundles, {
   tutorialSteps: tutorialChallenges.length,
@@ -108,6 +140,8 @@ export const caseDatabaseId = (caseId: string, dbId: string) =>
   `${caseId}:${dbId}`;
 
 export function loadCaseDatabase(databaseId: string): Promise<string> {
+  const imported = importedDatabases.get(databaseId);
+  if (imported !== undefined) return Promise.resolve(imported);
   const loader = databaseLoaders[databaseId];
   if (!loader)
     return Promise.reject(new Error(`banco ${databaseId} não existe`));
