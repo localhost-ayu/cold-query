@@ -8,6 +8,7 @@ import {
   type ThemePreference,
 } from '@/store/preferences-store';
 
+import { ModsSection } from './ModsSection';
 import { SavesSection } from './SavesSection';
 
 const themes: ThemePreference[] = ['system', 'light', 'dark'];
@@ -97,6 +98,8 @@ export function SettingsApp() {
           />
         </div>
       </section>
+
+      <ModsSection />
 
       <SavesSection />
     </div>

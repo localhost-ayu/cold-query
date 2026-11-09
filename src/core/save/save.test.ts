@@ -9,7 +9,7 @@ import {
   parseSave,
   type Migration,
 } from './schema';
-import { createIdbStorage } from './storage';
+import { createIdbCollection, createIdbStorage } from './storage';
 
 const valid = {
   app: 'cold-query',
@@ -106,5 +106,24 @@ describe('IndexedDB storage', () => {
 
   it('rejects when IndexedDB is not available', async () => {
     await expect(createIdbStorage(null).read()).rejects.toThrow();
+  });
+});
+
+describe('IndexedDB collections', () => {
+  it('lists, replaces and removes entries next to the autosave', async () => {
+    const cases = createIdbCollection<{ id: string; title: string }>();
+    await cases.put('901', { id: '901', title: 'A' });
+    await cases.put('901', { id: '901', title: 'B' });
+    await cases.put('902', { id: '902', title: 'C' });
+    expect((await cases.list()).map((item) => item.title).sort()).toEqual([
+      'B',
+      'C',
+    ]);
+    await cases.remove('901');
+    expect(await cases.list()).toEqual([{ id: '902', title: 'C' }]);
+    // O autosave continua no seu depósito.
+    const saves = createIdbStorage();
+    await saves.write({ ok: true });
+    expect(await saves.read()).toEqual({ ok: true });
   });
 });

@@ -147,10 +147,10 @@ Cada arquivo SQL cria e popula um banco SQLite do zero. Tabelas de domínio deve
 
 ## Empacotamento `.dbcase`
 
-É um ZIP com a estrutura acima na raiz. O importador deve rejeitar path traversal, links, arquivos inesperados, entradas compactadas excessivas, tamanho total acima do limite e schemas inválidos. Limites: 25 MiB compactado, 100 MiB expandido e 10 MiB por arquivo de texto.
+É um ZIP com a estrutura acima, na raiz ou dentro de uma única pasta. `bun run case:pack <pasta> [saida.dbcase]` valida e gera o pacote. O importador (`src/core/dbcase`) recusa caminhos absolutos, com `..` ou barra invertida, arquivos fora da estrutura, conteúdo que não seja UTF-8, mais de 500 arquivos e pacotes grandes demais: 25 MiB compactado, 100 MiB expandido, 10 MiB por JSON ou Markdown e 50 MiB por `.sql`. O tamanho declarado no zip é conferido antes de descompactar e o real, depois. Como publicar um caso: [MODDING.md](MODDING.md).
 
 ## Validação
 
-O script `validate-cases` confere JSON e frontmatter, IDs duplicados, referências, e-mails órfãos, banco e chaves primárias, todos os `verifyQuery`, hashes, matchers, opções alcançáveis e se existe pelo menos uma combinação correta alcançável. Rode com `bun run validate-cases`. O script `case:hash` (`bun run case:hash 001 who w1`) recebe caso, slot e opção e devolve `sha256(caseId|slotId|optionId)`.
+O script `validate-cases` confere, com as mesmas regras que o jogo aplica a um `.dbcase` importado (`src/core/case-schema/build.ts` e `src/core/case-validate`), JSON e frontmatter, IDs duplicados, referências, e-mails órfãos, banco e chaves primárias, todos os `verifyQuery`, hashes, matchers, opções alcançáveis e se existe pelo menos uma combinação correta alcançável. Rode com `bun run validate-cases`. O script `case:hash` (`bun run case:hash 001 who w1`) recebe caso, slot e opção e devolve `sha256(caseId|slotId|optionId)`.
 
 Um caso pode ter só pt-BR; os textos em inglês que faltarem caem no português.

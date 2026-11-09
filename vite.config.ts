@@ -34,8 +34,8 @@ function casesPlugin(): Plugin {
       for (const file of filesUnder(join(root, 'cases')))
         this.addWatchFile(file);
       const cases = loadCasesFromDisk(root);
-      const loaders = cases.flatMap(({ bundle, databases }) =>
-        Object.entries(databases).map(
+      const loaders = cases.flatMap(({ bundle, databasePaths }) =>
+        Object.entries(databasePaths).map(
           ([dbId, file]) =>
             `${JSON.stringify(`${bundle.manifest.id}:${dbId}`)}: () => import(${JSON.stringify(`/${relative(root, file)}?raw`)}).then((m) => m.default)`,
         ),

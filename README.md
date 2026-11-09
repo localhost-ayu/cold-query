@@ -36,7 +36,7 @@ The game can be embedded in an iframe (`sandbox="allow-scripts allow-same-origin
 
 ## How it is built
 
-React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwind CSS. Details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Case packages are plain JSON, Markdown and SQL, described in [docs/CASE_FORMAT.md](docs/CASE_FORMAT.md) and [docs/RESOLUTION_SYSTEM.md](docs/RESOLUTION_SYSTEM.md).
+React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwind CSS. Details in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Case packages are plain JSON, Markdown and SQL, described in [docs/CASE_FORMAT.md](docs/CASE_FORMAT.md) and [docs/RESOLUTION_SYSTEM.md](docs/RESOLUTION_SYSTEM.md). To write your own case and ship it as a `.dbcase` players can install, see [docs/MODDING.md](docs/MODDING.md) (in Portuguese).
 
 <a id="portugues"></a>
 
@@ -75,7 +75,7 @@ O jogo pode ser embutido num iframe (`sandbox="allow-scripts allow-same-origin"`
 
 ### Como é feito
 
-React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwind CSS. Detalhes em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Os casos são JSON, Markdown e SQL, descritos em [docs/CASE_FORMAT.md](docs/CASE_FORMAT.md) e [docs/RESOLUTION_SYSTEM.md](docs/RESOLUTION_SYSTEM.md).
+React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwind CSS. Detalhes em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Os casos são JSON, Markdown e SQL, descritos em [docs/CASE_FORMAT.md](docs/CASE_FORMAT.md) e [docs/RESOLUTION_SYSTEM.md](docs/RESOLUTION_SYSTEM.md). Para escrever um caso seu e distribuir como `.dbcase`, veja [docs/MODDING.md](docs/MODDING.md).
 
 </details>
 

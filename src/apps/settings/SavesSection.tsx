@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useStore } from 'zustand';
 
 import { gameStore } from '@/apps/shared/game';
+import { deliverImportedContracts } from '@/apps/shared/mods';
 import { currentViewport, persistence } from '@/apps/shared/persistence';
 import type { MessageKey } from '@/core/i18n';
 import { play } from '@/os/audio';
@@ -67,8 +68,9 @@ export function SavesSection() {
     if (action?.kind === 'reset') {
       await persistence.reset();
       setFeedback({ tone: 'ok', key: 'settings.resetDone' });
-      // Jogo novo: o primeiro contrato chega de novo.
+      // Jogo novo: o primeiro contrato (e os de casos importados) chega de novo.
       gameStore.getState().start();
+      deliverImportedContracts();
     }
   }
 

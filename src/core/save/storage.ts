@@ -9,7 +9,10 @@ export interface SaveStorage {
 }
 
 const DB_NAME = 'cold-query';
+/** Versão 2 criou o depósito dos casos importados; a atualização preserva os saves. */
+const DB_VERSION = 2;
 const STORE = 'saves';
+const CASES_STORE = 'cases';
 const KEY = 'autosave';
 
 /** Transforma um IDBRequest (baseado em eventos) numa Promise. */
@@ -22,11 +25,13 @@ function request<T>(req: IDBRequest<T>): Promise<T> {
 
 function openDatabase(factory: IDBFactory): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const req = factory.open(DB_NAME, 1);
-    // Primeira abertura (ou versão nova do banco): cria o depósito de saves.
+    const req = factory.open(DB_NAME, DB_VERSION);
+    // Primeira abertura ou versão nova do banco: cria só os depósitos que faltam.
     req.onupgradeneeded = () => {
-      if (!req.result.objectStoreNames.contains(STORE))
-        req.result.createObjectStore(STORE);
+      for (const name of [STORE, CASES_STORE]) {
+        if (!req.result.objectStoreNames.contains(name))
+          req.result.createObjectStore(name);
+      }
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
@@ -38,9 +43,8 @@ function openDatabase(factory: IDBFactory): Promise<IDBDatabase> {
  * Autosave no IndexedDB. Se o navegador não deixar (aba privada, armazenamento
  * bloqueado), as operações rejeitam e quem chama decide o que fazer.
  */
-export function createIdbStorage(
-  factory: IDBFactory | null = globalThis.indexedDB ?? null,
-): SaveStorage {
+/** Conexão compartilhada com o banco do jogo e um atalho para rodar uma operação num depósito. */
+function connect(factory: IDBFactory | null) {
   let connection: Promise<IDBDatabase> | null = null;
   const db = () => {
     if (!factory) return Promise.reject(new Error('IndexedDB indisponível'));
@@ -50,14 +54,26 @@ export function createIdbStorage(
     });
     return connection;
   };
-
-  async function run<T>(
+  return async function run<T>(
+    storeName: string,
     mode: IDBTransactionMode,
     action: (store: IDBObjectStore) => IDBRequest<T>,
   ): Promise<T> {
-    const store = (await db()).transaction(STORE, mode).objectStore(STORE);
+    const store = (await db())
+      .transaction(storeName, mode)
+      .objectStore(storeName);
     return request(action(store));
-  }
+  };
+}
+
+export function createIdbStorage(
+  factory: IDBFactory | null = globalThis.indexedDB ?? null,
+): SaveStorage {
+  const connection = connect(factory);
+  const run = <T>(
+    mode: IDBTransactionMode,
+    action: (store: IDBObjectStore) => IDBRequest<T>,
+  ) => connection(STORE, mode, action);
 
   return {
     read: async () => (await run('readonly', (s) => s.get(KEY))) ?? null,
@@ -80,6 +96,43 @@ export function createMemoryStorage(initial: unknown = null): SaveStorage {
     },
     clear: async () => {
       value = null;
+    },
+  };
+}
+
+/** Coleção chave → valor (os casos importados ficam numa assim). */
+export interface Collection<T> {
+  list(): Promise<T[]>;
+  put(key: string, value: T): Promise<void>;
+  remove(key: string): Promise<void>;
+}
+
+export function createIdbCollection<T>(
+  factory: IDBFactory | null = globalThis.indexedDB ?? null,
+  storeName: string = CASES_STORE,
+): Collection<T> {
+  const run = connect(factory);
+  return {
+    list: () =>
+      run(storeName, 'readonly', (s) => s.getAll() as IDBRequest<T[]>),
+    put: async (key, value) => {
+      await run(storeName, 'readwrite', (s) => s.put(value, key));
+    },
+    remove: async (key) => {
+      await run(storeName, 'readwrite', (s) => s.delete(key));
+    },
+  };
+}
+
+export function createMemoryCollection<T>(): Collection<T> {
+  const items = new Map<string, T>();
+  return {
+    list: async () => [...items.values()],
+    put: async (key, value) => {
+      items.set(key, structuredClone(value));
+    },
+    remove: async (key) => {
+      items.delete(key);
     },
   };
 }

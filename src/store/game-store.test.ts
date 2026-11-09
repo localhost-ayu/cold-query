@@ -208,3 +208,41 @@ describe('training day', () => {
     expect(store.getState().tutorial.status).toBe('skipped');
   });
 });
+
+describe('imported cases', () => {
+  const mod = {
+    ...case001,
+    manifest: { ...case001.manifest, id: '901', order: 901 },
+  };
+
+  it('registers a case and, after the start, delivers its contract right away', () => {
+    const { store } = setup();
+    store.getState().addCases([mod]);
+    expect(store.getState().cases['901'].status).toBe('available');
+    expect(store.getState().inbox[0]).toMatchObject({
+      caseId: '901',
+      emailId: 'e01-contrato',
+    });
+    store.getState().acceptCase('901');
+    expect(store.getState().cases['901'].status).toBe('active');
+  });
+
+  it('removing a case drops its progress, e-mails and evidence', () => {
+    const { store } = setup();
+    store.getState().addCases([mod]);
+    store.getState().acceptCase('901');
+    store.getState().pinEvidence({
+      caseId: '901',
+      source: 'query',
+      columns: ['x'],
+      rows: [[1]],
+    });
+    store.getState().removeCase('901');
+    expect(store.getState().cases['901']).toBeUndefined();
+    expect(store.getState().inbox.some((item) => item.caseId === '901')).toBe(
+      false,
+    );
+    expect(store.getState().evidence).toEqual([]);
+    expect(store.getState().cases['001']).toBeDefined();
+  });
+});

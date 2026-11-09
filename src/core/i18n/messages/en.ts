@@ -179,6 +179,37 @@ export const en: Record<keyof typeof ptBR, string> = {
   'help.stars':
     'Getting it right on the first try without hints is worth 3 stars. The facts percentage shows how much of the case you found, bonuses included.',
 
+  'mods.title': 'Cases',
+  'mods.install': 'Install case',
+  'mods.installHint':
+    'A community-made .dbcase file. It is checked before it goes in.',
+  'mods.installAction': 'Choose file',
+  'mods.byline': 'By {author} · license {license}',
+  'mods.remove': 'Remove case {id}',
+  'mods.working': 'Checking the case…',
+  'mods.installed': '“{title}” installed. Its contract is in Mail.',
+  'mods.replaced': '“{title}” updated.',
+  'mods.note':
+    'Community cases are not reviewed by Nova Perícia. The game checks their structure and that they can be solved, and never runs code from them.',
+  'mods.removeTitle': 'Remove this case?',
+  'mods.removeBody':
+    '“{title}” leaves the game along with its progress, e-mails and evidence.',
+  'mods.removeConfirm': 'Remove',
+  'mods.error.tooLarge': 'The file is larger than a case is allowed to be.',
+  'mods.error.notZip': 'That file is not a valid .dbcase.',
+  'mods.error.badPath': 'The package has a forbidden path: {detail}',
+  'mods.error.unexpectedFile':
+    'The package has a file that is not part of a case: {detail}',
+  'mods.error.notText': '{detail} is not UTF-8 text.',
+  'mods.error.tooManyFiles': 'The package has too many files.',
+  'mods.error.noCase': 'Could not find case.json in the package.',
+  'mods.error.invalid': 'The case has a format problem:',
+  'mods.error.official':
+    'Ids 001 to 099 belong to official cases. Use an id from 100 to 999 in case.json.',
+  'mods.error.unsolvable': 'The case failed the solvability check:',
+  'mods.error.storage':
+    'This browser did not allow storing the case (private window?).',
+
   'window.close': 'Close',
   'window.minimize': 'Minimize',
   'window.maximize': 'Maximize',

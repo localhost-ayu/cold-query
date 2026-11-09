@@ -117,3 +117,36 @@
 .settings__feedback--error {
   color: var(--danger);
 }
+
+.mods__icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: -3px;
+  color: var(--accent);
+}
+
+.mods__detail {
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: pre-wrap;
+}
+
+.mods__note {
+  margin: 10px 4px 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.settings__row > .pill-button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}

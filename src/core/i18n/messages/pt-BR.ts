@@ -180,6 +180,37 @@ export const ptBR = {
   'help.stars':
     'Acertar de primeira e sem dicas vale 3 estrelas. A porcentagem de fatos mostra quanto do caso você encontrou, bônus incluídos.',
 
+  'mods.title': 'Casos',
+  'mods.install': 'Instalar caso',
+  'mods.installHint':
+    'Um arquivo .dbcase feito pela comunidade. Ele é conferido antes de entrar.',
+  'mods.installAction': 'Escolher arquivo',
+  'mods.byline': 'Por {author} · licença {license}',
+  'mods.remove': 'Remover o caso {id}',
+  'mods.working': 'Conferindo o caso…',
+  'mods.installed': '“{title}” instalado. O contrato chegou no Mail.',
+  'mods.replaced': '“{title}” atualizado.',
+  'mods.note':
+    'Casos da comunidade não passam por revisão da Nova Perícia. O jogo confere a estrutura e se existe solução, e nunca executa código vindo deles.',
+  'mods.removeTitle': 'Remover este caso?',
+  'mods.removeBody':
+    '“{title}” sai do jogo junto com o progresso, os e-mails e as evidências dele.',
+  'mods.removeConfirm': 'Remover',
+  'mods.error.tooLarge': 'O arquivo passa do tamanho permitido para um caso.',
+  'mods.error.notZip': 'Esse arquivo não é um .dbcase válido.',
+  'mods.error.badPath': 'O pacote tem um caminho proibido: {detail}',
+  'mods.error.unexpectedFile':
+    'O pacote tem um arquivo que não faz parte de um caso: {detail}',
+  'mods.error.notText': '{detail} não é texto UTF-8.',
+  'mods.error.tooManyFiles': 'O pacote tem arquivos demais.',
+  'mods.error.noCase': 'Não achei o case.json no pacote.',
+  'mods.error.invalid': 'O caso tem um problema de formato:',
+  'mods.error.official':
+    'Os ids de 001 a 099 são dos casos oficiais. Use um id de 100 a 999 no case.json.',
+  'mods.error.unsolvable': 'O caso não passou na conferência de solução:',
+  'mods.error.storage':
+    'Este navegador não deixou guardar o caso (aba privada?).',
+
   'window.close': 'Fechar',
   'window.minimize': 'Minimizar',
   'window.maximize': 'Maximizar',

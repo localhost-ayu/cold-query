@@ -69,6 +69,10 @@ export interface GameSnapshot {
 
 interface GameState extends GameSnapshot {
   start: () => void;
+  /** Registra casos importados. Com o jogo já começado, o contrato deles chega na hora. */
+  addCases: (bundles: CaseBundle[]) => void;
+  /** Tira um caso importado: progresso, e-mails e evidências dele somem. */
+  removeCase: (caseId: string) => void;
   startTutorial: () => void;
   skipTutorial: () => void;
   /** Marca o exercício `step` como resolvido; o último conclui o treinamento. */
@@ -129,9 +133,11 @@ export function findEmail(
 }
 
 export function createGameStore(
-  bundles: CaseBundle[],
+  initialBundles: CaseBundle[],
   { onDeliver, now = Date.now, tutorialSteps = 0 }: GameStoreOptions = {},
 ) {
+  // Casos oficiais e, depois, os importados (mods). Mutável: addCases/removeCase.
+  const bundles = [...initialBundles];
   const byId = new Map(bundles.map((bundle) => [bundle.manifest.id, bundle]));
   // Ids aleatórios: continuam únicos depois de restaurar um save.
   const newId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
@@ -279,6 +285,49 @@ export function createGameStore(
           return;
         }
         deliverFirstCase();
+      },
+
+      addCases: (added) => {
+        for (const bundle of added) {
+          const id = bundle.manifest.id;
+          const index = bundles.findIndex((item) => item.manifest.id === id);
+          if (index >= 0) bundles[index] = bundle;
+          else bundles.push(bundle);
+          byId.set(id, bundle);
+        }
+        set((state) => ({
+          cases: {
+            ...state.cases,
+            ...Object.fromEntries(
+              added
+                .filter((bundle) => !state.cases[bundle.manifest.id])
+                .map((bundle) => [bundle.manifest.id, freshProgress()]),
+            ),
+          },
+        }));
+        if (!get().started) return;
+        for (const bundle of added) {
+          const { id, startEmail } = bundle.manifest;
+          const delivered = get().inbox.some(
+            (item) => item.caseId === id && item.emailId === startEmail,
+          );
+          if (!delivered) deliver(id, [startEmail]);
+        }
+      },
+
+      removeCase: (caseId) => {
+        const index = bundles.findIndex((item) => item.manifest.id === caseId);
+        if (index >= 0) bundles.splice(index, 1);
+        byId.delete(caseId);
+        set((state) => {
+          const cases = { ...state.cases };
+          delete cases[caseId];
+          return {
+            cases,
+            inbox: state.inbox.filter((item) => item.caseId !== caseId),
+            evidence: state.evidence.filter((item) => item.caseId !== caseId),
+          };
+        });
       },
 
       startTutorial: () => {
