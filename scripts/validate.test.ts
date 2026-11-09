@@ -59,6 +59,15 @@ describe('case 001', () => {
   });
 });
 
+describe('site anchors', () => {
+  it('wrap exactly the paragraph that ends with {#id}', () => {
+    const page = case001.bundle.sites.find((s) => s.id === 'politica-acesso')!;
+    const almox = page.html.match(/<p id="p-almox"[^>]*>([\s\S]*?)<\/p>/)?.[1];
+    expect(almox?.startsWith('O almoxarifado de TI')).toBe(true);
+    expect(page.html).toContain('<p>Revisão de janeiro de 2026.');
+  });
+});
+
 describe('validator', () => {
   it('catches a fact whose reference query does not prove it', async () => {
     const broken = structuredClone(case001);

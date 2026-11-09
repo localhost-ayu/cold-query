@@ -10,6 +10,8 @@ export const brand = {
     repository: 'https://github.com/localhost-ayu/cold-query',
     /** Pedidos de licença comercial. */
     commercial: 'https://github.com/localhost-ayu/cold-query/issues',
+    commercialEmail: 'natha@grazzioli.dev',
+    site: 'https://coldquery.grazzioli.dev',
     /** Vazio enquanto não houver página de apoio; a tela Sobre esconde o botão. */
     donation: '',
   },

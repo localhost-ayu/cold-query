@@ -1,7 +1,7 @@
 import { cases, databaseLoaders } from 'virtual:cases';
 
 import { tutorialChallenges, tutorialEmails } from '@/content/tutorial';
-import type { CaseBundle, LocalizedText } from '@/core/case-schema';
+import type { CaseBundle, CaseSite, LocalizedText } from '@/core/case-schema';
 import type { Locale } from '@/core/i18n';
 import { play } from '@/os/audio';
 import {
@@ -112,4 +112,24 @@ export function loadCaseDatabase(databaseId: string): Promise<string> {
   if (!loader)
     return Promise.reject(new Error(`banco ${databaseId} não existe`));
   return loader();
+}
+
+/** Página de intranet de um caso, no idioma pedido (com pt-BR de reserva). */
+export interface SiteEntry {
+  caseId: string;
+  site: CaseSite;
+}
+
+export function sitesFor(caseIds: string[], locale: Locale): SiteEntry[] {
+  return caseIds.flatMap((caseId) => {
+    const bundle = caseById.get(caseId);
+    if (!bundle) return [];
+    const ids = [...new Set(bundle.sites.map((site) => site.id))];
+    return ids.flatMap((id) => {
+      const site =
+        bundle.sites.find((s) => s.id === id && s.locale === locale) ??
+        bundle.sites.find((s) => s.id === id && s.locale === 'pt-BR');
+      return site ? [{ caseId, site }] : [];
+    });
+  });
 }

@@ -1,5 +1,7 @@
 import {
+  Compass,
   EnvelopeSimple,
+  FolderSimple,
   Gear,
   Lifebuoy,
   Notebook,
@@ -14,6 +16,8 @@ export const appIcons: Record<AppId, Icon> = {
   mail: EnvelopeSimple,
   terminal: TerminalWindow,
   dossier: PushPin,
+  browser: Compass,
+  files: FolderSimple,
   notes: Notebook,
   help: Lifebuoy,
   settings: Gear,

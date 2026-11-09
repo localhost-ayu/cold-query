@@ -11,6 +11,8 @@ Code available · Free for noncommercial use · Mods welcome
 Everything happens inside **TraceOS**, a fictional GNOME-flavored operating system that runs in the browser: windows, Activities overview, mail, notes. SQLite runs in a Web Worker on your machine. There are no accounts, no servers and nothing to install.
 
 > **Status:** early development. Case 001 is playable end to end: Mail, SQL Terminal and case board. Progress is saved in the browser and can be exported.
+>
+> Play it at **[coldquery.grazzioli.dev](https://coldquery.grazzioli.dev)**.
 
 ## Running locally
 
@@ -48,6 +50,8 @@ React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwin
 Tudo acontece dentro do **TraceOS**, um sistema operacional fictício, com cara de GNOME, que roda no navegador: janelas, Atividades, e-mail, notas. O SQLite roda num Web Worker na sua máquina. Não há conta, servidor nem instalação.
 
 > **Estado:** início do desenvolvimento. O caso 001 já dá para jogar do começo ao fim: Mail, Terminal SQL e Dossiê. O progresso fica salvo no navegador e pode ser exportado.
+>
+> Jogue em **[coldquery.grazzioli.dev](https://coldquery.grazzioli.dev)**.
 
 ### Rodando localmente
 
@@ -83,7 +87,7 @@ Cold Query is **code available** under the [PolyForm Noncommercial License 1.0.0
 
 - **Allowed, for noncommercial purposes:** clone it to study, play it, run it on your own site, republish it, modify it, build mods and new cases, and share all of that.
 - **Credit:** whatever you share must carry the license (or its URL) and the `Required Notice:` lines from [NOTICE](NOTICE), crediting Nathã Grazzioli Botelho and this repository. Modifying the game does not include removing the credit.
-- **Commercial use** (selling it or its mods, paid or ad-supported hosting, monetized adaptations) requires a separate license and the author's prior written authorization, with terms agreed before any commercial use. [Open an issue](https://github.com/localhost-ayu/cold-query/issues) describing what you have in mind. Opening an issue does not grant permission.
+- **Commercial use** (selling it or its mods, paid or ad-supported hosting, monetized adaptations) requires a separate license and the author's prior written authorization, with terms agreed before any commercial use. Write to [natha@grazzioli.dev](mailto:natha@grazzioli.dev) or [open an issue](https://github.com/localhost-ayu/cold-query/issues) describing what you have in mind. Getting in touch does not grant permission.
 - **Third-party software, fonts and icons** keep their own licenses; see [CREDITS.md](CREDITS.md).
 
 The English text in [LICENSE](LICENSE) is the license; these summaries are not.
@@ -94,7 +98,7 @@ O Cold Query é **code available** sob a [PolyForm Noncommercial License 1.0.0](
 
 - **Permitido, sem fins comerciais:** clonar para estudar, jogar, rodar no seu site, republicar, modificar, criar mods e casos novos, e compartilhar tudo isso.
 - **Crédito:** o que você compartilhar precisa levar a licença (ou o endereço dela) e as linhas `Required Notice:` do [NOTICE](NOTICE), citando Nathã Grazzioli Botelho e este repositório. Modificar o jogo não inclui remover o crédito.
-- **Uso comercial** (vender o jogo ou mods, hospedagem paga ou com anúncios, adaptações monetizadas) exige licença separada e autorização prévia por escrito do autor, com condições acertadas antes de qualquer uso comercial. [Abra uma issue](https://github.com/localhost-ayu/cold-query/issues) contando o que você pretende. Abrir a issue não concede permissão.
+- **Uso comercial** (vender o jogo ou mods, hospedagem paga ou com anúncios, adaptações monetizadas) exige licença separada e autorização prévia por escrito do autor, com condições acertadas antes de qualquer uso comercial. Escreva para [natha@grazzioli.dev](mailto:natha@grazzioli.dev) ou [abra uma issue](https://github.com/localhost-ayu/cold-query/issues) contando o que você pretende. Entrar em contato não concede permissão.
 - **Software, fontes e ícones de terceiros** mantêm as próprias licenças; veja [CREDITS.md](CREDITS.md).
 
 O texto em inglês de [LICENSE](LICENSE) é a licença; estes resumos não são.
