@@ -156,5 +156,16 @@ export function readSchema(db: Database): SchemaTable[] {
         type: String(type || ''),
         primaryKey: Number(pk) > 0,
       })),
+    // "to" vem nulo quando o REFERENCES omite a coluna: aí vale a chave primária.
+    foreignKeys: db
+      .selectArrays(
+        'SELECT "from", "table", "to" FROM pragma_foreign_key_list(?) ORDER BY id, seq',
+        [name],
+      )
+      .map(([column, table, to]) => ({
+        column: String(column),
+        table: String(table),
+        refColumn: to === null ? 'id' : String(to),
+      })),
   }));
 }
