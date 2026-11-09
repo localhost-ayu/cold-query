@@ -37,6 +37,8 @@ As dependências vão da UI para o núcleo, nunca ao contrário. Os stores chama
 ## Apps
 
 - **Navegador** (`src/apps/browser`): só abre páginas `.example` dos casos aceitos. Cada página vira um documento num `<iframe sandbox="allow-same-origin">`: sem `allow-scripts`, nada da página executa, e o jogo ainda alcança o DOM para ligar links internos e os botões "Fixar no dossiê" dos parágrafos com âncora. O HTML passa pelo DOMPurify antes. Endereços e histórico ficam em `src/core/browser` e `src/store/browser-store.ts`.
+- **Terminal**: alterna entre Consultas e Diagrama. O diagrama mostra um cartão por tabela e uma seta para cada chave estrangeira (`pragma_foreign_key_list`); `src/core/diagram` põe as tabelas que apontam à esquerda, as apontadas no meio e as soltas à direita, para as setas não cruzarem cartões.
+- **Dossiê**: alterna entre Quadro e Linha do tempo. `src/core/timeline` tira de cada linha fixada as datas e horas (data e hora juntas, ou data com horas em colunas separadas, como no ponto) e as põe em ordem, agrupadas por dia. Só organiza o que foi fixado; não indica o que é relevante.
 - **Arquivos**: lista os bancos (treino e casos aceitos) e as páginas da intranet; abrir leva ao Terminal ou ao Navegador.
 - **Notas**: um caderno Markdown por caso, mais um geral. A prévia carrega o `marked` sob demanda.
 - **Ajuda**: guia de SQL com um tópico por conceito do currículo, liberado conforme os contratos; os exemplos abrem numa aba nova do Terminal, na base de treino. Também traz como jogar, as dicas já reveladas e os atalhos.

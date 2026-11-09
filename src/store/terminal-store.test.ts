@@ -19,7 +19,7 @@ function fakeEngine(
   overrides: Partial<InterruptibleEngine> = {},
 ): InterruptibleEngine {
   return {
-    open: vi.fn(async () => [{ name: 't', columns: [] }]),
+    open: vi.fn(async () => [{ name: 't', columns: [], foreignKeys: [] }]),
     exec: vi.fn(async () => result),
     schema: vi.fn(async () => []),
     close: vi.fn(async () => {}),

@@ -21,9 +21,17 @@ export interface SchemaColumn {
   primaryKey: boolean;
 }
 
+/** Coluna desta tabela que aponta para a coluna de outra (REFERENCES). */
+export interface SchemaForeignKey {
+  column: string;
+  table: string;
+  refColumn: string;
+}
+
 export interface SchemaTable {
   name: string;
   columns: SchemaColumn[];
+  foreignKeys: SchemaForeignKey[];
 }
 
 export type SqlErrorCode =

@@ -9,6 +9,9 @@ import {
 } from '@/apps/shared/game';
 import type { Evidence } from '@/core/resolution';
 import { useLocale, useT } from '@/os/i18n';
+import { WindowHeaderItems } from '@/os/windows/header-slots';
+
+import { Timeline } from './Timeline';
 
 function EvidenceCard({
   evidence,
@@ -136,6 +139,7 @@ export function DossierApp() {
   const cases = useGameState((state) => state.cases);
   const allEvidence = useGameState((state) => state.evidence);
   const [removed, setRemoved] = useState<Evidence | null>(null);
+  const [view, setView] = useState<'board' | 'timeline'>('board');
   const undoTimer = useRef<number | undefined>(undefined);
 
   // O caso em andamento (ou o último resolvido), em ordem de caso.
@@ -166,7 +170,12 @@ export function DossierApp() {
   }
 
   return (
-    <div className="dossier">
+    <div
+      className="dossier"
+      tabIndex={0}
+      role="region"
+      aria-label={t('dossier.region')}
+    >
       <header className="dossier__header">
         <div>
           <p className="dossier__client">{bundle.manifest.client}</p>
@@ -179,7 +188,29 @@ export function DossierApp() {
         </span>
       </header>
 
-      {evidence.length === 0 ? (
+      <WindowHeaderItems side="end">
+        <div
+          className="segmented"
+          role="tablist"
+          aria-label={t('dossier.view')}
+        >
+          {(['board', 'timeline'] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              role="tab"
+              aria-selected={view === value}
+              onClick={() => setView(value)}
+            >
+              {t(`dossier.view.${value}`)}
+            </button>
+          ))}
+        </div>
+      </WindowHeaderItems>
+
+      {view === 'timeline' && evidence.length > 0 ? (
+        <Timeline evidence={evidence} />
+      ) : evidence.length === 0 ? (
         <div className="status-page status-page--inline">
           <PushPin
             weight="duotone"

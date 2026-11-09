@@ -30,6 +30,7 @@ import {
 } from './session';
 import { Sidebar } from './Sidebar';
 import { SqlEditor, type SqlEditorHandle } from './SqlEditor';
+import { SchemaDiagram } from './SchemaDiagram';
 import { TutorialBanner } from './TutorialBanner';
 
 /** Barra de abas no estilo Adwaita: só aparece quando há mais de uma consulta. */
@@ -289,6 +290,7 @@ export function TerminalApp() {
   );
   const history = useTerminal(terminalStore, (state) => state.history);
   const entries = useTerminalDatabases();
+  const [view, setView] = useState<'queries' | 'diagram'>('queries');
   const entry = entries.find((item) => item.id === tab.dbId);
   // Exemplo da dica com uma tabela que existe no banco escolhido.
   const example = `SELECT * FROM ${database?.schema[0]?.name ?? 'analysts'} LIMIT 10;`;
@@ -343,7 +345,24 @@ export function TerminalApp() {
         </select>
       </WindowHeaderItems>
       <WindowHeaderItems side="end">
-        {running ? (
+        <div
+          className="segmented"
+          role="tablist"
+          aria-label={t('terminal.view')}
+        >
+          {(['queries', 'diagram'] as const).map((value) => (
+            <button
+              key={value}
+              type="button"
+              role="tab"
+              aria-selected={view === value}
+              onClick={() => setView(value)}
+            >
+              {t(`terminal.view.${value}`)}
+            </button>
+          ))}
+        </div>
+        {view === 'diagram' ? null : running ? (
           <button
             type="button"
             className="pill-button pill-button--destructive"
@@ -384,7 +403,13 @@ export function TerminalApp() {
           result={tab.status === 'done' ? tab.result : null}
           onUseTraining={() => setDatabase(tab.id, trainingDatabase.id)}
         />
-        <div className="terminal__editor">
+        {view === 'diagram' ? (
+          <div className="terminal__diagram">
+            <SchemaDiagram schema={database?.schema ?? []} />
+          </div>
+        ) : null}
+        {/* O editor fica montado no diagrama (só escondido) para não perder cursor nem desfazer. */}
+        <div className="terminal__editor" hidden={view === 'diagram'}>
           <SqlEditor
             key={`${tab.id}:${locale}`}
             ref={editor}
@@ -398,7 +423,7 @@ export function TerminalApp() {
             onRun={execute}
           />
         </div>
-        <div className="terminal__results">
+        <div className="terminal__results" hidden={view === 'diagram'}>
           {database?.status === 'loading' ? (
             <div className="result-empty" role="status">
               <span className="spinner" aria-hidden />

@@ -545,3 +545,151 @@
   height: 30px;
   font-size: 13px;
 }
+
+/* ── diagrama das tabelas ────────────────────────────────── */
+.terminal__diagram {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--surface-raised);
+}
+
+.terminal__editor[hidden],
+.terminal__results[hidden] {
+  display: none;
+}
+
+.diagram {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  padding: 24px;
+}
+
+.diagram__links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.diagram__links path {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 2;
+  transition: stroke var(--dur-fast);
+}
+
+.diagram__links path[data-active] {
+  stroke: var(--accent-bg);
+  stroke-width: 2.5;
+}
+
+.diagram__links marker path {
+  fill: var(--text-muted);
+  stroke: none;
+}
+
+.diagram__grid {
+  position: relative;
+  display: grid;
+  /* Três colunas fixas (aponta / é apontada / solta); dense sobe os cartões. */
+  grid-template-columns: repeat(3, minmax(220px, 280px));
+  grid-auto-flow: row dense;
+  gap: 40px 96px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.diagram__table {
+  align-self: start;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--line-strong),
+    0 2px 6px rgb(0 0 6 / 8%);
+  transition: opacity var(--dur-fast);
+}
+
+.diagram__table[data-related] {
+  box-shadow:
+    0 0 0 2px var(--accent-bg),
+    0 4px 12px rgb(0 0 6 / 12%);
+}
+
+.diagram__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--headerbar);
+  box-shadow: inset 0 -1px var(--line);
+  color: var(--text-strong);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.diagram__title svg {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+
+.diagram__columns {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.diagram__columns li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.diagram__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.diagram__pk {
+  width: 11px;
+  height: 11px;
+  color: var(--warning);
+}
+
+.diagram__type {
+  color: var(--text-faint);
+}
+
+.diagram__ref {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.diagram__ref svg {
+  width: 11px;
+  height: 11px;
+}
+
+.diagram__legend {
+  position: relative;
+  max-width: 560px;
+  margin: 28px 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}

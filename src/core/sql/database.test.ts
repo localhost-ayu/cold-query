@@ -131,6 +131,18 @@ describe('readSchema', () => {
   });
 });
 
+describe('readSchema foreign keys', () => {
+  it('lists REFERENCES between tables', () => {
+    const contracts = readSchema(db).find(
+      (table) => table.name === 'contracts',
+    );
+    expect(contracts?.foreignKeys).toEqual([
+      { column: 'analyst_id', table: 'analysts', refColumn: 'id' },
+    ]);
+    expect(readSchema(db)[0].foreignKeys).toEqual([]);
+  });
+});
+
 describe('splitStatements', () => {
   it('splits on semicolons outside literals', () => {
     expect(splitStatements("SELECT ';'; SELECT 2;;")).toEqual([
