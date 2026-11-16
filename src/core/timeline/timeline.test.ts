@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { Evidence } from '@/core/resolution';
 
-import { extractTimeline } from '.';
+import { extractTimeline, formatOffset, parseOffset } from '.';
 
 const pin = (
   id: string,
@@ -87,5 +87,46 @@ describe('extractTimeline', () => {
       pin('b', ['id', 'event_time'], row),
     ]);
     expect(events).toHaveLength(1);
+  });
+});
+
+describe('clock adjustments', () => {
+  it('moves the times of an evidence by its offset and keeps the original', () => {
+    const firewall = {
+      ...pin(
+        'fw',
+        ['src_ip', 'event_time'],
+        [['10.30.2.57', '2026-05-12 22:58:12']],
+      ),
+      clockOffset: -432,
+    };
+    const edr = {
+      ...pin(
+        'edr',
+        ['process', 'event_time'],
+        [['rclone.exe', '2026-05-13 01:47:30']],
+      ),
+      clockOffset: -3 * 3600,
+    };
+    const events = extractTimeline([firewall, edr]);
+    expect(events.map((e) => [e.at, e.original, e.offset])).toEqual([
+      ['2026-05-12 22:47:30', '2026-05-13 01:47:30', -10800],
+      ['2026-05-12 22:51:00', '2026-05-12 22:58:12', -432],
+    ]);
+    expect(events[0].day).toBe('2026-05-12');
+  });
+
+  it('reads offsets the way people write them', () => {
+    expect(parseOffset('-432')).toBe(-432);
+    expect(parseOffset('-432s')).toBe(-432);
+    expect(parseOffset('-7:12')).toBe(-432);
+    expect(parseOffset(' -0:07:12 ')).toBe(-432);
+    expect(parseOffset('−3h')).toBe(-10800);
+    expect(parseOffset('+90min')).toBe(5400);
+    expect(parseOffset('7:75')).toBeNull();
+    expect(parseOffset('ontem')).toBeNull();
+    expect(parseOffset('')).toBeNull();
+    expect(formatOffset(-432)).toBe('-0:07:12');
+    expect(formatOffset(10800)).toBe('+3:00:00');
   });
 });

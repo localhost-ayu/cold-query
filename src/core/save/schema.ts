@@ -49,6 +49,7 @@ const evidenceSchema = z.object({
   pageId: id.optional(),
   anchor: id.optional(),
   note: z.string().max(10_000).optional(),
+  clockOffset: z.number().int().min(-172_800).max(172_800).optional(),
   pinnedAt: z.string(),
 });
 

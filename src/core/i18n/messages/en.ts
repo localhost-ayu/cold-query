@@ -82,6 +82,12 @@ export const en: Record<keyof typeof ptBR, string> = {
   'dossier.timelineEmptyBody':
     'Pin results that have dates or times (like event_time or clock_out) and they show up here in order.',
   'dossier.region': 'Case evidence',
+  'dossier.clocks': 'Evidence clocks',
+  'dossier.clocksIntro':
+    'If a source records the wrong time, note the adjustment to real time here: the timeline will show its times corrected.',
+  'dossier.clockHint': 'E.g. -7:12, -3h, +90min',
+  'dossier.clockInvalid': "Didn't get that. Use -7:12, -3h or seconds.",
+  'dossier.clockOriginal': 'recorded as {time}, adjusted {offset}',
   'dossier.note': 'Note',
   'dossier.notePlaceholder': 'Why does this matter?',
   'dossier.remove': 'Remove from case board',
