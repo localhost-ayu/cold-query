@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "005",
+  "order": 5,
+  "title": {
+    "pt-BR": "Fuso Horário do Invasor",
+    "en": "The Intruder's Time Zone"
+  },
+  "summary": {
+    "pt-BR": "De madrugada, 1,8 GB da folha de pagamento da Vantara saiu para a internet. Cinco sistemas viram alguma coisa, e nenhum deles concorda sobre a hora.",
+    "en": "Overnight, 1.8 GB of Vantara's payroll went out to the internet. Five systems saw something, and none of them agrees on the time."
+  },
+  "difficulty": 5,
+  "sqlConcepts": [
+    "WINDOW"
+  ],
+  "estimatedMinutes": 60,
+  "author": "Nathã Grazzioli Botelho",
+  "license": "MIT",
+  "client": "Vantara Logística",
+  "databases": [
+    {
+      "id": "main",
+      "file": "db/vantara_incidente.sql",
+      "label": {
+        "pt-BR": "Vantara — incidente de 12/05",
+        "en": "Vantara — May 12 incident"
+      },
+      "readOnly": true
+    }
+  ],
+  "startEmail": "e01-contrato",
+  "maxAttempts": 3,
+  "hints": [
+    {
+      "id": "h1",
+      "text": {
+        "pt-BR": "Nenhuma fonte tem o mesmo relógio. Ache um evento que duas fontes registram ao mesmo tempo e compare as horas.",
+        "en": "No two sources share a clock. Find an event two sources record at the same moment and compare the times."
+      }
+    },
+    {
+      "id": "h2",
+      "text": {
+        "pt-BR": "Um IP pertence a quem o tinha naquele instante, não a quem o tem depois.",
+        "en": "An IP belongs to whoever held it at that instant, not to whoever holds it afterwards."
+      }
+    },
+    {
+      "id": "h3",
+      "text": {
+        "pt-BR": "Compare quem estava dentro do prédio com quem estava de férias.",
+        "en": "Compare who was inside the building with who was on vacation."
+      }
+    },
+    {
+      "id": "h4",
+      "afterWrongAttempt": true,
+      "text": {
+        "pt-BR": "Junte os pulsos de uma fonte com os do AD pelo mesmo número de sequência e tire a média da diferença. Depois desconte essa diferença do horário do firewall antes de procurar o dono do IP em dhcp_leases.",
+        "en": "Join one source's heartbeats to the AD's by the same sequence number and average the difference. Then subtract that difference from the firewall time before looking up the IP's owner in dhcp_leases."
+      }
+    }
+  ]
+}

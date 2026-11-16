@@ -111,6 +111,34 @@ describe('case 004', () => {
   });
 });
 
+describe('case 005', () => {
+  it('passes validation and only Gustavo + h.sato + 22:48-22:55 is correct', async () => {
+    const case005 = loadCasesFromDisk(root).find(
+      (item) => item.bundle.manifest.id === '005',
+    )!;
+    const report = await validateCase(case005, sqlite3);
+    expect(report.errors).toEqual([]);
+    expect(report.correctCombinations).toEqual([
+      { who: 'w3', credential: 'c3', when: 't3' },
+    ]);
+  });
+
+  it('needs the firewall clock correction to suggest Gustavo', () => {
+    const case005 = loadCasesFromDisk(root).find(
+      (item) => item.bundle.manifest.id === '005',
+    )!;
+    const { report } = case005.bundle.resolution;
+    const raw = unlockOptions(report, ['f_lease_gustavo', 'f_asset_gustavo']);
+    expect(raw.who).not.toContain('w3');
+    const fixed = unlockOptions(report, [
+      'f_lease_gustavo',
+      'f_asset_gustavo',
+      'f_fw_offset',
+    ]);
+    expect(fixed.who).toContain('w3');
+  });
+});
+
 describe('site anchors', () => {
   it('wrap exactly the paragraph that ends with {#id}', () => {
     const page = case001.bundle.sites.find((s) => s.id === 'politica-acesso')!;

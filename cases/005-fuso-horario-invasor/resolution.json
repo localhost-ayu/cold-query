@@ -1,0 +1,410 @@
+{
+  "facts": [
+    {
+      "id": "f_fw_exfil",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "EXTERNO",
+          1874329600
+        ]
+      },
+      "verifyQuery": "SELECT src_ip, event_time, bytes_out, dst_scope FROM fw_events WHERE bytes_out > 1000000000"
+    },
+    {
+      "id": "f_fw_offset",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          432
+        ]
+      },
+      "verifyQuery": "SELECT AVG(strftime('%s', f.event_time) - strftime('%s', a.event_time)) AS offset_s FROM heartbeats f JOIN heartbeats a ON a.seq = f.seq WHERE f.source = 'FW' AND a.source = 'AD'"
+    },
+    {
+      "id": "f_lease_gustavo",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "10.30.2.57",
+          "WS-COM-14",
+          "2026-05-12 22:54:00"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM dhcp_leases WHERE ip = '10.30.2.57'"
+    },
+    {
+      "id": "f_asset_gustavo",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "WS-COM-14",
+          11
+        ]
+      },
+      "verifyQuery": "WITH real AS (SELECT src_ip, datetime(event_time, '-432 seconds') AS t FROM fw_events WHERE bytes_out > 1000000000) SELECT l.host, a.assigned_to, real.t FROM real JOIN dhcp_leases l ON l.ip = real.src_ip AND real.t BETWEEN l.lease_start AND l.lease_end JOIN assets a ON a.asset_tag = l.host"
+    },
+    {
+      "id": "f_sato_logon",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "h.sato",
+          "SRV-RH-01",
+          "WS-COM-14"
+        ]
+      },
+      "verifyQuery": "SELECT username, host, src_host, event_time, LAG(event_time) OVER (PARTITION BY username ORDER BY event_time) AS anterior FROM ad_logons WHERE username = 'h.sato' ORDER BY event_time DESC"
+    },
+    {
+      "id": "f_sato_vacation",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "FERIAS",
+          "2026-05-11"
+        ]
+      },
+      "verifyQuery": "SELECT e.name, a.kind, a.start_date, a.end_date FROM absences a JOIN employees e ON e.id = a.employee_id"
+    },
+    {
+      "id": "f_edr_local",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "WS-COM-14",
+          "rclone.exe",
+          "2026-05-12 22:47:30"
+        ]
+      },
+      "verifyQuery": "SELECT host, process, datetime(event_time, '-3 hours') AS local_time FROM edr_events WHERE process IN ('7z.exe', 'rclone.exe')"
+    },
+    {
+      "id": "f_edr_raw",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "WS-COM-14",
+          "rclone.exe",
+          "2026-05-13 01:47:30"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM edr_events WHERE process = 'rclone.exe'"
+    },
+    {
+      "id": "f_gustavo_return",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          3105,
+          "IN",
+          "2026-05-12 21:58:26"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM (SELECT badge_id, direction, event_time, ROW_NUMBER() OVER (PARTITION BY badge_id ORDER BY event_time DESC) AS rn FROM badge_events WHERE gate = 'PORTARIA' AND event_time <= '2026-05-12 22:51:00') WHERE rn = 1 AND direction = 'IN'"
+    },
+    {
+      "id": "b_gustavo_clockout",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          11,
+          "2026-05-12",
+          "18:12:00"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM timesheet WHERE employee_id = 11 AND work_date = '2026-05-12'"
+    },
+    {
+      "id": "f_natalia_lease",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "10.30.2.57",
+          "WS-COM-12",
+          "2026-05-12 22:54:00"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM dhcp_leases WHERE ip = '10.30.2.57'"
+    },
+    {
+      "id": "f_priscila_vpn",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "p.andrade",
+          "2026-05-12 22:12:04"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM vpn_sessions WHERE started_at LIKE '2026-05-12%'"
+    },
+    {
+      "id": "f_diego_patch",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "d.lima",
+          "SRV-RH-01",
+          "2026-05-12 22:05:10"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM ad_logons WHERE event_time LIKE '2026-05-12 22%'"
+    },
+    {
+      "id": "f_backup_internal",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "INTERNO",
+          3221225472
+        ]
+      },
+      "verifyQuery": "SELECT * FROM fw_events WHERE src_ip = '10.30.1.20' AND event_time LIKE '2026-05-12%'"
+    },
+    {
+      "id": "b_runbook",
+      "bonus": true,
+      "matcher": {
+        "type": "snippet",
+        "pageId": "runbook-relogios",
+        "anchor": "p-firewall"
+      }
+    }
+  ],
+  "report": {
+    "slots": [
+      {
+        "id": "who",
+        "label": {
+          "pt-BR": "Quem tirou a folha de pagamento?",
+          "en": "Who took the payroll out?"
+        },
+        "options": [
+          {
+            "id": "w1",
+            "label": {
+              "pt-BR": "Natália Prado, do Comercial",
+              "en": "Natália Prado, from Sales"
+            },
+            "requires": {
+              "all": [
+                "f_natalia_lease"
+              ]
+            }
+          },
+          {
+            "id": "w2",
+            "label": {
+              "pt-BR": "Diego Lima, de plantão na TI",
+              "en": "Diego Lima, on call in IT"
+            },
+            "requires": {
+              "all": [
+                "f_diego_patch"
+              ]
+            }
+          },
+          {
+            "id": "w3",
+            "label": {
+              "pt-BR": "Gustavo Pires, do Comercial",
+              "en": "Gustavo Pires, from Sales"
+            },
+            "requires": {
+              "all": [
+                "f_lease_gustavo",
+                "f_asset_gustavo",
+                "f_fw_offset"
+              ]
+            }
+          },
+          {
+            "id": "w4",
+            "label": {
+              "pt-BR": "Priscila Andrade, coordenadora de TI",
+              "en": "Priscila Andrade, IT coordinator"
+            },
+            "requires": {
+              "all": [
+                "f_priscila_vpn"
+              ]
+            }
+          },
+          {
+            "id": "w5",
+            "label": {
+              "pt-BR": "Henrique Sato, da infraestrutura",
+              "en": "Henrique Sato, from infrastructure"
+            },
+            "requires": {
+              "all": [
+                "f_sato_logon"
+              ]
+            }
+          },
+          {
+            "id": "w6",
+            "label": {
+              "pt-BR": "Os dados não permitem apontar ninguém",
+              "en": "The data doesn't point to anyone"
+            },
+            "requires": {
+              "minFacts": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "credential",
+        "label": {
+          "pt-BR": "Com qual credencial?",
+          "en": "Using which credential?"
+        },
+        "options": [
+          {
+            "id": "c1",
+            "label": {
+              "pt-BR": "A conta do próprio Gustavo",
+              "en": "Gustavo's own account"
+            },
+            "requires": {
+              "all": [
+                "f_asset_gustavo"
+              ]
+            }
+          },
+          {
+            "id": "c2",
+            "label": {
+              "pt-BR": "A conta de serviço do backup",
+              "en": "The backup service account"
+            },
+            "requires": {
+              "all": [
+                "f_backup_internal"
+              ]
+            }
+          },
+          {
+            "id": "c3",
+            "label": {
+              "pt-BR": "A conta do Henrique Sato, emprestada ou roubada",
+              "en": "Henrique Sato's account, borrowed or stolen"
+            },
+            "requires": {
+              "all": [
+                "f_sato_logon",
+                "f_sato_vacation"
+              ]
+            }
+          },
+          {
+            "id": "c4",
+            "label": {
+              "pt-BR": "A VPN da Priscila",
+              "en": "Priscila's VPN"
+            },
+            "requires": {
+              "all": [
+                "f_priscila_vpn"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "when",
+        "label": {
+          "pt-BR": "A que horas o dado saiu, no relógio real?",
+          "en": "What time did the data leave, on the real clock?"
+        },
+        "options": [
+          {
+            "id": "t1",
+            "label": {
+              "pt-BR": "Entre 22:30 e 22:40",
+              "en": "Between 10:30 and 10:40 pm"
+            },
+            "requires": {
+              "minFacts": 3
+            }
+          },
+          {
+            "id": "t2",
+            "label": {
+              "pt-BR": "Entre 22:40 e 22:50",
+              "en": "Between 10:40 and 10:50 pm"
+            },
+            "requires": {
+              "all": [
+                "f_sato_logon"
+              ]
+            }
+          },
+          {
+            "id": "t3",
+            "label": {
+              "pt-BR": "Entre 22:48 e 22:55",
+              "en": "Between 10:48 and 10:55 pm"
+            },
+            "requires": {
+              "all": [
+                "f_fw_exfil",
+                "f_fw_offset"
+              ]
+            }
+          },
+          {
+            "id": "t4",
+            "label": {
+              "pt-BR": "Entre 22:55 e 23:05",
+              "en": "Between 10:55 and 11:05 pm"
+            },
+            "requires": {
+              "all": [
+                "f_fw_exfil"
+              ]
+            }
+          },
+          {
+            "id": "t5",
+            "label": {
+              "pt-BR": "Entre 01:45 e 01:55",
+              "en": "Between 1:45 and 1:55 am"
+            },
+            "requires": {
+              "all": [
+                "f_edr_raw"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "answerHashes": {
+    "who": "15dc0f380e1a773460fc1af2a4ca14731c0b727001dd3a78eb5122fce8228454",
+    "credential": "b7f60a421fe9969bcc05d5363710267f6efa06725427c7b804db7159ea24caf4",
+    "when": "5e2be1539cfaee501f80590e4269bbb7c6ea03821b750c6588891d77906422a4"
+  },
+  "outcomes": {
+    "correct": "e90-correto",
+    "partial": "e91-parcial",
+    "wrong": "e92-errado",
+    "failed": "e93-falhou"
+  }
+}
