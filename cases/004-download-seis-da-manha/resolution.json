@@ -1,0 +1,350 @@
+{
+  "facts": [
+    {
+      "id": "f_dl_v7",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "2026-04-22 06:02:41",
+          "VPN"
+        ]
+      },
+      "verifyQuery": "SELECT u.username, d.downloaded_at, d.source_ip, d.channel FROM downloads d JOIN users u ON u.id = d.user_id JOIN documents doc ON doc.id = d.document_id WHERE doc.title = 'minuta_fusao_v7' ORDER BY d.downloaded_at"
+    },
+    {
+      "id": "f_not_team",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "c.brito",
+          "minuta_fusao_v7"
+        ]
+      },
+      "verifyQuery": "SELECT u.username, doc.title, d.downloaded_at FROM downloads d JOIN documents doc ON doc.id = d.document_id JOIN users u ON u.id = d.user_id LEFT JOIN matter_team mt ON mt.matter_id = doc.matter_id AND mt.user_id = d.user_id WHERE doc.matter_id = 3 AND mt.user_id IS NULL"
+    },
+    {
+      "id": "f_account_active",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "c.brito",
+          "Caetano Brito",
+          1
+        ]
+      },
+      "verifyQuery": "SELECT * FROM users WHERE active = 1 AND hr_id IN (SELECT id FROM hr_records WHERE status = 'DESLIGADO')"
+    },
+    {
+      "id": "f_termination",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Caetano Brito",
+          "DESLIGADO",
+          "2026-02-20"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM hr_records WHERE status = 'DESLIGADO'"
+    },
+    {
+      "id": "f_first_conf",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "c.brito",
+          1
+        ]
+      },
+      "verifyQuery": "WITH conf AS (SELECT d.user_id, COUNT(*) AS n FROM downloads d JOIN documents doc ON doc.id = d.document_id WHERE doc.classification = 'CONFIDENCIAL' GROUP BY d.user_id) SELECT u.username, conf.n FROM conf JOIN users u ON u.id = conf.user_id WHERE conf.n = 1"
+    },
+    {
+      "id": "f_doc_created",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "minuta_fusao_v7",
+          "2026-04-22 05:20:00"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM documents WHERE title = 'minuta_fusao_v7'"
+    },
+    {
+      "id": "f_luana",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Luana Prates",
+          "DESLIGADO"
+        ]
+      },
+      "verifyQuery": "SELECT * FROM hr_records WHERE status = 'DESLIGADO'"
+    },
+    {
+      "id": "f_backup_3am",
+      "bonus": false,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [
+          "10.0.0.5"
+        ],
+        "min": 5
+      },
+      "verifyQuery": "SELECT * FROM downloads WHERE user_id = 32 LIMIT 20"
+    },
+    {
+      "id": "f_augusto_v7",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "2026-04-22 09:40:12",
+          "OFFICE_NET"
+        ]
+      },
+      "verifyQuery": "SELECT u.username, d.downloaded_at, d.source_ip, d.channel FROM downloads d JOIN users u ON u.id = d.user_id JOIN documents doc ON doc.id = d.document_id WHERE doc.title = 'minuta_fusao_v7' ORDER BY d.downloaded_at"
+    },
+    {
+      "id": "f_matos_volume",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "f.matos",
+          2359
+        ]
+      },
+      "verifyQuery": "SELECT u.username, COUNT(*) AS downloads FROM downloads d JOIN users u ON u.id = d.user_id GROUP BY u.username ORDER BY downloads DESC"
+    },
+    {
+      "id": "f_shared_link",
+      "bonus": false,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [
+          "SHARED_LINK",
+          "187.44.10.9"
+        ],
+        "min": 2
+      },
+      "verifyQuery": "SELECT * FROM downloads WHERE channel = 'SHARED_LINK'"
+    },
+    {
+      "id": "b_policy",
+      "bonus": true,
+      "matcher": {
+        "type": "snippet",
+        "pageId": "politica-acessos",
+        "anchor": "p-desligamento"
+      }
+    }
+  ],
+  "report": {
+    "slots": [
+      {
+        "id": "account",
+        "label": {
+          "pt-BR": "Qual conta baixou a minuta que vazou?",
+          "en": "Which account downloaded the leaked draft?"
+        },
+        "options": [
+          {
+            "id": "a1",
+            "label": {
+              "pt-BR": "f.matos (Fernanda Matos, estagiária)",
+              "en": "f.matos (Fernanda Matos, intern)"
+            },
+            "requires": {
+              "all": [
+                "f_matos_volume"
+              ]
+            }
+          },
+          {
+            "id": "a2",
+            "label": {
+              "pt-BR": "svc_backup (backup noturno)",
+              "en": "svc_backup (nightly backup)"
+            },
+            "requires": {
+              "all": [
+                "f_backup_3am"
+              ]
+            }
+          },
+          {
+            "id": "a3",
+            "label": {
+              "pt-BR": "c.brito (Caetano Brito)",
+              "en": "c.brito (Caetano Brito)"
+            },
+            "requires": {
+              "all": [
+                "f_dl_v7",
+                "f_not_team",
+                "f_account_active"
+              ]
+            }
+          },
+          {
+            "id": "a4",
+            "label": {
+              "pt-BR": "augusto.borges (sócio da matéria)",
+              "en": "augusto.borges (partner on the matter)"
+            },
+            "requires": {
+              "all": [
+                "f_augusto_v7"
+              ]
+            }
+          },
+          {
+            "id": "a5",
+            "label": {
+              "pt-BR": "luana.prates (Luana Prates)",
+              "en": "luana.prates (Luana Prates)"
+            },
+            "requires": {
+              "all": [
+                "f_luana"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "how",
+        "label": {
+          "pt-BR": "Como o acesso foi possível?",
+          "en": "How was the access possible?"
+        },
+        "options": [
+          {
+            "id": "m1",
+            "label": {
+              "pt-BR": "Link compartilhado pelo sócio com o cliente",
+              "en": "A link the partner shared with the client"
+            },
+            "requires": {
+              "all": [
+                "f_shared_link"
+              ]
+            }
+          },
+          {
+            "id": "m2",
+            "label": {
+              "pt-BR": "Estagiária da equipe, com acesso legítimo",
+              "en": "A team intern with legitimate access"
+            },
+            "requires": {
+              "all": [
+                "f_matos_volume"
+              ]
+            }
+          },
+          {
+            "id": "m3",
+            "label": {
+              "pt-BR": "Credencial de ex-funcionário ainda ativa, usada pela VPN",
+              "en": "A former employee's credential, still active, used over VPN"
+            },
+            "requires": {
+              "all": [
+                "f_dl_v7",
+                "f_termination"
+              ]
+            }
+          },
+          {
+            "id": "m4",
+            "label": {
+              "pt-BR": "Conta de serviço do backup noturno",
+              "en": "The nightly backup service account"
+            },
+            "requires": {
+              "all": [
+                "f_backup_3am"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "control",
+        "label": {
+          "pt-BR": "Qual controle falhou?",
+          "en": "Which control failed?"
+        },
+        "options": [
+          {
+            "id": "c1",
+            "label": {
+              "pt-BR": "Expiração de links compartilhados",
+              "en": "Expiry of shared links"
+            },
+            "requires": {
+              "all": [
+                "f_shared_link"
+              ]
+            }
+          },
+          {
+            "id": "c2",
+            "label": {
+              "pt-BR": "Monitoramento de acessos em horário atípico",
+              "en": "Monitoring of off-hours access"
+            },
+            "requires": {
+              "all": [
+                "f_dl_v7"
+              ]
+            }
+          },
+          {
+            "id": "c3",
+            "label": {
+              "pt-BR": "Desativação de contas no desligamento",
+              "en": "Disabling accounts when people leave"
+            },
+            "requires": {
+              "all": [
+                "f_account_active",
+                "f_termination"
+              ]
+            }
+          },
+          {
+            "id": "c4",
+            "label": {
+              "pt-BR": "Segregação de acesso por matéria no sistema",
+              "en": "Per-matter access segregation in the system"
+            },
+            "requires": {
+              "all": [
+                "f_not_team"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "answerHashes": {
+    "account": "e9191b328ca51f401a2a1d1578031f0e0e99c594ed998033e826c9536c620548",
+    "how": "d1868ad2c4798b10f0cf0cbb2f981e4df92b3ff93b55a9f3a4e4e4bb07c2733d",
+    "control": "5c1a91d79372efef1cb3a1d4d306482c54d32a4ae337a944de7354fd4882bb01"
+  },
+  "outcomes": {
+    "correct": "e90-correto",
+    "partial": "e91-parcial",
+    "wrong": "e92-errado",
+    "failed": "e93-falhou"
+  }
+}

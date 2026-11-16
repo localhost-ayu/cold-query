@@ -284,16 +284,33 @@ export const helpTopics: HelpTopic[] = [
     example:
       'SELECT analyst_id, COUNT(*) AS contratos\nFROM contracts\nWHERE analyst_id IS NOT NULL\nGROUP BY analyst_id\nHAVING COUNT(*) >= 2;',
   },
-];
-
-/** Conceitos que ainda virão, mostrados trancados (sem conteúdo) para dar o mapa do currículo. */
-export const upcomingConcepts: Array<{
-  concept: string;
-  title: LocalizedText;
-}> = [
   {
     concept: 'CTE',
     title: { 'pt-BR': 'Subconsultas e CTEs', en: 'Subqueries and CTEs' },
+    summary: {
+      'pt-BR':
+        'Uma consulta dentro da outra, para perguntas que dependem de outra resposta.',
+      en: 'A query inside another, for questions that depend on another answer.',
+    },
+    body: [
+      {
+        'pt-BR':
+          'Uma subconsulta entre parênteses vira uma lista ou uma tabela para a consulta de fora. WHERE coluna IN (SELECT ...) filtra pelos valores que a de dentro devolve.',
+        en: 'A subquery in parentheses becomes a list or a table for the outer query. WHERE column IN (SELECT ...) filters by the values the inner one returns.',
+      },
+      {
+        'pt-BR':
+          'WITH nome AS (SELECT ...) dá um nome a uma subconsulta antes da consulta principal. Fica mais fácil de ler, e dá para usar o nome mais de uma vez.',
+        en: 'WITH name AS (SELECT ...) names a subquery before the main query. It reads more easily, and the name can be used more than once.',
+      },
+      {
+        'pt-BR':
+          'Consultas longas assim merecem um nome: salve-as na aba Salvas do Terminal para reabrir e ajustar depois.',
+        en: "Long queries like these deserve a name: save them in the Terminal's Saved tab to reopen and adjust later.",
+      },
+    ],
+    example:
+      'WITH por_analista AS (\n  SELECT analyst_id, COUNT(*) AS n\n  FROM contracts\n  GROUP BY analyst_id\n)\nSELECT a.name, p.n\nFROM por_analista p\nJOIN analysts a ON a.id = p.analyst_id\nWHERE p.n > (SELECT AVG(n) FROM por_analista);',
   },
   {
     concept: 'LEFT JOIN',
@@ -301,7 +318,33 @@ export const upcomingConcepts: Array<{
       'pt-BR': 'LEFT JOIN: o que falta',
       en: 'LEFT JOIN: what is missing',
     },
+    summary: {
+      'pt-BR':
+        'Mantém todas as linhas da esquerda, com ou sem par do outro lado.',
+      en: 'Keeps every row on the left, with or without a match on the other side.',
+    },
+    body: [
+      {
+        'pt-BR':
+          'JOIN descarta as linhas sem par; LEFT JOIN as mantém e preenche as colunas do outro lado com NULL.',
+        en: "JOIN drops rows with no match; LEFT JOIN keeps them and fills the other side's columns with NULL.",
+      },
+      {
+        'pt-BR':
+          'Isso responde "quem não está na lista": faça o LEFT JOIN com a lista e filtre WHERE coluna_da_lista IS NULL. É o chamado anti-join. NOT IN (SELECT ...) e NOT EXISTS fazem o mesmo de outro jeito.',
+        en: 'That answers "who is not on the list": LEFT JOIN the list and filter WHERE list_column IS NULL. It is called an anti-join. NOT IN (SELECT ...) and NOT EXISTS do the same in another way.',
+      },
+    ],
+    example:
+      'SELECT a.name\nFROM analysts a\nLEFT JOIN contracts c ON c.analyst_id = a.id\nWHERE c.id IS NULL;',
   },
+];
+
+/** Conceitos que ainda virão, mostrados trancados (sem conteúdo) para dar o mapa do currículo. */
+export const upcomingConcepts: Array<{
+  concept: string;
+  title: LocalizedText;
+}> = [
   {
     concept: 'WINDOW',
     title: { 'pt-BR': 'Funções de janela', en: 'Window functions' },

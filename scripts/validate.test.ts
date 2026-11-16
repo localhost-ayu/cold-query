@@ -97,6 +97,20 @@ describe('case 003', () => {
   });
 });
 
+describe('case 004', () => {
+  it('passes validation and only c.brito + ex-employee credential + offboarding is correct', async () => {
+    const case004 = loadCasesFromDisk(root).find(
+      (item) => item.bundle.manifest.id === '004',
+    )!;
+    const report = await validateCase(case004, sqlite3);
+    expect(report.errors).toEqual([]);
+    expect(report.correctCombinations).toEqual([
+      { account: 'a3', how: 'm3', control: 'c3' },
+    ]);
+    expect(case004.bundle.manifest.hints.at(-1)?.afterWrongAttempt).toBe(true);
+  });
+});
+
 describe('site anchors', () => {
   it('wrap exactly the paragraph that ends with {#id}', () => {
     const page = case001.bundle.sites.find((s) => s.id === 'politica-acesso')!;

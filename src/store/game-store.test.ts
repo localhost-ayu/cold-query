@@ -5,6 +5,7 @@ import { createGameStore, findEmail } from './game-store';
 
 const case001 = cases.find((bundle) => bundle.manifest.id === '001')!;
 const case002 = cases.find((bundle) => bundle.manifest.id === '002')!;
+const case004 = cases.find((bundle) => bundle.manifest.id === '004')!;
 
 function setup() {
   const onDeliver = vi.fn();
@@ -260,6 +261,40 @@ describe('case progression', () => {
         .map((item) => item.emailId)
         .sort(),
     ).toEqual(['e01-contrato', 'e02-dicionario']);
+  });
+});
+
+describe('hints after a wrong attempt', () => {
+  it('keeps the last hint of case 004 until a report is wrong', async () => {
+    const store = createGameStore([case004], { now: () => 1000 });
+    store.getState().start();
+    store.getState().acceptCase('004');
+    for (let i = 0; i < 5; i += 1) store.getState().revealHint('004');
+    expect(store.getState().cases['004'].hintsRevealed).toBe(3);
+
+    store.getState().pinEvidence({
+      caseId: '004',
+      source: 'query',
+      columns: ['username', 'n'],
+      rows: [['f.matos', 2359]],
+    });
+    const slots = case004.resolution.report.slots;
+    store.getState().selectOption('004', slots[0].id, 'a1');
+    store.getState().selectOption('004', slots[1].id, 'm2');
+    store.getState().selectOption('004', slots[2].id, 'c4');
+    // c4 ainda não foi liberada: o relatório fica incompleto e não sai.
+    expect(store.getState().cases['004'].selection.control).toBeUndefined();
+    store.getState().pinEvidence({
+      caseId: '004',
+      source: 'query',
+      columns: ['username', 'title'],
+      rows: [['c.brito', 'minuta_fusao_v7']],
+    });
+    store.getState().selectOption('004', 'control', 'c4');
+    expect(await store.getState().submitReport('004')).toBe('wrong');
+
+    store.getState().revealHint('004');
+    expect(store.getState().cases['004'].hintsRevealed).toBe(4);
   });
 });
 

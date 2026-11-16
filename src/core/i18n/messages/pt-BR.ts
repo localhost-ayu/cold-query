@@ -59,6 +59,8 @@ export const ptBR = {
   'report.hints': 'Dicas',
   'report.hint': 'Pedir uma dica',
   'report.hintCost': 'Cada dica conta como uma penalidade nas estrelas.',
+  'report.hintAfterAttempt':
+    'Mais uma dica fica disponível depois de uma tentativa errada.',
   'report.noMoreHints': 'Sem mais dicas para este caso.',
   'report.submit': 'Enviar relatório',
   'report.cancel': 'Cancelar',
@@ -228,6 +230,15 @@ export const ptBR = {
     'O TraceOS segue a linguagem visual do GNOME sem usar arte do projeto. Os sons são sintetizados no navegador.',
   'quick.lock': 'Bloquear',
   'help.keyLock': 'Bloquear a tela (volta ao menu)',
+
+  'terminal.saved': 'Salvas',
+  'terminal.saveCurrent': 'Salvar a consulta atual',
+  'terminal.savedName': 'Nome da consulta',
+  'terminal.savedNamePlaceholder': 'Nome, e Enter para salvar',
+  'terminal.savedEmpty':
+    'Consultas salvas com nome ficam aqui para reabrir e editar.',
+  'terminal.savedRename': 'Renomear {name}',
+  'terminal.savedDelete': 'Apagar {name}',
 
   'window.close': 'Fechar',
   'window.minimize': 'Minimizar',

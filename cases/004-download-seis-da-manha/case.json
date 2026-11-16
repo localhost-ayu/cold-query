@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "004",
+  "order": 4,
+  "title": {
+    "pt-BR": "O Download das Seis da Manhã",
+    "en": "The Six A.M. Download"
+  },
+  "summary": {
+    "pt-BR": "A minuta sigilosa de uma fusão apareceu na imprensa. O arquivo foi baixado de madrugada, a equipe jura inocência e a TI diz que todo mundo baixa documento.",
+    "en": "The confidential draft of a merger turned up in the press. The file was downloaded at dawn, the team swears innocence and IT says everyone downloads documents."
+  },
+  "difficulty": 4,
+  "sqlConcepts": [
+    "CTE",
+    "LEFT JOIN"
+  ],
+  "estimatedMinutes": 45,
+  "author": "Nathã Grazzioli Botelho",
+  "license": "MIT",
+  "client": "Borges & Lacerda Advogados",
+  "databases": [
+    {
+      "id": "main",
+      "file": "db/borges_dms.sql",
+      "label": {
+        "pt-BR": "Borges & Lacerda — documentos",
+        "en": "Borges & Lacerda — documents"
+      },
+      "readOnly": true
+    }
+  ],
+  "startEmail": "e01-contrato",
+  "maxAttempts": 3,
+  "hints": [
+    {
+      "id": "h1",
+      "text": {
+        "pt-BR": "Descubra primeiro quem baixou o arquivo exato. Depois pergunte se essa pessoa devia estar ali.",
+        "en": "First find out who downloaded that exact file. Then ask whether that person should have been there."
+      }
+    },
+    {
+      "id": "h2",
+      "text": {
+        "pt-BR": "Para achar quem NÃO está numa lista, LEFT JOIN com a lista e IS NULL do lado dela fazem o trabalho.",
+        "en": "To find who is NOT on a list, a LEFT JOIN to that list plus IS NULL on its side does the job."
+      }
+    },
+    {
+      "id": "h3",
+      "text": {
+        "pt-BR": "A tabela hr_records conta uma história que users não conta.",
+        "en": "The hr_records table tells a story that users doesn't."
+      }
+    },
+    {
+      "id": "h4",
+      "afterWrongAttempt": true,
+      "text": {
+        "pt-BR": "Junte downloads e documents, e depois matter_team com LEFT JOIN pelas duas colunas: a matéria do documento e o usuário do download. Onde o lado da equipe vier NULL, quem baixou não é da equipe.",
+        "en": "Join downloads and documents, then LEFT JOIN matter_team on both columns: the document's matter and the download's user. Where the team side comes back NULL, whoever downloaded is not on the team."
+      }
+    }
+  ]
+}
