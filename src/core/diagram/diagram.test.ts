@@ -29,4 +29,30 @@ describe('diagramColumns', () => {
       timesheet: 0,
     });
   });
+
+  it('spreads a chain of references over as many columns as it needs', () => {
+    const columns = diagramColumns([
+      table('employees'),
+      table('invoices', ['vendors', 'purchase_orders']),
+      table('payments', ['invoices', 'employees']),
+      table('purchase_orders', ['employees']),
+      table('vendors', ['employees']),
+    ]);
+    expect(Object.fromEntries(columns)).toEqual({
+      payments: 0,
+      invoices: 1,
+      purchase_orders: 2,
+      vendors: 2,
+      employees: 3,
+    });
+  });
+
+  it('survives a table that points to itself and a schema with no links', () => {
+    expect(
+      Object.fromEntries(diagramColumns([table('people', ['people'])])),
+    ).toEqual({ people: 0 });
+    expect(
+      Object.fromEntries(diagramColumns([table('a'), table('b')])),
+    ).toEqual({ a: 0, b: 0 });
+  });
 });

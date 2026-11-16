@@ -59,6 +59,27 @@ describe('case 001', () => {
   });
 });
 
+describe('case 002', () => {
+  it('passes validation and only Tiago + July 2025 is correct', async () => {
+    const case002 = loadCasesFromDisk(root).find(
+      (item) => item.bundle.manifest.id === '002',
+    )!;
+    const report = await validateCase(case002, sqlite3);
+    expect(report.errors).toEqual([]);
+    expect(report.correctCombinations).toEqual([{ who: 'w3', when: 't3' }]);
+  });
+
+  it('arrives only after case 001 is solved', () => {
+    const case002 = loadCasesFromDisk(root).find(
+      (item) => item.bundle.manifest.id === '002',
+    )!;
+    const contract = case002.bundle.emails.find(
+      (email) => email.id === case002.bundle.manifest.startEmail,
+    );
+    expect(contract?.unlockedBy).toBe('answerCorrect:001');
+  });
+});
+
 describe('site anchors', () => {
   it('wrap exactly the paragraph that ends with {#id}', () => {
     const page = case001.bundle.sites.find((s) => s.id === 'politica-acesso')!;

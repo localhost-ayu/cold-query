@@ -124,7 +124,7 @@ Corpo em Markdown sem HTML executável.
 
 `client` é o nome do cliente, mostrado no Dossiê e no relatório.
 
-Para o e-mail inicial, `unlockedBy` pode ser omitido; ele é referenciado por `startEmail`. Valores válidos posteriores: `caseAccepted`, `emailRead:<id>` e `answerCorrect:<caseId>`. Attachments precisam existir dentro do pacote.
+Valores de `unlockedBy`: `caseAccepted`, `emailRead:<id>` e `answerCorrect:<caseId>`. Os dois primeiros valem só dentro do próprio caso (ids de e-mail se repetem entre casos). `answerCorrect` vale para todos e é o que encadeia a campanha: o `startEmail` de um caso com `unlockedBy: answerCorrect:001` só chega quando o 001 é resolvido. Sem `unlockedBy`, o `startEmail` chega no começo do jogo (o caso de menor `order`) ou na instalação, para casos importados. Attachments precisam existir dentro do pacote.
 
 ## Sites Markdown
 

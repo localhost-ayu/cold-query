@@ -1,0 +1,348 @@
+{
+  "facts": [
+    {
+      "id": "f_acct_match",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Delta Higienização ME",
+          "Tiago Seixas"
+        ]
+      },
+      "verifyQuery": "SELECT v.legal_name, v.bank_account, e.name, e.department FROM vendors v JOIN employees e ON e.bank_account = v.bank_account"
+    },
+    {
+      "id": "f_created_by",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Delta Higienização ME",
+          7
+        ]
+      },
+      "verifyQuery": "SELECT * FROM vendors WHERE legal_name LIKE 'Delta%'"
+    },
+    {
+      "id": "f_vendor_created",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Delta Higienização ME",
+          "2025-06-30"
+        ]
+      },
+      "verifyQuery": "SELECT legal_name, created_by, created_at FROM vendors WHERE legal_name LIKE 'Delta%'"
+    },
+    {
+      "id": "f_no_po",
+      "bonus": false,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [
+          42,
+          null
+        ],
+        "min": 6
+      },
+      "verifyQuery": "SELECT * FROM invoices WHERE vendor_id = 42 AND po_number IS NULL"
+    },
+    {
+      "id": "f_first_invoice",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "2025-07-02",
+          9840
+        ]
+      },
+      "verifyQuery": "SELECT * FROM invoices WHERE vendor_id = 42 ORDER BY issued_at LIMIT 1"
+    },
+    {
+      "id": "f_first_payment",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Delta Higienização ME",
+          "2025-07-02"
+        ]
+      },
+      "verifyQuery": "SELECT v.legal_name, i.issued_at, p.paid_at FROM payments p JOIN invoices i ON i.id = p.invoice_id JOIN vendors v ON v.id = i.vendor_id WHERE v.legal_name LIKE 'Delta%' ORDER BY i.issued_at"
+    },
+    {
+      "id": "f_last_invoice",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "2026-02-24",
+          25390.2
+        ]
+      },
+      "verifyQuery": "SELECT * FROM invoices WHERE vendor_id = 42 ORDER BY issued_at DESC LIMIT 1"
+    },
+    {
+      "id": "f_fast_pay",
+      "bonus": false,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [
+          "Delta Higienização ME",
+          1
+        ],
+        "min": 5
+      },
+      "verifyQuery": "SELECT v.legal_name, i.issued_at, p.paid_at, julianday(p.paid_at) - julianday(i.issued_at) AS dias FROM payments p JOIN invoices i ON i.id = p.invoice_id JOIN vendors v ON v.id = i.vendor_id WHERE v.legal_name LIKE 'Delta%' ORDER BY i.issued_at"
+    },
+    {
+      "id": "f_approver",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Bruna Calado"
+        ]
+      },
+      "verifyQuery": "SELECT DISTINCT e.name FROM payments p JOIN invoices i ON i.id = p.invoice_id JOIN vendors v ON v.id = i.vendor_id JOIN employees e ON e.id = p.approved_by WHERE v.legal_name LIKE 'Delta%'"
+    },
+    {
+      "id": "f_bruna_start",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Bruna Calado",
+          "2025-03-03"
+        ]
+      },
+      "verifyQuery": "SELECT name, job_title, hired_at FROM employees WHERE name = 'Bruna Calado'"
+    },
+    {
+      "id": "f_olavo_id",
+      "bonus": false,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [
+          10
+        ],
+        "min": 3
+      },
+      "verifyQuery": "SELECT * FROM vendors WHERE created_by = 10"
+    },
+    {
+      "id": "f_olavo_name",
+      "bonus": false,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [
+          "Olavo Dantas"
+        ],
+        "min": 3
+      },
+      "verifyQuery": "SELECT v.legal_name, v.created_at, e.name FROM vendors v JOIN employees e ON e.id = v.created_by WHERE e.name = 'Olavo Dantas'"
+    },
+    {
+      "id": "f_same_address",
+      "bonus": false,
+      "matcher": {
+        "type": "rowsHaveValues",
+        "values": [
+          "Av. Industrial, 1500, sala 214"
+        ],
+        "min": 2
+      },
+      "verifyQuery": "SELECT * FROM vendors WHERE address = 'Av. Industrial, 1500, sala 214'"
+    },
+    {
+      "id": "f_marcos",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Marcos Veiga Fotografia",
+          "Marcos Veiga"
+        ]
+      },
+      "verifyQuery": "SELECT v.legal_name, v.created_at, e.name, e.hired_at FROM vendors v JOIN employees e ON e.bank_account = v.bank_account"
+    },
+    {
+      "id": "b_marcos_before",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Marcos Veiga Fotografia",
+          "2025-04-10",
+          "2025-09-01"
+        ]
+      },
+      "verifyQuery": "SELECT v.legal_name, v.created_at, e.name, e.hired_at FROM vendors v JOIN employees e ON e.bank_account = v.bank_account"
+    },
+    {
+      "id": "b_policy",
+      "bonus": true,
+      "matcher": {
+        "type": "snippet",
+        "pageId": "politica-compras",
+        "anchor": "p-po"
+      }
+    }
+  ],
+  "report": {
+    "slots": [
+      {
+        "id": "who",
+        "label": {
+          "pt-BR": "Quem se beneficiou dos pagamentos à Delta?",
+          "en": "Who benefited from the payments to Delta?"
+        },
+        "options": [
+          {
+            "id": "w1",
+            "label": {
+              "pt-BR": "Bruna Calado, do Financeiro",
+              "en": "Bruna Calado, from Finance"
+            },
+            "requires": {
+              "all": [
+                "f_approver"
+              ]
+            }
+          },
+          {
+            "id": "w2",
+            "label": {
+              "pt-BR": "Os donos da Transportes Rota Sul",
+              "en": "The owners of Transportes Rota Sul"
+            },
+            "requires": {
+              "all": [
+                "f_same_address"
+              ]
+            }
+          },
+          {
+            "id": "w3",
+            "label": {
+              "pt-BR": "Tiago Seixas, de Compras",
+              "en": "Tiago Seixas, from Purchasing"
+            },
+            "requires": {
+              "all": [
+                "f_acct_match",
+                "f_created_by"
+              ]
+            }
+          },
+          {
+            "id": "w4",
+            "label": {
+              "pt-BR": "Olavo Dantas, da TI",
+              "en": "Olavo Dantas, from IT"
+            },
+            "requires": {
+              "any": [
+                "f_olavo_id",
+                "f_olavo_name"
+              ]
+            }
+          },
+          {
+            "id": "w5",
+            "label": {
+              "pt-BR": "Marcos Veiga, do Marketing",
+              "en": "Marcos Veiga, from Marketing"
+            },
+            "requires": {
+              "all": [
+                "f_marcos"
+              ]
+            }
+          },
+          {
+            "id": "w6",
+            "label": {
+              "pt-BR": "Os dados não permitem apontar ninguém",
+              "en": "The data doesn't point to anyone"
+            },
+            "requires": {
+              "minFacts": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "when",
+        "label": {
+          "pt-BR": "Quando o dinheiro começou a sair para a Delta?",
+          "en": "When did money start going to Delta?"
+        },
+        "options": [
+          {
+            "id": "t1",
+            "label": {
+              "pt-BR": "Março de 2025",
+              "en": "March 2025"
+            },
+            "requires": {
+              "all": [
+                "f_bruna_start"
+              ]
+            }
+          },
+          {
+            "id": "t2",
+            "label": {
+              "pt-BR": "Junho de 2025",
+              "en": "June 2025"
+            },
+            "requires": {
+              "all": [
+                "f_vendor_created"
+              ]
+            }
+          },
+          {
+            "id": "t3",
+            "label": {
+              "pt-BR": "Julho de 2025",
+              "en": "July 2025"
+            },
+            "requires": {
+              "any": [
+                "f_first_invoice",
+                "f_first_payment"
+              ]
+            }
+          },
+          {
+            "id": "t4",
+            "label": {
+              "pt-BR": "Fevereiro de 2026",
+              "en": "February 2026"
+            },
+            "requires": {
+              "all": [
+                "f_last_invoice"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "answerHashes": {
+    "who": "a6e0c7a5db5d49d335008aeed08884164642e652f497b91a390a769cc1f614e1",
+    "when": "0c08228b42e546214e06d38568c7b429b0619a8b2449dfc7d83c835e7fbdf063"
+  },
+  "outcomes": {
+    "correct": "e90-correto",
+    "partial": "e91-parcial",
+    "wrong": "e92-errado",
+    "failed": "e93-falhou"
+  }
+}

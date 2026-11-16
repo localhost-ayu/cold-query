@@ -595,10 +595,9 @@
 .diagram__grid {
   position: relative;
   display: grid;
-  /* Três colunas fixas (aponta / é apontada / solta); dense sobe os cartões. */
-  grid-template-columns: repeat(3, minmax(220px, 280px));
+  /* As colunas vêm do componente (uma por camada); dense sobe os cartões. */
   grid-auto-flow: row dense;
-  gap: 40px 96px;
+  gap: 40px 88px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -658,6 +657,7 @@
 
 .diagram__name {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   gap: 4px;
 }
@@ -676,11 +676,20 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
+  min-width: 0;
   color: var(--accent);
   font-weight: 700;
 }
 
+/* Destino longo (purchase_orders.po_number) termina em reticências; o texto inteiro fica no title. */
+.diagram__ref-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .diagram__ref svg {
+  flex-shrink: 0;
   width: 11px;
   height: 11px;
 }

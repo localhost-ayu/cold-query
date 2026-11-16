@@ -155,16 +155,32 @@ export const helpTopics: HelpTopic[] = [
     example:
       "SELECT client, opened_on\nFROM contracts\nWHERE opened_on BETWEEN '2025-01-01' AND '2025-06-30';",
   },
-];
-
-/** Conceitos que ainda virão, mostrados trancados (sem conteúdo) para dar o mapa do currículo. */
-export const upcomingConcepts: Array<{
-  concept: string;
-  title: LocalizedText;
-}> = [
   {
     concept: 'JOIN',
     title: { 'pt-BR': 'JOIN: juntar tabelas', en: 'JOIN: combining tables' },
+    summary: {
+      'pt-BR': 'Junta linhas de duas tabelas que têm um valor em comum.',
+      en: 'Combines rows from two tables that share a value.',
+    },
+    body: [
+      {
+        'pt-BR':
+          'JOIN ... ON diz qual coluna de uma tabela corresponde a qual coluna da outra. Cada par de linhas que casa vira uma linha no resultado; linhas sem par ficam de fora.',
+        en: 'JOIN ... ON says which column of one table matches which column of the other. Every matching pair of rows becomes one result row; rows with no match are left out.',
+      },
+      {
+        'pt-BR':
+          'Dê um apelido curto a cada tabela (contracts c, analysts a) e use-o antes das colunas: c.client, a.name. Fica claro de onde vem cada coluna quando as duas têm uma "id" ou um "name".',
+        en: 'Give each table a short alias (contracts c, analysts a) and put it before the columns: c.client, a.name. It makes clear where each column comes from when both have an "id" or a "name".',
+      },
+      {
+        'pt-BR':
+          'Dá para encadear: um JOIN depois do outro liga três ou mais tabelas. A coluna do ON não precisa ser a chave; qualquer valor em comum serve.',
+        en: 'You can chain them: one JOIN after another links three or more tables. The ON column does not have to be the key; any shared value works.',
+      },
+    ],
+    example:
+      'SELECT c.client, c.opened_on, a.name\nFROM contracts c\nJOIN analysts a ON a.id = c.analyst_id;',
   },
   {
     concept: 'DISTINCT',
@@ -172,7 +188,57 @@ export const upcomingConcepts: Array<{
       'pt-BR': 'DISTINCT: sem repetição',
       en: 'DISTINCT: no duplicates',
     },
+    summary: {
+      'pt-BR': 'Mostra cada valor (ou combinação de valores) uma vez só.',
+      en: 'Shows each value (or combination of values) only once.',
+    },
+    body: [
+      {
+        'pt-BR':
+          'SELECT DISTINCT tira as linhas repetidas do resultado. Com várias colunas, conta como repetida a linha em que todas são iguais.',
+        en: 'SELECT DISTINCT removes repeated rows from the result. With several columns, a row only counts as repeated when all of them are the same.',
+      },
+      {
+        'pt-BR':
+          'Bom para perguntas como "quem já aprovou isso?" ou "em quais setores trabalhamos?", em que a quantidade de vezes não importa.',
+        en: 'Good for questions like "who has ever approved this?" or "which sectors do we work in?", where how many times does not matter.',
+      },
+    ],
+    example: 'SELECT DISTINCT sector\nFROM contracts\nORDER BY sector;',
   },
+  {
+    concept: 'DATES',
+    title: {
+      'pt-BR': 'Datas: contas e partes',
+      en: 'Dates: arithmetic and parts',
+    },
+    summary: {
+      'pt-BR':
+        'Quantos dias entre duas datas, e que mês ou dia da semana cada uma é.',
+      en: 'How many days lie between two dates, and which month or weekday each one is.',
+    },
+    body: [
+      {
+        'pt-BR':
+          'No SQLite, datas são texto no formato AAAA-MM-DD. julianday() transforma a data num número de dias; subtrair duas dá a distância entre elas.',
+        en: 'In SQLite, dates are text formatted YYYY-MM-DD. julianday() turns a date into a number of days; subtracting two gives the distance between them.',
+      },
+      {
+        'pt-BR':
+          "strftime() tira uma parte da data: '%Y' o ano, '%m' o mês, '%Y-%m' ano e mês juntos, '%w' o dia da semana (0 é domingo).",
+        en: "strftime() extracts part of a date: '%Y' the year, '%m' the month, '%Y-%m' year and month together, '%w' the weekday (0 is Sunday).",
+      },
+    ],
+    example:
+      "SELECT client, opened_on, closed_on,\n  julianday(closed_on) - julianday(opened_on) AS dias,\n  strftime('%Y-%m', opened_on) AS mes\nFROM contracts\nWHERE closed_on IS NOT NULL;",
+  },
+];
+
+/** Conceitos que ainda virão, mostrados trancados (sem conteúdo) para dar o mapa do currículo. */
+export const upcomingConcepts: Array<{
+  concept: string;
+  title: LocalizedText;
+}> = [
   {
     concept: 'GROUP BY',
     title: { 'pt-BR': 'GROUP BY e agregações', en: 'GROUP BY and aggregates' },
