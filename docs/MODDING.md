@@ -42,4 +42,4 @@ O jogo guarda os arquivos originais do caso no navegador (IndexedDB) e monta o c
 
 ## Licença dos mods
 
-O formato e o código do Cold Query são PolyForm Noncommercial 1.0.0 (veja o [README](../README.md#license)). Um caso escrito do zero é seu: escolha a licença dele e declare em `license` no `case.json`. Um caso derivado de um oficial (copiando textos, bancos ou personagens) herda a licença do jogo e precisa levar o crédito do `NOTICE`. Vender casos ou cobrar por eles exige autorização, como qualquer uso comercial do jogo.
+O Cold Query é MIT, código e conteúdo (veja o [README](../README.md#license)). Um caso seu pode ter a licença que você escolher; declare em `license` no `case.json`. Se ele copiar textos, bancos ou personagens de um caso oficial, mantenha o aviso de copyright e o texto da licença MIT junto do pacote.

@@ -2,7 +2,7 @@
 
 [English](#english) · [Português do Brasil](#portugues) · [License / Licença](#license)
 
-Code available · Free for noncommercial use · Mods welcome
+Open source · MIT · Mods welcome
 
 <a id="english"></a>
 
@@ -83,22 +83,12 @@ React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwin
 
 ## License
 
-Cold Query is **code available** under the [PolyForm Noncommercial License 1.0.0](LICENSE). The license covers the code and the original game content: cases, databases, e-mails, fictional sites, texts and art. It is not an OSI-approved open source license, because commercial use is not granted.
+Cold Query is open source under the [MIT License](LICENSE), covering both the code and the original game content: cases, databases, e-mails, fictional sites, texts and art. You can use, study, modify, republish and sell it, and build mods and new cases, as long as copies keep the copyright notice and the license text.
 
-- **Allowed, for noncommercial purposes:** clone it to study, play it, run it on your own site, republish it, modify it, build mods and new cases, and share all of that.
-- **Credit:** whatever you share must carry the license (or its URL) and the `Required Notice:` lines from [NOTICE](NOTICE), crediting Nathã Grazzioli Botelho and this repository. Modifying the game does not include removing the credit.
-- **Commercial use** (selling it or its mods, paid or ad-supported hosting, monetized adaptations) requires a separate license and the author's prior written authorization, with terms agreed before any commercial use. Write to [natha@grazzioli.dev](mailto:natha@grazzioli.dev) or [open an issue](https://github.com/localhost-ayu/cold-query/issues) describing what you have in mind. Getting in touch does not grant permission.
-- **Third-party software, fonts and icons** keep their own licenses; see [CREDITS.md](CREDITS.md).
-
-The English text in [LICENSE](LICENSE) is the license; these summaries are not.
+Third-party software, fonts and icons keep their own licenses; see [CREDITS.md](CREDITS.md).
 
 ### Licença
 
-O Cold Query é **code available** sob a [PolyForm Noncommercial License 1.0.0](LICENSE). A licença cobre o código e o conteúdo original do jogo: casos, bancos, e-mails, sites fictícios, textos e arte. Não é uma licença open source aprovada pela OSI, porque não concede uso comercial.
+O Cold Query é open source sob a [licença MIT](LICENSE), que cobre o código e o conteúdo original do jogo: casos, bancos, e-mails, sites fictícios, textos e arte. Você pode usar, estudar, modificar, republicar e vender, além de criar mods e casos novos, desde que as cópias mantenham o aviso de copyright e o texto da licença.
 
-- **Permitido, sem fins comerciais:** clonar para estudar, jogar, rodar no seu site, republicar, modificar, criar mods e casos novos, e compartilhar tudo isso.
-- **Crédito:** o que você compartilhar precisa levar a licença (ou o endereço dela) e as linhas `Required Notice:` do [NOTICE](NOTICE), citando Nathã Grazzioli Botelho e este repositório. Modificar o jogo não inclui remover o crédito.
-- **Uso comercial** (vender o jogo ou mods, hospedagem paga ou com anúncios, adaptações monetizadas) exige licença separada e autorização prévia por escrito do autor, com condições acertadas antes de qualquer uso comercial. Escreva para [natha@grazzioli.dev](mailto:natha@grazzioli.dev) ou [abra uma issue](https://github.com/localhost-ayu/cold-query/issues) contando o que você pretende. Entrar em contato não concede permissão.
-- **Software, fontes e ícones de terceiros** mantêm as próprias licenças; veja [CREDITS.md](CREDITS.md).
-
-O texto em inglês de [LICENSE](LICENSE) é a licença; estes resumos não são.
+Software, fontes e ícones de terceiros mantêm as próprias licenças; veja [CREDITS.md](CREDITS.md).

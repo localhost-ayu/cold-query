@@ -5,7 +5,7 @@
   "type": "module",
   "description": "SQL detective game that runs entirely in the browser, inside the fictional TraceOS.",
   "author": "Nathã Grazzioli Botelho",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/localhost-ayu/cold-query.git"
