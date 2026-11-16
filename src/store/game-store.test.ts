@@ -147,7 +147,14 @@ describe('game store', () => {
   });
 
   it('finds e-mails in the requested language with Portuguese as fallback', () => {
-    expect(findEmail(case001, 'e01-contrato', 'en')?.locale).toBe('pt-BR');
+    expect(findEmail(case001, 'e01-contrato', 'en')?.locale).toBe('en');
+    const onlyPortuguese = {
+      ...case001,
+      emails: case001.emails.filter((email) => email.locale === 'pt-BR'),
+    };
+    expect(findEmail(onlyPortuguese, 'e01-contrato', 'en')?.locale).toBe(
+      'pt-BR',
+    );
   });
 });
 
