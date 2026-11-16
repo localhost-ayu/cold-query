@@ -14,7 +14,7 @@
   "sqlConcepts": ["SELECT", "WHERE", "ORDER BY", "LIMIT", "LIKE", "BETWEEN"],
   "estimatedMinutes": 25,
   "author": "Nathã Grazzioli Botelho",
-  "license": "PolyForm-Noncommercial-1.0.0",
+  "license": "MIT",
   "client": "Vantara Logística",
   "databases": [
     {

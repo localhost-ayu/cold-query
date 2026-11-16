@@ -38,7 +38,7 @@ Paths são relativos à raiz do caso, usam `/`, não contêm `..` e diferenciam 
   "sqlConcepts": ["SELECT", "WHERE"],
   "estimatedMinutes": 20,
   "author": "Autor",
-  "license": "PolyForm-Noncommercial-1.0.0",
+  "license": "MIT",
   "client": "Empresa Exemplo",
   "databases": [
     {
