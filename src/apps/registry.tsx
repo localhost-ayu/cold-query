@@ -20,6 +20,9 @@ const FilesApp = lazy(() =>
 const NotesApp = lazy(() =>
   import('./notes/NotesApp').then((m) => ({ default: m.NotesApp })),
 );
+const ContractsApp = lazy(() =>
+  import('./contracts/ContractsApp').then((m) => ({ default: m.ContractsApp })),
+);
 const HelpApp = lazy(() =>
   import('./help/HelpApp').then((m) => ({ default: m.HelpApp })),
 );
@@ -47,6 +50,7 @@ export const apps: AppDefinition[] = [
     fallback: TerminalLoading,
   },
   { id: 'dossier', icon: appIcons.dossier, component: DossierApp },
+  { id: 'contracts', icon: appIcons.contracts, component: ContractsApp },
   { id: 'browser', icon: appIcons.browser, component: BrowserApp },
   { id: 'files', icon: appIcons.files, component: FilesApp },
   { id: 'notes', icon: appIcons.notes, component: NotesApp },

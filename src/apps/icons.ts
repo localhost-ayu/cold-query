@@ -1,4 +1,5 @@
 import {
+  Briefcase,
   Compass,
   EnvelopeSimple,
   FolderSimple,
@@ -16,6 +17,7 @@ export const appIcons: Record<AppId, Icon> = {
   mail: EnvelopeSimple,
   terminal: TerminalWindow,
   dossier: PushPin,
+  contracts: Briefcase,
   browser: Compass,
   files: FolderSimple,
   notes: Notebook,

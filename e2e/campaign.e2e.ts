@@ -105,4 +105,11 @@ test('plays the whole season, from case 001 to the end-of-season e-mail', async 
   );
 
   await expect(mailItem(page, 'Fim de temporada')).toBeVisible();
+
+  // A tela de contratos fecha a conta: cinco resolvidos, de primeira, sem dicas.
+  await openApp(page, 'Contratos');
+  await expect(activeWindow(page)).toContainText(
+    '5 de 5 casos resolvidos · 15 de 15 estrelas',
+  );
+  if (process.env.SHOT) await page.screenshot({ path: process.env.SHOT });
 });

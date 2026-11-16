@@ -311,6 +311,42 @@ describe('clock adjustments', () => {
   });
 });
 
+describe('replaying a case', () => {
+  it('starts over from scratch but keeps notes and the best result', async () => {
+    const { store } = setup();
+    store.getState().acceptCase('001');
+    store.getState().setNote('001', 'Rafael?');
+    pin(store, rows.rafaelEntry);
+    pin(store, rows.rafaelId);
+    store.getState().selectOption('001', 'who', 'w1');
+    store.getState().selectOption('001', 'when', 't2');
+    expect(await store.getState().submitReport('001')).toBe('correct');
+    const best = store.getState().cases['001'].best;
+    expect(best?.stars).toBe(3);
+    expect(best?.completeness).toBeGreaterThan(0);
+
+    store.getState().replayCase('001');
+    expect(store.getState().cases['001']).toMatchObject({
+      status: 'active',
+      attempts: 0,
+      discoveredFacts: [],
+      best,
+    });
+    expect(store.getState().evidence).toEqual([]);
+    expect(store.getState().notes['001']).toBe('Rafael?');
+
+    // Uma vitória pior não apaga a melhor marca.
+    store.getState().revealHint('001');
+    pin(store, rows.rafaelEntry);
+    pin(store, rows.rafaelId);
+    store.getState().selectOption('001', 'who', 'w1');
+    store.getState().selectOption('001', 'when', 't2');
+    expect(await store.getState().submitReport('001')).toBe('correct');
+    expect(store.getState().cases['001'].stars).toBe(2);
+    expect(store.getState().cases['001'].best?.stars).toBe(3);
+  });
+});
+
 describe('imported cases', () => {
   const mod = {
     ...case001,

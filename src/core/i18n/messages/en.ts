@@ -245,6 +245,27 @@ export const en: Record<keyof typeof ptBR, string> = {
   'terminal.savedRename': 'Rename {name}',
   'terminal.savedDelete': 'Delete {name}',
 
+  'app.contracts': 'Contracts',
+  'contracts.title': 'Nova Perícia contracts',
+  'contracts.summary':
+    '{solved} of {total} cases solved · {stars} of {maxStars} stars',
+  'contracts.locked': 'Contract not here yet',
+  'contracts.lockedHint': 'It arrives once the previous case is solved.',
+  'contracts.meta':
+    'Difficulty {difficulty} of 5 · about {minutes} min · {concepts}',
+  'contracts.status.available': 'Waiting to be accepted',
+  'contracts.status.active': 'In progress · attempt {attempt} of {max}',
+  'contracts.status.solved': 'Solved',
+  'contracts.status.failed': 'Closed unsolved',
+  'contracts.stars': 'Best result: {count} of 3 stars',
+  'contracts.completeness': 'Completeness {value}%',
+  'contracts.open': 'View in Mail',
+  'contracts.replay': 'Replay',
+  'contracts.replayTitle': 'Replay this case?',
+  'contracts.replayBody':
+    '“{title}” starts over: dossier, attempts and hints reset. Your notes and best result stay.',
+  'contracts.community': 'Community cases',
+
   'window.close': 'Close',
   'window.minimize': 'Minimize',
   'window.maximize': 'Maximize',

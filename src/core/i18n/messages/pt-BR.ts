@@ -246,6 +246,27 @@ export const ptBR = {
   'terminal.savedRename': 'Renomear {name}',
   'terminal.savedDelete': 'Apagar {name}',
 
+  'app.contracts': 'Contratos',
+  'contracts.title': 'Contratos da Nova Perícia',
+  'contracts.summary':
+    '{solved} de {total} casos resolvidos · {stars} de {maxStars} estrelas',
+  'contracts.locked': 'Contrato ainda não chegou',
+  'contracts.lockedHint': 'Chega quando o caso anterior for resolvido.',
+  'contracts.meta':
+    'Dificuldade {difficulty} de 5 · uns {minutes} min · {concepts}',
+  'contracts.status.available': 'Aguardando aceite',
+  'contracts.status.active': 'Em andamento · tentativa {attempt} de {max}',
+  'contracts.status.solved': 'Resolvido',
+  'contracts.status.failed': 'Encerrado sem solução',
+  'contracts.stars': 'Melhor resultado: {count} de 3 estrelas',
+  'contracts.completeness': 'Completude {value}%',
+  'contracts.open': 'Ver no Mail',
+  'contracts.replay': 'Rejogar',
+  'contracts.replayTitle': 'Rejogar este caso?',
+  'contracts.replayBody':
+    '“{title}” recomeça do zero: dossiê, tentativas e dicas zeram. As notas e a melhor marca ficam.',
+  'contracts.community': 'Casos da comunidade',
+
   'window.close': 'Fechar',
   'window.minimize': 'Minimizar',
   'window.maximize': 'Maximizar',
