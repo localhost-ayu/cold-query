@@ -4,13 +4,20 @@
 
 Open source · MIT · Mods welcome
 
+![TraceOS Activities overview with the Mail and SQL Terminal windows](docs/screenshots/overview.webp)
+
+|                                                                                       |                                                                    |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| ![Lock screen, which is also the game menu](docs/screenshots/lock.webp)               | ![A contract from Helena in Mail](docs/screenshots/mail.webp)      |
+| ![SQL Terminal with a GROUP BY query and its results](docs/screenshots/terminal.webp) | ![Schema diagram with foreign keys](docs/screenshots/diagram.webp) |
+
 <a id="english"></a>
 
 **A detective game where the only weapon is SQL.** You are a data analyst at Nova Perícia Digital, a small forensics firm. Helena, the coordinator, sends you contracts; each one comes with real databases (badge logs, inventories, timesheets) and a question nobody inside the client company could answer. You open the SQL Terminal, query, pin what matters to your case board and send in a conclusion backed by evidence.
 
 Everything happens inside **TraceOS**, a fictional GNOME-flavored operating system that runs in the browser: windows, Activities overview, mail, notes. SQLite runs in a Web Worker on your machine. There are no accounts, no servers and nothing to install.
 
-> **Status:** early development. Case 001 is playable end to end: Mail, SQL Terminal and case board. Progress is saved in the browser and can be exported.
+> **Status:** the first season is playable end to end: five cases, from `SELECT` to window functions, in Portuguese and English. Progress is saved in the browser and can be exported; community cases install as `.dbcase` files.
 >
 > Play it at **[coldquery.grazzioli.dev](https://coldquery.grazzioli.dev)**.
 
@@ -52,7 +59,7 @@ React · Vite · TypeScript · SQLite WASM · CodeMirror 6 · Zustand · Tailwin
 
 Tudo acontece dentro do **TraceOS**, um sistema operacional fictício, com cara de GNOME, que roda no navegador: janelas, Atividades, e-mail, notas. O SQLite roda num Web Worker na sua máquina. Não há conta, servidor nem instalação.
 
-> **Estado:** início do desenvolvimento. O caso 001 já dá para jogar do começo ao fim: Mail, Terminal SQL e Dossiê. O progresso fica salvo no navegador e pode ser exportado.
+> **Estado:** a primeira temporada dá para jogar do começo ao fim: cinco casos, do `SELECT` às funções de janela, em português e inglês. O progresso fica salvo no navegador e pode ser exportado; casos da comunidade se instalam como arquivos `.dbcase`.
 >
 > Jogue em **[coldquery.grazzioli.dev](https://coldquery.grazzioli.dev)**.
 
