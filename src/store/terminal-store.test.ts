@@ -101,3 +101,31 @@ describe('terminal store', () => {
     expect(store.getState().tabs).toHaveLength(1);
   });
 });
+
+describe('saved queries', () => {
+  it('saves with a name, renames, deletes and survives a snapshot', () => {
+    const store = createTerminalStore(fakeEngine(), 'training');
+    store.getState().saveQuery('  Downloads da v7  ', ' SELECT 1 ', 'training');
+    store.getState().saveQuery('', 'SELECT 2', 'training');
+    store.getState().saveQuery('Vazia', '   ', 'training');
+    expect(store.getState().saved).toMatchObject([
+      { name: 'Downloads da v7', sql: 'SELECT 1', dbId: 'training' },
+    ]);
+    const [entry] = store.getState().saved;
+    store.getState().renameSaved(entry.id, 'Quem baixou a v7');
+    expect(store.getState().saved[0].name).toBe('Quem baixou a v7');
+
+    const restored = createTerminalStore(fakeEngine(), 'training');
+    restored.getState().hydrate({
+      tabs: [{ id: 'tab-1', number: 1, sql: '', dbId: 'training' }],
+      activeTabId: 'tab-1',
+      history: [],
+      saved: store.getState().saved,
+      nextNumber: 2,
+    });
+    expect(restored.getState().saved[0].name).toBe('Quem baixou a v7');
+
+    store.getState().deleteSaved(entry.id);
+    expect(store.getState().saved).toEqual([]);
+  });
+});

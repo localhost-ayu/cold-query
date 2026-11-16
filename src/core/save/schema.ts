@@ -121,6 +121,18 @@ export const saveSchema = z.object({
         .max(50),
       activeTabId: id,
       history: z.array(historySchema).max(200),
+      // Opcional: saves de antes das consultas salvas não têm o campo.
+      saved: z
+        .array(
+          z.object({
+            id,
+            name: z.string().min(1).max(60),
+            sql: z.string().max(20_000),
+            dbId: id,
+          }),
+        )
+        .max(100)
+        .optional(),
       nextNumber: z.number().int().positive(),
     })
     .optional(),

@@ -6,6 +6,7 @@ import type { Locale } from '@/core/i18n';
 import {
   MAX_EVIDENCE,
   MAX_EVIDENCE_ROWS,
+  availableHints,
   discoverFacts,
   judge,
   stars,
@@ -426,7 +427,11 @@ export function createGameStore(
         const bundle = byId.get(caseId);
         const progress = get().cases[caseId];
         if (!bundle || !progress || progress.status !== 'active') return;
-        if (progress.hintsRevealed >= bundle.manifest.hints.length) return;
+        const limit = availableHints(
+          bundle.manifest.hints,
+          progress.wrongAttempts,
+        );
+        if (progress.hintsRevealed >= limit) return;
         patchCase(caseId, { hintsRevealed: progress.hintsRevealed + 1 });
       },
 

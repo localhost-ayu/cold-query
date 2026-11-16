@@ -4,6 +4,7 @@ import type { Fact, Resolution } from '@/core/case-schema';
 
 import {
   answerHash,
+  availableHints,
   completeness,
   discoverFacts,
   isSatisfied,
@@ -168,5 +169,14 @@ describe('verdict', () => {
     expect(stars(0, 1)).toBe(2);
     expect(stars(1, 1)).toBe(1);
     expect(completeness(facts, ['f_a', 'f_a', 'f_c'])).toBe(67);
+  });
+});
+
+describe('availableHints', () => {
+  it('keeps hints flagged afterWrongAttempt until a report is wrong', () => {
+    const hints = [{}, {}, { afterWrongAttempt: true }];
+    expect(availableHints(hints, 0)).toBe(2);
+    expect(availableHints(hints, 1)).toBe(3);
+    expect(availableHints([{}, {}], 0)).toBe(2);
   });
 });

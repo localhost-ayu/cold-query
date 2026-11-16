@@ -289,12 +289,22 @@ export function TerminalApp() {
     (state) => state.databases[tab.dbId],
   );
   const history = useTerminal(terminalStore, (state) => state.history);
+  const saved = useTerminal(terminalStore, (state) => state.saved);
   const entries = useTerminalDatabases();
   const [view, setView] = useState<'queries' | 'diagram'>('queries');
   const entry = entries.find((item) => item.id === tab.dbId);
   // Exemplo da dica com uma tabela que existe no banco escolhido.
   const example = `SELECT * FROM ${database?.schema[0]?.name ?? 'analysts'} LIMIT 10;`;
-  const { setSql, setDatabase, run, stop, addTab } = terminalStore.getState();
+  const {
+    setSql,
+    setDatabase,
+    run,
+    stop,
+    addTab,
+    saveQuery,
+    renameSaved,
+    deleteSaved,
+  } = terminalStore.getState();
   const running = tab.status === 'running';
   const ready = database?.status === 'ready';
 
@@ -390,8 +400,17 @@ export function TerminalApp() {
       <Sidebar
         schema={database?.schema ?? []}
         history={history}
+        saved={saved}
+        currentSql={tab.sql}
         onInsert={(text) => editor.current?.insert(text)}
         onPickHistory={(entry) => {
+          setSql(tab.id, entry.sql);
+          editor.current?.focus();
+        }}
+        onSave={(name) => saveQuery(name, tab.sql, tab.dbId)}
+        onRename={renameSaved}
+        onDelete={deleteSaved}
+        onPickSaved={(entry) => {
           setSql(tab.id, entry.sql);
           editor.current?.focus();
         }}

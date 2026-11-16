@@ -60,6 +60,8 @@ export const en: Record<keyof typeof ptBR, string> = {
   'report.hints': 'Hints',
   'report.hint': 'Get a hint',
   'report.hintCost': 'Each hint counts as a penalty against your stars.',
+  'report.hintAfterAttempt':
+    'One more hint becomes available after a wrong attempt.',
   'report.noMoreHints': 'No more hints for this case.',
   'report.submit': 'Send report',
   'report.cancel': 'Cancel',
@@ -227,6 +229,15 @@ export const en: Record<keyof typeof ptBR, string> = {
     "TraceOS follows GNOME's visual language without using its artwork. Sounds are synthesized in the browser.",
   'quick.lock': 'Lock',
   'help.keyLock': 'Lock the screen (back to the menu)',
+
+  'terminal.saved': 'Saved',
+  'terminal.saveCurrent': 'Save the current query',
+  'terminal.savedName': 'Query name',
+  'terminal.savedNamePlaceholder': 'Name, then Enter to save',
+  'terminal.savedEmpty':
+    'Queries saved with a name stay here to reopen and edit.',
+  'terminal.savedRename': 'Rename {name}',
+  'terminal.savedDelete': 'Delete {name}',
 
   'window.close': 'Close',
   'window.minimize': 'Minimize',

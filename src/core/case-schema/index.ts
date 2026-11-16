@@ -36,7 +36,14 @@ export const caseSchema = z.object({
   databases: z.array(databaseSchema).min(1),
   startEmail: id,
   maxAttempts: z.number().int().min(1).max(10),
-  hints: z.array(z.object({ id, text: localizedText })),
+  hints: z.array(
+    z.object({
+      id,
+      text: localizedText,
+      /** Só pode ser revelada depois de uma tentativa errada. Vai no fim da lista. */
+      afterWrongAttempt: z.boolean().optional(),
+    }),
+  ),
 });
 
 export const matcherSchema = z.discriminatedUnion('type', [

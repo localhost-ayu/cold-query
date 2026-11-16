@@ -7,6 +7,7 @@ import {
   localized,
   useGameState,
 } from '@/apps/shared/game';
+import { availableHints } from '@/core/resolution';
 import { play } from '@/os/audio';
 import { useLocale, useT } from '@/os/i18n';
 
@@ -43,7 +44,10 @@ export function ReportDialog({ caseId, open, onClose }: ReportDialogProps) {
     (slot) => progress.selection[slot.id],
   );
   const hints = manifest.hints.slice(0, progress.hintsRevealed);
-  const moreHints = progress.hintsRevealed < manifest.hints.length;
+  const available = availableHints(manifest.hints, progress.wrongAttempts);
+  const moreHints = progress.hintsRevealed < available;
+  // Há dica guardada para depois de um erro: avisa, sem dizer o que ela diz.
+  const lockedHint = available < manifest.hints.length;
 
   async function submit() {
     setSending(true);
@@ -143,6 +147,8 @@ export function ReportDialog({ caseId, open, onClose }: ReportDialogProps) {
               </button>
               <span>{t('report.hintCost')}</span>
             </div>
+          ) : lockedHint ? (
+            <p className="report__empty">{t('report.hintAfterAttempt')}</p>
           ) : (
             <p className="report__empty">{t('report.noMoreHints')}</p>
           )}
