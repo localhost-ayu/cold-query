@@ -148,6 +148,19 @@ export async function judge(
  * Estrelas: 3 acertando de primeira sem dicas; 2 com no máximo uma penalidade
  * (um erro ou uma dica); 1 nos demais casos.
  */
+/**
+ * Quantas dicas o jogador pode revelar agora. As marcadas com
+ * `afterWrongAttempt` ficam no fim e só contam depois de um relatório errado.
+ */
+export function availableHints(
+  hints: Array<{ afterWrongAttempt?: boolean }>,
+  wrongAttempts: number,
+): number {
+  return wrongAttempts > 0
+    ? hints.length
+    : hints.filter((hint) => !hint.afterWrongAttempt).length;
+}
+
 export function stars(wrongAttempts: number, hintsUsed: number): 1 | 2 | 3 {
   const penalties = wrongAttempts + hintsUsed;
   if (penalties === 0) return 3;
