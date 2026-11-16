@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "002",
+  "order": 2,
+  "title": {
+    "pt-BR": "O Fornecedor Fantasma",
+    "en": "The Ghost Vendor"
+  },
+  "summary": {
+    "pt-BR": "A Delta Higienização recebeu mais de R$ 214 mil da Mercatto Alimentos desde o ano passado, e ninguém na fábrica lembra de ter visto a Delta higienizar nada.",
+    "en": "Delta Higienização has received over R$ 214,000 from Mercatto Alimentos since last year, and nobody at the plant remembers Delta cleaning anything."
+  },
+  "difficulty": 2,
+  "sqlConcepts": [
+    "JOIN",
+    "DISTINCT",
+    "DATES"
+  ],
+  "estimatedMinutes": 30,
+  "author": "Nathã Grazzioli Botelho",
+  "license": "MIT",
+  "client": "Mercatto Alimentos",
+  "databases": [
+    {
+      "id": "main",
+      "file": "db/mercatto_financeiro.sql",
+      "label": {
+        "pt-BR": "Mercatto — contas a pagar",
+        "en": "Mercatto — accounts payable"
+      },
+      "readOnly": true
+    }
+  ],
+  "startEmail": "e01-contrato",
+  "maxAttempts": 3,
+  "hints": [
+    {
+      "id": "h1",
+      "text": {
+        "pt-BR": "Fornecedor que recebe sem pedido de compra é suspeito, mas o que prova a quem o dinheiro chega é a conta bancária.",
+        "en": "A vendor paid without a purchase order is suspicious, but what proves who gets the money is the bank account."
+      }
+    },
+    {
+      "id": "h2",
+      "text": {
+        "pt-BR": "Uma consulta pode juntar duas tabelas pela coluna que elas têm em comum. Fornecedores e funcionários têm mais de uma coluna em comum.",
+        "en": "A query can join two tables on a column they share. Vendors and employees share more than one column."
+      }
+    },
+    {
+      "id": "h3",
+      "text": {
+        "pt-BR": "Compare quantos dias o dinheiro leva para sair num fornecedor comum e no suspeito. julianday() transforma uma data em número de dias.",
+        "en": "Compare how many days the money takes to go out for an ordinary vendor and for the suspect. julianday() turns a date into a number of days."
+      }
+    }
+  ]
+}
