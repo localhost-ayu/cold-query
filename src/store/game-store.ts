@@ -172,10 +172,16 @@ export function createGameStore(
       for (const item of items) onDeliver?.(item);
     }
 
-    /** E-mails liberados por um gatilho ("caseAccepted", "emailRead:x"...), entregues uma vez só. */
-    function unlock(trigger: string) {
+    /**
+     * E-mails liberados por um gatilho, entregues uma vez só. "caseAccepted" e
+     * "emailRead:x" valem só dentro do próprio caso (os ids de e-mail se
+     * repetem entre casos); "answerCorrect:NNN" vale para todos, e é assim que
+     * o contrato do caso seguinte chega.
+     */
+    function unlock(trigger: string, scope?: string) {
       for (const bundle of bundles) {
         const caseId = bundle.manifest.id;
+        if (scope && caseId !== scope) continue;
         const delivered = new Set(
           get()
             .inbox.filter((item) => item.caseId === caseId)
@@ -364,14 +370,14 @@ export function createGameStore(
             entry.id === inboxId ? { ...entry, read: true } : entry,
           ),
         }));
-        unlock(`emailRead:${item.emailId}`);
+        unlock(`emailRead:${item.emailId}`, item.caseId);
       },
 
       acceptCase: (caseId) => {
         const progress = get().cases[caseId];
         if (!progress || progress.status !== 'available') return;
         patchCase(caseId, { status: 'active', acceptedAt: now() });
-        unlock('caseAccepted');
+        unlock('caseAccepted', caseId);
       },
 
       pinEvidence: (input) => {

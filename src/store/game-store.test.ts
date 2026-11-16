@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createGameStore, findEmail } from './game-store';
 
 const case001 = cases.find((bundle) => bundle.manifest.id === '001')!;
+const case002 = cases.find((bundle) => bundle.manifest.id === '002')!;
 
 function setup() {
   const onDeliver = vi.fn();
@@ -213,6 +214,52 @@ describe('training day', () => {
       started: true,
     });
     expect(store.getState().tutorial.status).toBe('skipped');
+  });
+});
+
+describe('case progression', () => {
+  it('delivers the next contract only when the previous case is solved', async () => {
+    const store = createGameStore([case001, case002], { now: () => 1000 });
+    store.getState().start();
+    const contracts = () =>
+      store
+        .getState()
+        .inbox.filter((item) => item.emailId === 'e01-contrato')
+        .map((item) => item.caseId);
+    expect(contracts()).toEqual(['001']);
+
+    store.getState().acceptCase('001');
+    // Aceitar o 001 só libera os e-mails do próprio 001.
+    expect(
+      store.getState().inbox.filter((item) => item.caseId === '002'),
+    ).toEqual([]);
+    pin(store, rows.deniseEntry);
+    store.getState().selectOption('001', 'who', 'w2');
+    store.getState().selectOption('001', 'when', 't1');
+    expect(await store.getState().submitReport('001')).toBe('wrong');
+    expect(contracts()).toEqual(['001']);
+
+    pin(store, rows.rafaelEntry);
+    pin(store, rows.rafaelId);
+    store.getState().selectOption('001', 'who', 'w1');
+    store.getState().selectOption('001', 'when', 't2');
+    expect(await store.getState().submitReport('001')).toBe('correct');
+    expect(contracts().sort()).toEqual(['001', '002']);
+    expect(
+      store
+        .getState()
+        .inbox.filter((item) => item.caseId === '002')
+        .map((item) => item.emailId),
+    ).toEqual(['e01-contrato']);
+
+    store.getState().acceptCase('002');
+    expect(
+      store
+        .getState()
+        .inbox.filter((item) => item.caseId === '002')
+        .map((item) => item.emailId)
+        .sort(),
+    ).toEqual(['e01-contrato', 'e02-dicionario']);
   });
 });
 
