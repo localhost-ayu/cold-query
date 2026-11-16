@@ -9,6 +9,24 @@ const note = {
 };
 
 describe('shell store', () => {
+  it('starts locked, and locking clears the overview, menus and banner', () => {
+    const store = createShellStore();
+    expect(store.getState().locked).toBe(true);
+    store.getState().unlock();
+    store.getState().notify(note);
+    store.getState().togglePopover('calendar');
+    store.getState().setOverview(true);
+    store.getState().lock();
+    expect(store.getState()).toMatchObject({
+      locked: true,
+      overviewOpen: false,
+      popover: null,
+      bannerId: null,
+    });
+    // As notificações continuam na lista; só o banner sai.
+    expect(store.getState().notifications).toHaveLength(1);
+  });
+
   it('opening the overview closes any top bar menu', () => {
     const store = createShellStore();
     store.getState().togglePopover('quickSettings');

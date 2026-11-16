@@ -17,6 +17,8 @@ export interface ShellNotification {
 type Popover = 'calendar' | 'quickSettings' | null;
 
 interface ShellState {
+  /** Tela de bloqueio na frente de tudo. O jogo sempre abre bloqueado: é o menu inicial. */
+  locked: boolean;
   overviewOpen: boolean;
   /** Texto da busca das Atividades; com texto, as janelas saem de cena. */
   overviewQuery: string;
@@ -24,6 +26,9 @@ interface ShellState {
   notifications: ShellNotification[];
   /** Notificação mostrada como banner no topo da tela, se houver. */
   bannerId: string | null;
+  /** Bloqueia a tela: fecha Atividades, menus e banner, como o GNOME faz. */
+  lock: () => void;
+  unlock: () => void;
   setOverview: (open: boolean) => void;
   toggleOverview: () => void;
   setOverviewQuery: (query: string) => void;
@@ -42,11 +47,22 @@ export const NOTIFICATION_LIMIT = 20;
 export function createShellStore() {
   let counter = 0;
   return createStore<ShellState>((set) => ({
+    locked: true,
     overviewOpen: false,
     overviewQuery: '',
     popover: null,
     notifications: [],
     bannerId: null,
+
+    lock: () =>
+      set({
+        locked: true,
+        overviewOpen: false,
+        overviewQuery: '',
+        popover: null,
+        bannerId: null,
+      }),
+    unlock: () => set({ locked: false }),
 
     // Abrir o overview fecha qualquer menu da barra, como no GNOME.
     setOverview: (overviewOpen) =>

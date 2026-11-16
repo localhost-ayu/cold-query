@@ -3,6 +3,7 @@ import { Suspense, useEffect, useMemo, useSyncExternalStore } from 'react';
 
 import { appById } from '@/apps/registry';
 import { layoutOverview } from '@/os/overview/layout';
+import { lockScreen } from '@/os/lock/lock';
 import { shellStore, useShell } from '@/store/shell-store';
 import {
   TOP_BAR_HEIGHT,
@@ -40,7 +41,18 @@ function useWindowShortcuts() {
     let superAlone = false;
     const onKeyDown = (event: KeyboardEvent) => {
       superAlone = event.key === 'Meta';
+      // Com a tela bloqueada, só ela responde ao teclado.
+      if (shellStore.getState().locked) return;
       const state = windowStore.getState();
+      // Super+L bloqueia, como no GNOME; Alt+Shift+L onde o sistema captura o Super.
+      if (
+        event.key.toLowerCase() === 'l' &&
+        (event.metaKey || (event.altKey && event.shiftKey))
+      ) {
+        event.preventDefault();
+        lockScreen();
+        return;
+      }
       if (event.altKey && event.key === 'F1') {
         event.preventDefault();
         shellStore.getState().toggleOverview();
@@ -69,7 +81,7 @@ function useWindowShortcuts() {
       }
     };
     const onKeyUp = (event: KeyboardEvent) => {
-      if (event.key === 'Meta' && superAlone)
+      if (event.key === 'Meta' && superAlone && !shellStore.getState().locked)
         shellStore.getState().toggleOverview();
       superAlone = false;
     };

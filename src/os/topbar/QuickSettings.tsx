@@ -1,5 +1,6 @@
 import {
   Gear,
+  LockSimple,
   ShieldCheck,
   Moon,
   SpeakerHigh,
@@ -11,6 +12,7 @@ import { useId, type CSSProperties } from 'react';
 import { locales, type Locale } from '@/core/i18n';
 import { play } from '@/os/audio';
 import { useT } from '@/os/i18n';
+import { lockScreen } from '@/os/lock/lock';
 import { usePreferences } from '@/store/preferences-store';
 import { shellStore } from '@/store/shell-store';
 import { windowStore } from '@/store/window-store';
@@ -55,6 +57,15 @@ export function QuickSettings() {
           <ShieldCheck weight="fill" aria-hidden />
           {t('quick.isolated')}
         </span>
+        <button
+          type="button"
+          className="shell-round-button"
+          aria-label={t('quick.lock')}
+          title={t('quick.lock')}
+          onClick={lockScreen}
+        >
+          <LockSimple aria-hidden />
+        </button>
         <button
           type="button"
           className="shell-round-button"

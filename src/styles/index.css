@@ -9,6 +9,7 @@
 @import './mail.css';
 @import './dossier.css';
 @import './apps-extra.css';
+@import './lock.css';
 
 /* Expõe os tokens às utilidades do Tailwind (bg-surface, text-muted etc.). */
 @theme inline {

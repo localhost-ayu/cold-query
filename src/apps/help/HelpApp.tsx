@@ -218,6 +218,11 @@ export function HelpApp() {
               </dt>
               <dd>{t('help.keyMaximize')}</dd>
               <dt>
+                <Kbd>Super</Kbd> / <Kbd>Alt</Kbd> <Kbd>Shift</Kbd> +{' '}
+                <Kbd>L</Kbd>
+              </dt>
+              <dd>{t('help.keyLock')}</dd>
+              <dt>
                 <Kbd>Esc</Kbd>
               </dt>
               <dd>{t('help.keyEscape')}</dd>

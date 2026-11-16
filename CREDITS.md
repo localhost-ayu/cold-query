@@ -18,6 +18,7 @@ Os arquivos WOFF2 vêm dos pacotes Fontsource, reduzidos ao subconjunto latino c
 - **CodeMirror 6**, Marijn Haverbeke e colaboradores, MIT — <https://codemirror.net>
 - **React** e **Vite**, MIT
 - **Zustand**, MIT · **Framer Motion**, MIT · **TanStack Virtual**, MIT · **Tailwind CSS**, MIT
+- **DOMPurify**, Cure53, Apache 2.0 ou MPL 2.0 · **marked**, MIT · **Zod**, MIT · **yaml**, Eemeli Aro, ISC · **fflate**, Arjun Barrett, MIT
 
 ## Arte do jogo
 
