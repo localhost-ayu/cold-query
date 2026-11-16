@@ -80,6 +80,23 @@ describe('case 002', () => {
   });
 });
 
+describe('case 003', () => {
+  it('passes validation and only Wellington + below the limit + R$ 9-14k is correct', async () => {
+    const case003 = loadCasesFromDisk(root).find(
+      (item) => item.bundle.manifest.id === '003',
+    )!;
+    const report = await validateCase(case003, sqlite3);
+    expect(report.errors).toEqual([]);
+    expect(report.correctCombinations).toEqual([
+      { who: 'w4', pattern: 'p2', loss: 'l3' },
+    ]);
+    const contract = case003.bundle.emails.find(
+      (email) => email.id === case003.bundle.manifest.startEmail,
+    );
+    expect(contract?.unlockedBy).toBe('answerCorrect:002');
+  });
+});
+
 describe('site anchors', () => {
   it('wrap exactly the paragraph that ends with {#id}', () => {
     const page = case001.bundle.sites.find((s) => s.id === 'politica-acesso')!;
