@@ -8,6 +8,11 @@
   isolation: isolate;
 }
 
+/* Só agrupa a sessão para o atributo inert; não cria caixa nem posição. */
+.desktop__session {
+  display: contents;
+}
+
 .wallpaper {
   position: absolute;
   inset: 0;
@@ -885,7 +890,8 @@
 }
 
 @media (max-width: 760px), (max-height: 520px) {
-  .desktop > :not(.wallpaper, .small-screen) {
+  .desktop__session > :not(.wallpaper),
+  .desktop > .lock {
     display: none;
   }
 

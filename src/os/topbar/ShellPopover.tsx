@@ -41,6 +41,8 @@ export function ShellPopover({
     };
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
+      // Marca o Esc como usado, para quem escuta depois não fechar mais nada.
+      event.preventDefault();
       onClose();
       anchor.current?.focus();
     };

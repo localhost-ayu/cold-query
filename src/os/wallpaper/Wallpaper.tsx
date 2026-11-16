@@ -36,22 +36,30 @@ const layers = [
 ];
 
 /** Papel de parede procedural do TraceOS: ondas frias sobre um degradê, nas cores do tema. */
-export const Wallpaper = memo(function Wallpaper() {
+export const Wallpaper = memo(function Wallpaper({
+  className = 'wallpaper',
+  idPrefix = '',
+}: {
+  className?: string;
+  /** Um segundo papel de parede na página (a tela de bloqueio) precisa de ids próprios. */
+  idPrefix?: string;
+}) {
+  const sky = `${idPrefix}wall-sky`;
   return (
     <svg
-      className="wallpaper"
+      className={className}
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       preserveAspectRatio="xMidYMid slice"
       aria-hidden
       focusable="false"
     >
       <defs>
-        <linearGradient id="wall-sky" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={sky} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="var(--wall-top)" />
           <stop offset="1" stopColor="var(--wall-bottom)" />
         </linearGradient>
       </defs>
-      <rect width={WIDTH} height={HEIGHT} fill="url(#wall-sky)" />
+      <rect width={WIDTH} height={HEIGHT} fill={`url(#${sky})`} />
       {layers.map((layer, index) => (
         <path key={index} d={layer.d} fill={layer.fill} />
       ))}
