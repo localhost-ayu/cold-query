@@ -33,9 +33,15 @@ export async function acceptCase001(page: Page) {
 /** Abre um app pelo overview (Alt+F1, digitar, Enter), como o jogador faria. */
 export async function openApp(page: Page, name: string) {
   await page.keyboard.press('Alt+F1');
+  // Espera a busca ganhar o foco, senão as primeiras letras vão para outra janela.
+  await expect(
+    page.getByRole('searchbox', { name: 'Digite para pesquisar' }),
+  ).toBeFocused();
   await page.keyboard.type(name);
   await page.keyboard.press('Enter');
-  await expect(activeWindow(page)).toContainText(name);
+  await expect(
+    page.locator('.window[data-active] .window__title').last(),
+  ).toHaveText(name);
 }
 
 export const activeWindow = (page: Page) =>
@@ -55,3 +61,46 @@ export const replyButton = (page: Page) =>
   page
     .getByRole('region', { name: 'Mensagem' })
     .getByRole('button', { name: 'Responder com relatório' });
+
+/** Fixa o resultado que está na tela do Terminal. */
+export async function pinResult(page: Page) {
+  await activeWindow(page)
+    .getByRole('button', { name: 'Fixar no dossiê' })
+    .click();
+  await expect(page.getByText('Fixado no dossiê.')).toBeVisible();
+}
+
+/** Responde o contrato com uma opção por slot, pelos rótulos visíveis. */
+export async function sendReport(
+  page: Page,
+  contract: string,
+  choices: string[],
+) {
+  await openApp(page, 'Mail');
+  await mailItem(page, contract).first().click();
+  await replyButton(page).click();
+  const report = page.getByRole('dialog');
+  for (const choice of choices) await report.getByLabel(choice).check();
+  await report.getByRole('button', { name: 'Enviar relatório' }).click();
+}
+
+/** Resolve o caso 001 pelo caminho mais curto, para chegar aos casos seguintes. */
+export async function solveCase001(page: Page) {
+  await acceptCase001(page);
+  await openApp(page, 'Terminal SQL');
+  await expect(
+    activeWindow(page).getByText('badge_events').first(),
+  ).toBeVisible();
+  await runQuery(
+    page,
+    "SELECT * FROM badge_events WHERE badge_id = 4471 AND gate = 'ALMOX_TI'",
+  );
+  await pinResult(page);
+  await runQuery(page, 'SELECT * FROM employees WHERE badge_id = 4471');
+  await pinResult(page);
+  await sendReport(page, 'Contrato 112', [
+    'Rafael Tavares, do Financeiro',
+    'Sexta, 13/03, entre 22:30 e 23:00',
+  ]);
+  await expect(mailItem(page, 'relatório aceito')).toBeVisible();
+}
