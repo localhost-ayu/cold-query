@@ -27,6 +27,12 @@ const progressSchema = z.object({
   selection: z.record(id, id),
   stars: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
   completedAt: z.number().optional(),
+  best: z
+    .object({
+      stars: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+      completeness: z.number().min(0).max(100),
+    })
+    .optional(),
 });
 
 const inboxSchema = z.object({

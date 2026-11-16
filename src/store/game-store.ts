@@ -7,6 +7,7 @@ import {
   MAX_EVIDENCE,
   MAX_EVIDENCE_ROWS,
   availableHints,
+  completeness,
   discoverFacts,
   judge,
   stars,
@@ -39,6 +40,8 @@ export interface CaseProgress {
   selection: Record<string, string>;
   stars?: 1 | 2 | 3;
   completedAt?: number;
+  /** Melhor resultado entre as vezes em que o caso foi resolvido; sobrevive ao rejogar. */
+  best?: { stars: 1 | 2 | 3; completeness: number };
 }
 
 export type PinInput = Omit<Evidence, 'id' | 'pinnedAt' | 'rows'> & {
@@ -96,6 +99,8 @@ interface GameState extends GameSnapshot {
   selectOption: (caseId: string, slotId: string, optionId: string) => void;
   submitReport: (caseId: string) => Promise<VerdictKind | 'failed' | null>;
   reopenCase: (caseId: string) => void;
+  /** Joga de novo um caso resolvido: dossiê e tentativas zeram, notas e melhor marca ficam. */
+  replayCase: (caseId: string) => void;
   setNote: (caseId: string, text: string) => void;
 }
 
@@ -461,11 +466,21 @@ export function createGameStore(
         const { outcomes } = bundle.resolution;
 
         if (verdict === 'correct') {
+          const earned = stars(progress.wrongAttempts, progress.hintsRevealed);
+          const complete = completeness(
+            bundle.resolution.facts,
+            progress.discoveredFacts,
+          );
+          const best = progress.best;
           patchCase(caseId, {
             attempts,
             status: 'solved',
             completedAt: now(),
-            stars: stars(progress.wrongAttempts, progress.hintsRevealed),
+            stars: earned,
+            best: {
+              stars: best && best.stars > earned ? best.stars : earned,
+              completeness: Math.max(best?.completeness ?? 0, complete),
+            },
           });
           deliver(caseId, [outcomes.correct], 'correct');
           unlock(`answerCorrect:${caseId}`);
@@ -487,17 +502,32 @@ export function createGameStore(
         return verdict;
       },
 
+      replayCase: (caseId) => {
+        const progress = get().cases[caseId];
+        if (!progress || progress.status !== 'solved') return;
+        set((state) => ({
+          evidence: state.evidence.filter((item) => item.caseId !== caseId),
+        }));
+        patchCase(caseId, {
+          ...freshProgress(),
+          status: 'active',
+          acceptedAt: now(),
+          best: progress.best,
+        });
+      },
+
       reopenCase: (caseId) => {
         const progress = get().cases[caseId];
         if (!progress || progress.status !== 'failed') return;
         set((state) => ({
           evidence: state.evidence.filter((item) => item.caseId !== caseId),
         }));
-        // Volta a ativo do zero; as notas do caso ficam.
+        // Volta a ativo do zero; as notas do caso e a melhor marca ficam.
         patchCase(caseId, {
           ...freshProgress(),
           status: 'active',
           acceptedAt: now(),
+          best: progress.best,
         });
       },
 
