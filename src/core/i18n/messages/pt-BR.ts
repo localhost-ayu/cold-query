@@ -211,6 +211,24 @@ export const ptBR = {
   'mods.error.storage':
     'Este navegador não deixou guardar o caso (aba privada?).',
 
+  'lock.title': 'Tela de bloqueio',
+  'lock.hint': 'Clique ou pressione uma tecla para desbloquear',
+  'lock.user': 'Analista',
+  'lock.password': 'Senha',
+  'lock.passwordNote': 'O TI disse que essa senha era temporária. Em 2019.',
+  'lock.unlock': 'Desbloquear',
+  'lock.options': 'Opções',
+  'lock.credits': 'Créditos',
+  'lock.close': 'Fechar',
+  'lock.createdBy': 'Criado por {author}.',
+  'lock.license': 'Licença {license}.',
+  'lock.repository': 'Código-fonte no GitHub',
+  'lock.thirdParty': 'Feito com',
+  'lock.creditsNote':
+    'O TraceOS segue a linguagem visual do GNOME sem usar arte do projeto. Os sons são sintetizados no navegador.',
+  'quick.lock': 'Bloquear',
+  'help.keyLock': 'Bloquear a tela (volta ao menu)',
+
   'window.close': 'Fechar',
   'window.minimize': 'Minimizar',
   'window.maximize': 'Maximizar',

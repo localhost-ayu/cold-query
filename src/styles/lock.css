@@ -1,0 +1,442 @@
+/* ── tela de bloqueio (menu do jogo) ─────────────────────────
+   Escura nos dois temas, como o GNOME Shell: texto branco sobre o papel de
+   parede escurecido. O véu desfoca e escurece mais no login. */
+.lock {
+  position: absolute;
+  inset: 0;
+  /* Acima de tudo da sessão, inclusive barra (10000), menus e banners. */
+  z-index: 20000;
+  overflow: hidden;
+  /* Fundo sólido: a borda do papel de parede desfocado fica semitransparente. */
+  background: var(--wall-bottom);
+  color: #ffffff;
+  isolation: isolate;
+}
+
+.lock__wallpaper {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  transition:
+    filter var(--dur-slow) var(--ease-out),
+    scale var(--dur-slow) var(--ease-out);
+}
+
+/* No login o papel de parede desfoca; a escala esconde a borda clara do desfoque. */
+.lock[data-stage='login'] .lock__wallpaper {
+  filter: blur(24px);
+  scale: 1.08;
+}
+
+.lock__veil {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgb(0 0 0 / 38%);
+  transition: background-color var(--dur-slow) var(--ease-out);
+}
+
+.lock[data-stage='login'] .lock__veil {
+  background: rgb(0 0 0 / 52%);
+}
+
+.lock__bar {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-height);
+  padding: 0 14px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.lock__indicators {
+  display: inline-flex;
+  gap: 10px;
+  font-size: 16px;
+}
+
+/* Escudo: o botão ocupa a tela inteira; o relógio fica no terço de cima. */
+.lock__shield {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18vh 24px 48px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: default;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 30%);
+}
+
+.lock__shield:focus-visible {
+  outline: none;
+}
+
+.lock__shield:focus-visible .lock__hint {
+  outline: 2px solid rgb(255 255 255 / 60%);
+  outline-offset: 6px;
+  border-radius: 999px;
+}
+
+.lock__time {
+  font-size: clamp(72px, 11vw, 128px);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.lock__date {
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.lock__date::first-letter {
+  text-transform: uppercase;
+}
+
+.lock__hint {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding: 6px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.lock__hint svg {
+  width: 20px;
+  height: 20px;
+  animation: lock-nudge 2.4s var(--ease-out) infinite;
+}
+
+@keyframes lock-nudge {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Login */
+.lock__login {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.lock__avatar {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 16%);
+  font-size: 52px;
+  color: rgb(255 255 255 / 90%);
+}
+
+.lock__user {
+  margin: 14px 0 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.lock__company {
+  margin: 2px 0 18px;
+  color: rgb(255 255 255 / 78%);
+  font-size: 14px;
+}
+
+.lock__entry {
+  position: relative;
+  width: min(300px, 100%);
+}
+
+.lock__password {
+  width: 100%;
+  height: 40px;
+  padding: 0 46px 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 14%);
+  color: #ffffff;
+  font: inherit;
+  font-size: 16px;
+  letter-spacing: 0.15em;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.lock__password:hover {
+  background: rgb(255 255 255 / 18%);
+}
+
+.lock__password:focus-visible {
+  outline: 2px solid var(--accent-bg);
+  outline-offset: 1px;
+}
+
+.lock__submit {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  color: #ffffff;
+  font-size: 16px;
+  transition:
+    filter var(--dur-fast) var(--ease-out),
+    transform var(--dur-instant) var(--ease-out);
+}
+
+.lock__submit:hover {
+  filter: brightness(1.12);
+}
+
+.lock__submit:active {
+  transform: scale(0.92);
+}
+
+.lock__submit:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.lock__note {
+  margin: 10px 0 0;
+  color: rgb(255 255 255 / 72%);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.lock__actions {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  display: flex;
+  gap: 8px;
+  translate: -50% 0;
+}
+
+.lock__menu {
+  position: relative;
+}
+
+.lock__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 12%);
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.lock__chip:hover,
+.lock__chip[aria-expanded='true'] {
+  background: rgb(255 255 255 / 20%);
+}
+
+.lock__chip:active {
+  background: rgb(255 255 255 / 26%);
+}
+
+.lock__chip:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* O menu de opções sobe a partir do botão, em vez de descer da barra. */
+.lock__popover {
+  top: auto;
+  bottom: calc(100% + 8px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 300px;
+  padding: 16px;
+  animation-name: lock-popover-in;
+}
+
+@keyframes lock-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.lock__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lock__field legend,
+.lock__field > label {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lock__field legend {
+  margin-bottom: 8px;
+}
+
+.lock__field--row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lock__segmented {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 8%);
+}
+
+.lock__segmented label {
+  position: relative;
+  flex: 1;
+}
+
+.lock__segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lock__segmented span {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.lock__segmented label:hover span {
+  background: rgb(255 255 255 / 8%);
+}
+
+.lock__segmented input:checked + span {
+  background: rgb(255 255 255 / 20%);
+}
+
+.lock__segmented input:focus-visible + span {
+  outline: 2px solid var(--accent-bg);
+  outline-offset: 1px;
+}
+
+/* Créditos */
+.credits {
+  width: min(520px, calc(100vw - 32px));
+  color: var(--text);
+}
+
+.credits__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.credits__game {
+  text-align: center;
+}
+
+.credits__game p {
+  margin: 0 0 6px;
+}
+
+.credits__name {
+  color: var(--text-strong);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.credits__tagline {
+  color: var(--text-muted);
+}
+
+.credits h3 {
+  margin: 0 0 8px;
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.credits a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.credits__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.credits__list li {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.credits__list span {
+  color: var(--text-muted);
+}
+
+.credits__note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lock__hint svg {
+    animation: none;
+  }
+
+  .lock__wallpaper {
+    transition: none;
+  }
+}

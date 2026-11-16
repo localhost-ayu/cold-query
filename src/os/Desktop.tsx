@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 
 import { gameStore } from '@/apps/shared/game';
@@ -10,6 +11,8 @@ import { brand } from '@/config/brand';
 import { configureAudio } from '@/os/audio';
 import { AutoHideDock } from '@/os/dash/AutoHideDock';
 import { useT } from '@/os/i18n';
+import { whenUnlocked } from '@/os/lock/lock';
+import { LockScreen } from '@/os/lock/LockScreen';
 import { NotificationBanner } from '@/os/notifications/NotificationBanner';
 import { Overview } from '@/os/overview/Overview';
 import { ThemeController } from '@/os/theme/ThemeController';
@@ -17,7 +20,7 @@ import { TopBar } from '@/os/topbar/TopBar';
 import { Wallpaper } from '@/os/wallpaper/Wallpaper';
 import { WindowManager } from '@/os/windows/WindowManager';
 import { usePreferences } from '@/store/preferences-store';
-import { shellStore } from '@/store/shell-store';
+import { shellStore, useShell } from '@/store/shell-store';
 import { windowStore } from '@/store/window-store';
 
 /**
@@ -35,6 +38,7 @@ function useBoot() {
     let cancelled = false;
     let stopAutosave: (() => void) | undefined;
     let timer: number | undefined;
+    let stopWaiting: (() => void) | undefined;
 
     // Casos importados entram antes do save, para o progresso deles ser reconhecido.
     void loadInstalledCases()
@@ -45,13 +49,16 @@ function useBoot() {
           windowStore.getState().openApp('mail', currentViewport());
         }
         stopAutosave = persistence.startAutosave();
-        // Jogo novo: um respiro antes do primeiro e-mail, para ele chegar depois
-        // da janela. Num save restaurado, start() não faz nada.
+        // Jogo novo: o primeiro e-mail chega um respiro depois de desbloquear,
+        // para aparecer com a área de trabalho já à vista. Num save restaurado,
+        // start() não faz nada.
         if (result !== 'restored') {
-          timer = window.setTimeout(() => {
-            gameStore.getState().start();
-            deliverImportedContracts();
-          }, 900);
+          stopWaiting = whenUnlocked(() => {
+            timer = window.setTimeout(() => {
+              gameStore.getState().start();
+              deliverImportedContracts();
+            }, 900);
+          });
         }
       });
 
@@ -63,6 +70,7 @@ function useBoot() {
     return () => {
       cancelled = true;
       stopAutosave?.();
+      stopWaiting?.();
       window.clearTimeout(timer);
       window.removeEventListener('pagehide', flush);
       document.removeEventListener('visibilitychange', onVisibility);
@@ -98,18 +106,25 @@ function HotCorner() {
 
 export function Desktop() {
   const t = useT();
+  const locked = useShell((state) => state.locked);
   useBoot();
 
   return (
     <main className="desktop">
       <ThemeController />
-      <Wallpaper />
-      <TopBar />
-      <HotCorner />
-      <Overview />
-      <WindowManager />
-      <AutoHideDock />
-      <NotificationBanner />
+      {/* Bloqueado, a área de trabalho fica fora do alcance do teclado e dos leitores de tela. */}
+      <div className="desktop__session" inert={locked}>
+        <Wallpaper />
+        <TopBar />
+        <HotCorner />
+        <Overview />
+        <WindowManager />
+        <AutoHideDock />
+        <NotificationBanner />
+      </div>
+      <AnimatePresence>
+        {locked ? <LockScreen key="lock" /> : null}
+      </AnimatePresence>
       <section className="small-screen">
         <span className="small-screen__mark">{brand.osName}</span>
         <h1>{t('desktop.mobileTitle')}</h1>

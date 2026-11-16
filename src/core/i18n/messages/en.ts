@@ -210,6 +210,24 @@ export const en: Record<keyof typeof ptBR, string> = {
   'mods.error.storage':
     'This browser did not allow storing the case (private window?).',
 
+  'lock.title': 'Lock screen',
+  'lock.hint': 'Click or press a key to unlock',
+  'lock.user': 'Analyst',
+  'lock.password': 'Password',
+  'lock.passwordNote': 'IT said this password was temporary. In 2019.',
+  'lock.unlock': 'Unlock',
+  'lock.options': 'Options',
+  'lock.credits': 'Credits',
+  'lock.close': 'Close',
+  'lock.createdBy': 'Made by {author}.',
+  'lock.license': '{license} license.',
+  'lock.repository': 'Source code on GitHub',
+  'lock.thirdParty': 'Built with',
+  'lock.creditsNote':
+    "TraceOS follows GNOME's visual language without using its artwork. Sounds are synthesized in the browser.",
+  'quick.lock': 'Lock',
+  'help.keyLock': 'Lock the screen (back to the menu)',
+
   'window.close': 'Close',
   'window.minimize': 'Minimize',
   'window.maximize': 'Maximize',

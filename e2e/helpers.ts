@@ -1,8 +1,18 @@
 import { expect, type Page } from '@playwright/test';
 
-/** Abre o jogo novo e espera o e-mail de boas-vindas. */
+/** Passa pela tela de bloqueio: levanta o escudo e desbloqueia. */
+export async function unlock(page: Page) {
+  await page.getByRole('button', { name: /para desbloquear/ }).click();
+  await page.getByRole('button', { name: 'Desbloquear' }).click();
+  await expect(
+    page.getByRole('dialog', { name: 'Tela de bloqueio' }),
+  ).toHaveCount(0);
+}
+
+/** Abre o jogo novo, desbloqueia e espera o e-mail de boas-vindas. */
 export async function startGame(page: Page) {
   await page.goto('/');
+  await unlock(page);
   await expect(mailItem(page, 'Bem-vindo à Nova Perícia')).toBeVisible({
     timeout: 15_000,
   });

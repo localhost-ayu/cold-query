@@ -17,11 +17,19 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   use: {
     baseURL: 'http://localhost:4173',
-    viewport: { width: 1440, height: 900 },
     locale: 'pt-BR',
     trace: 'retain-on-failure',
   },
-  projects: [{ name: 'firefox', use: { ...devices['Desktop Firefox'] } }],
+  projects: [
+    {
+      name: 'firefox',
+      // O viewport vem depois do preset, que traz o próprio (1280×720).
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1440, height: 900 },
+      },
+    },
+  ],
   webServer: {
     command: 'bun run build && bun run preview --port 4173 --strictPort',
     url: 'http://localhost:4173',
