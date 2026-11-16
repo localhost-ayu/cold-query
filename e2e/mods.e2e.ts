@@ -7,7 +7,7 @@ import { readCaseFiles } from '../scripts/cases';
 import { packDbcase } from '../src/core/dbcase';
 import { answerHash } from '../src/core/resolution';
 
-import { activeWindow, mailItem, openApp, startGame } from './helpers';
+import { activeWindow, mailItem, openApp, startGame, unlock } from './helpers';
 
 /** Um mod de teste: o caso 001 com outro id, título e hashes refeitos. */
 async function buildMod(id: string): Promise<string> {
@@ -47,6 +47,7 @@ test('installs a community case, keeps it after a reload and removes it', async 
 
   await page.waitForTimeout(1500);
   await page.reload();
+  await unlock(page);
   await openApp(page, 'Ajustes');
   const remove = activeWindow(page).getByRole('button', {
     name: 'Remover o caso 901',
