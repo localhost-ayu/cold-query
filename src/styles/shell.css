@@ -805,6 +805,12 @@
   --icon-bottom: #62a0ea;
   --icon-edge: #1c71d8;
 }
+.app-icon--contracts {
+  --icon-top: #f9f06b;
+  --icon-bottom: #f6d32d;
+  --icon-edge: #e5a50a;
+  --icon-glyph: #63452c;
+}
 .app-icon--files {
   --icon-top: #8ff0a4;
   --icon-bottom: #57e389;
