@@ -232,16 +232,32 @@ export const helpTopics: HelpTopic[] = [
     example:
       "SELECT client, opened_on, closed_on,\n  julianday(closed_on) - julianday(opened_on) AS dias,\n  strftime('%Y-%m', opened_on) AS mes\nFROM contracts\nWHERE closed_on IS NOT NULL;",
   },
-];
-
-/** Conceitos que ainda virão, mostrados trancados (sem conteúdo) para dar o mapa do currículo. */
-export const upcomingConcepts: Array<{
-  concept: string;
-  title: LocalizedText;
-}> = [
   {
     concept: 'GROUP BY',
     title: { 'pt-BR': 'GROUP BY e agregações', en: 'GROUP BY and aggregates' },
+    summary: {
+      'pt-BR': 'Junta as linhas em grupos e resume cada grupo numa linha só.',
+      en: 'Gathers rows into groups and sums up each group in a single row.',
+    },
+    body: [
+      {
+        'pt-BR':
+          'GROUP BY coluna junta todas as linhas com o mesmo valor naquela coluna. No SELECT, o que não for a coluna do grupo precisa ser uma agregação: COUNT(*) conta, SUM() soma, AVG() tira a média, MIN() e MAX() acham o menor e o maior.',
+        en: 'GROUP BY column gathers all rows with the same value in that column. In the SELECT, anything that is not the group column must be an aggregate: COUNT(*) counts, SUM() adds, AVG() averages, MIN() and MAX() find the smallest and largest.',
+      },
+      {
+        'pt-BR':
+          'Com JOIN, uma linha pode se repetir no resultado antes do agrupamento. COUNT(DISTINCT coluna) conta cada valor uma vez só.',
+        en: 'With a JOIN, a row may repeat in the result before grouping. COUNT(DISTINCT column) counts each value only once.',
+      },
+      {
+        'pt-BR':
+          'Para comparar grupos de tamanhos diferentes, divida: 1.0 * COUNT(...) / COUNT(...) dá uma razão (o 1.0 evita a divisão inteira). ROUND(valor, 3) deixa o número legível.',
+        en: 'To compare groups of different sizes, divide: 1.0 * COUNT(...) / COUNT(...) gives a ratio (the 1.0 avoids integer division). ROUND(value, 3) keeps the number readable.',
+      },
+    ],
+    example:
+      'SELECT sector, COUNT(*) AS contratos, SUM(fee_brl) AS total\nFROM contracts\nGROUP BY sector\nORDER BY total DESC;',
   },
   {
     concept: 'HAVING',
@@ -249,7 +265,32 @@ export const upcomingConcepts: Array<{
       'pt-BR': 'HAVING: filtrar grupos',
       en: 'HAVING: filtering groups',
     },
+    summary: {
+      'pt-BR': 'O WHERE dos grupos: filtra depois de agrupar.',
+      en: 'The WHERE of groups: it filters after grouping.',
+    },
+    body: [
+      {
+        'pt-BR':
+          'WHERE escolhe linhas antes do GROUP BY; HAVING escolhe grupos depois, olhando para as agregações. HAVING COUNT(*) >= 2 fica só com os grupos que têm duas linhas ou mais.',
+        en: 'WHERE picks rows before GROUP BY; HAVING picks groups afterwards, looking at the aggregates. HAVING COUNT(*) >= 2 keeps only the groups with two rows or more.',
+      },
+      {
+        'pt-BR':
+          'Bom para tirar da conta os grupos pequenos demais para dizer alguma coisa, como alguém com três vendas no período inteiro.',
+        en: 'Good for leaving out groups too small to say anything, like someone with three sales in the whole period.',
+      },
+    ],
+    example:
+      'SELECT analyst_id, COUNT(*) AS contratos\nFROM contracts\nWHERE analyst_id IS NOT NULL\nGROUP BY analyst_id\nHAVING COUNT(*) >= 2;',
   },
+];
+
+/** Conceitos que ainda virão, mostrados trancados (sem conteúdo) para dar o mapa do currículo. */
+export const upcomingConcepts: Array<{
+  concept: string;
+  title: LocalizedText;
+}> = [
   {
     concept: 'CTE',
     title: { 'pt-BR': 'Subconsultas e CTEs', en: 'Subqueries and CTEs' },

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "003",
+  "order": 3,
+  "title": {
+    "pt-BR": "A Fila do Caixa 7",
+    "en": "The Line at Register 7"
+  },
+  "summary": {
+    "pt-BR": "A loja Centro da Rede Praça Nova fechou o mês com mais de R$ 11 mil a menos no caixa, e o sistema aponta estornos. A gerente já acusou a pessoa errada uma vez.",
+    "en": "Rede Praça Nova's downtown store closed the month more than R$ 11,000 short, and the system points to refunds. The manager has already accused the wrong person once."
+  },
+  "difficulty": 3,
+  "sqlConcepts": [
+    "GROUP BY",
+    "HAVING"
+  ],
+  "estimatedMinutes": 35,
+  "author": "Nathã Grazzioli Botelho",
+  "license": "MIT",
+  "client": "Rede Praça Nova",
+  "databases": [
+    {
+      "id": "main",
+      "file": "db/pracanova_pdv.sql",
+      "label": {
+        "pt-BR": "Praça Nova — vendas e estornos",
+        "en": "Praça Nova — sales and refunds"
+      },
+      "readOnly": true
+    }
+  ],
+  "startEmail": "e01-contrato",
+  "maxAttempts": 3,
+  "hints": [
+    {
+      "id": "h1",
+      "text": {
+        "pt-BR": "Contar estornos não basta: compare cada pessoa com o quanto ela vende.",
+        "en": "Counting refunds is not enough: compare each person with how much they sell."
+      }
+    },
+    {
+      "id": "h2",
+      "text": {
+        "pt-BR": "Uma razão calculada sobre poucas vendas engana. HAVING filtra grupos depois do GROUP BY, e COUNT(DISTINCT ...) evita contar a mesma linha duas vezes quando há JOIN.",
+        "en": "A ratio computed over a handful of sales is misleading. HAVING filters groups after GROUP BY, and COUNT(DISTINCT ...) avoids counting the same row twice when there is a JOIN."
+      }
+    },
+    {
+      "id": "h3",
+      "text": {
+        "pt-BR": "Para cada operador, olhe o menor e o maior valor dos estornos sem supervisor e compare com a política de estornos.",
+        "en": "For each cashier, look at the smallest and largest refund made without a supervisor and compare them with the refund policy."
+      }
+    }
+  ]
+}

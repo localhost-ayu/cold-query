@@ -1,0 +1,380 @@
+{
+  "facts": [
+    {
+      "id": "f_ratio",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Wellington Castro",
+          1287,
+          250
+        ]
+      },
+      "verifyQuery": "SELECT c.name, COUNT(DISTINCT t.id) AS vendas, COUNT(DISTINCT r.id) AS estornos, ROUND(1.0 * COUNT(DISTINCT r.id) / COUNT(DISTINCT t.id), 3) AS razao FROM cashiers c JOIN transactions t ON t.cashier_id = c.id LEFT JOIN refunds r ON r.cashier_id = c.id GROUP BY c.id HAVING vendas >= 100 ORDER BY razao DESC"
+    },
+    {
+      "id": "f_below_limit",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          44,
+          49.5
+        ]
+      },
+      "verifyQuery": "SELECT cashier_id, COUNT(*), MIN(amount), MAX(amount), SUM(amount) FROM refunds WHERE approved_by IS NULL GROUP BY cashier_id"
+    },
+    {
+      "id": "f_no_approval",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          null,
+          250
+        ]
+      },
+      "verifyQuery": "SELECT approved_by, COUNT(*) FROM refunds WHERE cashier_id = 4 GROUP BY approved_by"
+    },
+    {
+      "id": "f_cash",
+      "bonus": true,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "DINHEIRO",
+          250
+        ]
+      },
+      "verifyQuery": "SELECT t.payment_method, COUNT(*) FROM refunds r JOIN transactions t ON t.id = r.transaction_id WHERE r.cashier_id = 4 GROUP BY t.payment_method"
+    },
+    {
+      "id": "f_hour",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "14",
+          179
+        ]
+      },
+      "verifyQuery": "SELECT strftime('%H', refunded_at) AS hora, COUNT(*), SUM(amount) FROM refunds WHERE cashier_id = 4 GROUP BY hora"
+    },
+    {
+      "id": "f_hour_total",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "14",
+          8475.5
+        ]
+      },
+      "verifyQuery": "SELECT strftime('%H', refunded_at) AS hora, COUNT(*), SUM(amount) FROM refunds WHERE cashier_id = 4 GROUP BY hora"
+    },
+    {
+      "id": "f_total",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          11840
+        ]
+      },
+      "verifyQuery": "SELECT SUM(amount) FROM refunds WHERE cashier_id = 4 AND approved_by IS NULL"
+    },
+    {
+      "id": "f_marcia",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Marcia Teles",
+          297
+        ]
+      },
+      "verifyQuery": "SELECT c.name, COUNT(*) AS qtd, SUM(r.amount) AS total FROM refunds r JOIN cashiers c ON c.id = r.cashier_id GROUP BY c.id ORDER BY qtd DESC"
+    },
+    {
+      "id": "f_paulo",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Paulo Garcia",
+          35944.25
+        ]
+      },
+      "verifyQuery": "SELECT c.name, COUNT(*) AS qtd, SUM(r.amount) AS total FROM refunds r JOIN cashiers c ON c.id = r.cashier_id GROUP BY c.id ORDER BY total DESC"
+    },
+    {
+      "id": "f_register",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          7,
+          280
+        ]
+      },
+      "verifyQuery": "SELECT t.store_id, t.register_no, COUNT(*) FROM refunds r JOIN transactions t ON t.id = r.transaction_id GROUP BY t.store_id, t.register_no"
+    },
+    {
+      "id": "f_novato",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Kevin Souza",
+          3,
+          1
+        ]
+      },
+      "verifyQuery": "SELECT c.name, COUNT(DISTINCT t.id) AS vendas, COUNT(DISTINCT r.id) AS estornos, ROUND(1.0 * COUNT(DISTINCT r.id) / COUNT(DISTINCT t.id), 3) AS razao FROM cashiers c JOIN transactions t ON t.cashier_id = c.id LEFT JOIN refunds r ON r.cashier_id = c.id GROUP BY c.id ORDER BY razao DESC"
+    },
+    {
+      "id": "f_shopping_card",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Shopping",
+          "CREDITO",
+          131
+        ]
+      },
+      "verifyQuery": "SELECT s.name, t.payment_method, COUNT(*) FROM refunds r JOIN transactions t ON t.id = r.transaction_id JOIN stores s ON s.id = t.store_id GROUP BY s.name, t.payment_method"
+    },
+    {
+      "id": "f_total_all",
+      "bonus": false,
+      "matcher": {
+        "type": "rowHasValues",
+        "values": [
+          "Centro",
+          54767.5
+        ]
+      },
+      "verifyQuery": "SELECT s.name, SUM(r.amount) FROM refunds r JOIN transactions t ON t.id = r.transaction_id JOIN stores s ON s.id = t.store_id GROUP BY s.name"
+    },
+    {
+      "id": "b_policy",
+      "bonus": true,
+      "matcher": {
+        "type": "snippet",
+        "pageId": "politica-estornos",
+        "anchor": "p-limite"
+      }
+    }
+  ],
+  "report": {
+    "slots": [
+      {
+        "id": "who",
+        "label": {
+          "pt-BR": "Quem está desviando dinheiro com estornos?",
+          "en": "Who is skimming money through refunds?"
+        },
+        "options": [
+          {
+            "id": "w1",
+            "label": {
+              "pt-BR": "Marcia Teles, do caixa 1",
+              "en": "Marcia Teles, register 1"
+            },
+            "requires": {
+              "all": [
+                "f_marcia"
+              ]
+            }
+          },
+          {
+            "id": "w2",
+            "label": {
+              "pt-BR": "Sueli Barreto, que divide o caixa 7",
+              "en": "Sueli Barreto, who shares register 7"
+            },
+            "requires": {
+              "all": [
+                "f_register"
+              ]
+            }
+          },
+          {
+            "id": "w3",
+            "label": {
+              "pt-BR": "Paulo Garcia, do balcão de eletro",
+              "en": "Paulo Garcia, at the appliance counter"
+            },
+            "requires": {
+              "all": [
+                "f_paulo"
+              ]
+            }
+          },
+          {
+            "id": "w4",
+            "label": {
+              "pt-BR": "Wellington Castro, do caixa 7 à tarde",
+              "en": "Wellington Castro, register 7 in the afternoon"
+            },
+            "requires": {
+              "all": [
+                "f_ratio",
+                "f_below_limit"
+              ]
+            }
+          },
+          {
+            "id": "w5",
+            "label": {
+              "pt-BR": "Kevin Souza, o operador recém-contratado",
+              "en": "Kevin Souza, the newly hired cashier"
+            },
+            "requires": {
+              "all": [
+                "f_novato"
+              ]
+            }
+          },
+          {
+            "id": "w6",
+            "label": {
+              "pt-BR": "Os dados não permitem apontar ninguém",
+              "en": "The data doesn't point to anyone"
+            },
+            "requires": {
+              "minFacts": 4
+            }
+          }
+        ]
+      },
+      {
+        "id": "pattern",
+        "label": {
+          "pt-BR": "Qual é o padrão dos estornos irregulares?",
+          "en": "What is the pattern of the irregular refunds?"
+        },
+        "options": [
+          {
+            "id": "p1",
+            "label": {
+              "pt-BR": "Devoluções de eletrodomésticos de alto valor",
+              "en": "High-value appliance returns"
+            },
+            "requires": {
+              "all": [
+                "f_paulo"
+              ]
+            }
+          },
+          {
+            "id": "p2",
+            "label": {
+              "pt-BR": "Valores logo abaixo do limite de R$ 50, sem supervisor",
+              "en": "Amounts just under the R$ 50 limit, with no supervisor"
+            },
+            "requires": {
+              "all": [
+                "f_below_limit"
+              ]
+            }
+          },
+          {
+            "id": "p3",
+            "label": {
+              "pt-BR": "Estornos de compras no cartão de crédito",
+              "en": "Refunds of credit card purchases"
+            },
+            "requires": {
+              "all": [
+                "f_shopping_card"
+              ]
+            }
+          },
+          {
+            "id": "p4",
+            "label": {
+              "pt-BR": "Estornos no horário de almoço da supervisora",
+              "en": "Refunds during the supervisor's lunch hour"
+            },
+            "requires": {
+              "all": [
+                "f_hour"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "loss",
+        "label": {
+          "pt-BR": "Quanto a loja Centro perdeu com esses estornos?",
+          "en": "How much did the downtown store lose to those refunds?"
+        },
+        "options": [
+          {
+            "id": "l1",
+            "label": {
+              "pt-BR": "Entre R$ 2 mil e R$ 5 mil",
+              "en": "Between R$ 2,000 and R$ 5,000"
+            },
+            "requires": {
+              "all": [
+                "f_marcia"
+              ]
+            }
+          },
+          {
+            "id": "l2",
+            "label": {
+              "pt-BR": "Entre R$ 5 mil e R$ 9 mil",
+              "en": "Between R$ 5,000 and R$ 9,000"
+            },
+            "requires": {
+              "all": [
+                "f_hour_total"
+              ]
+            }
+          },
+          {
+            "id": "l3",
+            "label": {
+              "pt-BR": "Entre R$ 9 mil e R$ 14 mil",
+              "en": "Between R$ 9,000 and R$ 14,000"
+            },
+            "requires": {
+              "all": [
+                "f_total"
+              ]
+            }
+          },
+          {
+            "id": "l4",
+            "label": {
+              "pt-BR": "Acima de R$ 14 mil",
+              "en": "Over R$ 14,000"
+            },
+            "requires": {
+              "all": [
+                "f_total_all"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "answerHashes": {
+    "who": "f4afc69e00e53c54c7ff2b727132bb3986b58f5aa429a4ceae95e15511f498da",
+    "pattern": "73392daf85f6845866a6d6abf98d6cb911dcc45ae9cd33ee3724de932ea24192",
+    "loss": "df2fc77a71861e5eb91cfcb22878de03cf5903a7d7ec110673bd1a07e3ac0c39"
+  },
+  "outcomes": {
+    "correct": "e90-correto",
+    "partial": "e91-parcial",
+    "wrong": "e92-errado",
+    "failed": "e93-falhou"
+  }
+}
