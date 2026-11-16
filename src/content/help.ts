@@ -338,15 +338,32 @@ export const helpTopics: HelpTopic[] = [
     example:
       'SELECT a.name\nFROM analysts a\nLEFT JOIN contracts c ON c.analyst_id = a.id\nWHERE c.id IS NULL;',
   },
-];
-
-/** Conceitos que ainda virão, mostrados trancados (sem conteúdo) para dar o mapa do currículo. */
-export const upcomingConcepts: Array<{
-  concept: string;
-  title: LocalizedText;
-}> = [
   {
     concept: 'WINDOW',
     title: { 'pt-BR': 'Funções de janela', en: 'Window functions' },
+    summary: {
+      'pt-BR':
+        'Contas que olham para as linhas vizinhas sem juntar tudo numa linha só.',
+      en: 'Calculations that look at neighbouring rows without collapsing them into one.',
+    },
+    body: [
+      {
+        'pt-BR':
+          'Uma função de janela termina em OVER (...). PARTITION BY separa os grupos e ORDER BY diz a ordem dentro de cada um. Ao contrário do GROUP BY, todas as linhas continuam no resultado.',
+        en: 'A window function ends in OVER (...). PARTITION BY splits the groups and ORDER BY sets the order inside each one. Unlike GROUP BY, every row stays in the result.',
+      },
+      {
+        'pt-BR':
+          'ROW_NUMBER() numera as linhas (a 1 é a primeira na ordem); LAG(coluna) traz o valor da linha anterior; SUM(coluna) OVER (...) soma acumulando.',
+        en: "ROW_NUMBER() numbers the rows (1 is first in the order); LAG(column) brings the previous row's value; SUM(column) OVER (...) adds up cumulatively.",
+      },
+      {
+        'pt-BR':
+          "Para comparar uma tabela com ela mesma, junte-a duas vezes com apelidos diferentes (um self-join). datetime(hora, '-432 seconds') ou '-3 hours' corrige um horário; strftime('%s', hora) dá os segundos, bons para subtrair.",
+        en: "To compare a table with itself, join it twice under different aliases (a self-join). datetime(time, '-432 seconds') or '-3 hours' corrects a time; strftime('%s', time) gives the seconds, handy for subtracting.",
+      },
+    ],
+    example:
+      'SELECT client, opened_on, fee_brl,\n  ROW_NUMBER() OVER (PARTITION BY sector ORDER BY opened_on) AS ordem,\n  LAG(client) OVER (ORDER BY opened_on) AS anterior,\n  SUM(fee_brl) OVER (ORDER BY opened_on) AS acumulado\nFROM contracts\nORDER BY opened_on;',
   },
 ];
