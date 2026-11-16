@@ -8,22 +8,36 @@ import { useState } from 'react';
 
 import type { SchemaTable } from '@/core/sql/types';
 import { useT } from '@/os/i18n';
-import type { HistoryEntry } from '@/store/terminal-store';
+import type { HistoryEntry, SavedQuery } from '@/store/terminal-store';
+
+import { SavedQueries } from './SavedQueries';
 
 interface SidebarProps {
   schema: SchemaTable[];
   history: HistoryEntry[];
+  saved: SavedQuery[];
+  currentSql: string;
   onInsert: (text: string) => void;
   onPickHistory: (entry: HistoryEntry) => void;
+  onSave: (name: string) => void;
+  onRename: (id: string, name: string) => void;
+  onDelete: (id: string) => void;
+  onPickSaved: (entry: SavedQuery) => void;
 }
 
-type Panel = 'schema' | 'history';
+type Panel = 'schema' | 'history' | 'saved';
 
 export function Sidebar({
   schema,
   history,
+  saved,
+  currentSql,
   onInsert,
   onPickHistory,
+  onSave,
+  onRename,
+  onDelete,
+  onPickSaved,
 }: SidebarProps) {
   const t = useT();
   const [panel, setPanel] = useState<Panel>('schema');
@@ -37,7 +51,7 @@ export function Sidebar({
         role="tablist"
         aria-label={t('terminal.schema')}
       >
-        {(['schema', 'history'] as const).map((id) => (
+        {(['schema', 'history', 'saved'] as const).map((id) => (
           <button
             key={id}
             type="button"
@@ -118,6 +132,22 @@ export function Sidebar({
               );
             })}
           </ul>
+        </div>
+      ) : panel === 'saved' ? (
+        <div
+          className="sidebar-panel"
+          role="tabpanel"
+          id="terminal-panel-saved"
+          aria-labelledby="terminal-tab-saved"
+        >
+          <SavedQueries
+            saved={saved}
+            canSave={currentSql.trim() !== ''}
+            onSave={onSave}
+            onRename={onRename}
+            onDelete={onDelete}
+            onPick={onPickSaved}
+          />
         </div>
       ) : (
         <div

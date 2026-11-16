@@ -29,6 +29,14 @@ export interface HistoryEntry {
   ranAt: number;
 }
 
+/** Consulta guardada com nome pelo jogador; não expira como o histórico. */
+export interface SavedQuery {
+  id: string;
+  name: string;
+  sql: string;
+  dbId: string;
+}
+
 export interface TerminalDatabase {
   id: string;
   status: 'loading' | 'ready' | 'error';
@@ -41,6 +49,8 @@ export interface TerminalSnapshot {
   tabs: Array<Pick<QueryTab, 'id' | 'number' | 'sql' | 'dbId'>>;
   activeTabId: string;
   history: HistoryEntry[];
+  /** Opcional: saves de antes das consultas salvas não têm o campo. */
+  saved?: SavedQuery[];
   nextNumber: number;
 }
 
@@ -48,6 +58,7 @@ interface TerminalState {
   tabs: QueryTab[];
   activeTabId: string;
   history: HistoryEntry[];
+  saved: SavedQuery[];
   databases: Record<string, TerminalDatabase>;
   nextNumber: number;
   /** Carrega o SQL (pode vir de um import sob demanda) e abre o banco no motor. */
@@ -59,11 +70,18 @@ interface TerminalState {
   setDatabase: (id: string, dbId: string) => void;
   run: (id: string) => Promise<void>;
   stop: () => void;
+  saveQuery: (name: string, sql: string, dbId: string) => void;
+  renameSaved: (id: string, name: string) => void;
+  deleteSaved: (id: string) => void;
   hydrate: (snapshot: TerminalSnapshot) => void;
   reset: () => void;
 }
 
 export const HISTORY_LIMIT = 50;
+export const SAVED_LIMIT = 100;
+export const SAVED_NAME_LIMIT = 60;
+
+const cleanName = (name: string) => name.trim().slice(0, SAVED_NAME_LIMIT);
 
 /** O motor precisa saber interromper para o botão "Interromper" existir. */
 export type InterruptibleEngine = SqlEngine & { interrupt(): void };
@@ -96,6 +114,7 @@ export function createTerminalStore(
   starterSql = '',
 ) {
   return createStore<TerminalState>((set, get) => {
+    let savedCounter = 0;
     const patchTab = (id: string, patch: Partial<QueryTab>) =>
       set((state) => ({
         tabs: state.tabs.map((tab) =>
@@ -107,6 +126,7 @@ export function createTerminalStore(
       tabs: [blankTab(1, defaultDbId, starterSql)],
       activeTabId: 'tab-1',
       history: [],
+      saved: [],
       databases: {},
       nextNumber: 2,
 
@@ -218,6 +238,38 @@ export function createTerminalStore(
 
       stop: () => engine.interrupt(),
 
+      saveQuery: (name, sql, dbId) => {
+        const label = cleanName(name);
+        const text = sql.trim();
+        if (!label || !text) return;
+        set((state) => {
+          if (state.saved.length >= SAVED_LIMIT) return {};
+          savedCounter += 1;
+          const entry: SavedQuery = {
+            id: `s-${Date.now()}-${savedCounter}`,
+            name: label,
+            sql: text,
+            dbId,
+          };
+          return { saved: [entry, ...state.saved] };
+        });
+      },
+
+      renameSaved: (id, name) => {
+        const label = cleanName(name);
+        if (!label) return;
+        set((state) => ({
+          saved: state.saved.map((entry) =>
+            entry.id === id ? { ...entry, name: label } : entry,
+          ),
+        }));
+      },
+
+      deleteSaved: (id) =>
+        set((state) => ({
+          saved: state.saved.filter((entry) => entry.id !== id),
+        })),
+
       hydrate: (snapshot) => {
         if (snapshot.tabs.length === 0) return;
         const tabs = snapshot.tabs.map((tab) => ({
@@ -230,6 +282,7 @@ export function createTerminalStore(
             ? snapshot.activeTabId
             : tabs[0].id,
           history: snapshot.history.slice(0, HISTORY_LIMIT),
+          saved: (snapshot.saved ?? []).slice(0, SAVED_LIMIT),
           nextNumber: Math.max(
             snapshot.nextNumber,
             ...tabs.map((tab) => tab.number + 1),
@@ -242,6 +295,7 @@ export function createTerminalStore(
           tabs: [blankTab(1, defaultDbId, starterSql)],
           activeTabId: 'tab-1',
           history: [],
+          saved: [],
           nextNumber: 2,
         }),
     };

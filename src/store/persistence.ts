@@ -103,6 +103,7 @@ export function createPersistence({
         })),
         activeTabId: t.activeTabId,
         history: t.history,
+        saved: t.saved,
         nextNumber: t.nextNumber,
       },
       windows: { windows: w.windows, activeId: w.activeId },
