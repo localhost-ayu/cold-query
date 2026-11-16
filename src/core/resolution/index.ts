@@ -21,6 +21,8 @@ export interface Evidence {
   pageId?: string;
   anchor?: string;
   note?: string;
+  /** Ajuste de relógio anotado pelo jogador, em segundos (ex.: -432). Só a linha do tempo usa. */
+  clockOffset?: number;
   pinnedAt: string;
 }
 

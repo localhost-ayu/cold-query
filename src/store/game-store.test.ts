@@ -298,6 +298,19 @@ describe('hints after a wrong attempt', () => {
   });
 });
 
+describe('clock adjustments', () => {
+  it('notes and clears a clock offset on a pinned evidence', () => {
+    const { store } = setup();
+    store.getState().acceptCase('001');
+    pin(store, rows.rafaelEntry);
+    const id = store.getState().evidence[0].id;
+    store.getState().setClockOffset(id, -432);
+    expect(store.getState().evidence[0].clockOffset).toBe(-432);
+    store.getState().setClockOffset(id, null);
+    expect('clockOffset' in store.getState().evidence[0]).toBe(false);
+  });
+});
+
 describe('imported cases', () => {
   const mod = {
     ...case001,

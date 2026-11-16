@@ -336,3 +336,104 @@
   color: var(--text-muted);
   font-size: 12px;
 }
+
+/* Ajustes de relógio por evidência, acima da linha do tempo. */
+.clocks {
+  margin: 0 0 18px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+:root[data-theme='dark'] .clocks {
+  background: rgb(255 255 255 / 6%);
+  box-shadow: none;
+}
+
+.clocks summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-strong);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.clocks summary svg {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+}
+
+.clocks__intro {
+  margin: 8px 0 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.clocks__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.clocks__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  align-items: center;
+  gap: 2px 12px;
+  font-size: 13px;
+}
+
+.clocks__row label {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clocks__input {
+  height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: right;
+}
+
+.clocks__input:focus-visible {
+  outline: 2px solid var(--accent-bg);
+  outline-offset: 1px;
+}
+
+.clocks__input[aria-invalid] {
+  box-shadow: inset 0 0 0 1px var(--danger);
+}
+
+.clocks__hint {
+  grid-column: 2;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  text-align: right;
+}
+
+.clocks__hint[data-invalid] {
+  color: var(--danger);
+}
+
+/* Horário corrigido pelo jogador: em destaque, com o original na dica e na legenda. */
+.timeline__time[data-adjusted] {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: help;
+}

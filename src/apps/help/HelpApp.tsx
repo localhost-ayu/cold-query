@@ -16,7 +16,7 @@ import {
 } from '@/apps/shared/game';
 import { terminalStore } from '@/apps/terminal/session';
 import { trainingDatabase } from '@/content/databases/training';
-import { helpTopics, upcomingConcepts } from '@/content/help';
+import { helpTopics } from '@/content/help';
 import { play } from '@/os/audio';
 import { useLocale, useT } from '@/os/i18n';
 import { windowStore } from '@/store/window-store';
@@ -71,7 +71,8 @@ export function HelpApp() {
   const [page, setPage] = useState<Page>('how');
 
   const topics = helpTopics.filter((topic) => unlocked.has(topic.concept));
-  const locked = upcomingConcepts.filter((item) => !unlocked.has(item.concept));
+  // Tópicos de contratos que ainda não chegaram: só o título, trancado, como mapa do currículo.
+  const locked = helpTopics.filter((item) => !unlocked.has(item.concept));
   const topic = page.startsWith('topic:')
     ? topics.find((item) => `topic:${item.concept}` === page)
     : undefined;

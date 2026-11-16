@@ -81,6 +81,12 @@ export const ptBR = {
   'dossier.timelineEmptyBody':
     'Fixe resultados que tenham datas ou horários (como event_time ou clock_out) e eles aparecem aqui em ordem.',
   'dossier.region': 'Evidências do caso',
+  'dossier.clocks': 'Relógios das evidências',
+  'dossier.clocksIntro':
+    'Se uma fonte grava a hora errada, anote aqui o ajuste para a hora real: a linha do tempo passa a mostrar os horários dela corrigidos.',
+  'dossier.clockHint': 'Ex.: -7:12, -3h, +90min',
+  'dossier.clockInvalid': 'Não entendi. Use -7:12, -3h ou segundos.',
+  'dossier.clockOriginal': 'gravado como {time}, ajustado {offset}',
   'dossier.note': 'Anotação',
   'dossier.notePlaceholder': 'Por que isto importa?',
   'dossier.remove': 'Remover do dossiê',

@@ -90,6 +90,8 @@ interface GameState extends GameSnapshot {
   removeEvidence: (evidenceId: string) => Evidence | null;
   restoreEvidence: (evidence: Evidence) => void;
   setEvidenceNote: (evidenceId: string, note: string) => void;
+  /** Anota (ou tira, com null) o ajuste de relógio de uma evidência. */
+  setClockOffset: (evidenceId: string, seconds: number | null) => void;
   revealHint: (caseId: string) => void;
   selectOption: (caseId: string, slotId: string, optionId: string) => void;
   submitReport: (caseId: string) => Promise<VerdictKind | 'failed' | null>;
@@ -498,6 +500,18 @@ export function createGameStore(
           acceptedAt: now(),
         });
       },
+
+      setClockOffset: (evidenceId, seconds) =>
+        set((state) => ({
+          evidence: state.evidence.map((item) => {
+            if (item.id !== evidenceId) return item;
+            if (seconds) return { ...item, clockOffset: seconds };
+            // Sem ajuste, o campo sai do objeto (o save fica igual ao de antes).
+            const copy = { ...item };
+            delete copy.clockOffset;
+            return copy;
+          }),
+        })),
 
       setNote: (caseId, text) =>
         set((state) => ({ notes: { ...state.notes, [caseId]: text } })),
