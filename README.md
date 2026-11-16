@@ -26,6 +26,9 @@ bun run lint
 bun run typecheck
 bun run build      # static site in dist/
 bun run validate-cases
+
+# end-to-end tests in Firefox (first time: bunx playwright install firefox)
+bun run e2e
 ```
 
 ## Deploying
@@ -65,6 +68,9 @@ bun run lint
 bun run typecheck
 bun run build      # site estático em dist/
 bun run validate-cases
+
+# testes de ponta a ponta no Firefox (na primeira vez: bunx playwright install firefox)
+bun run e2e
 ```
 
 ### Publicando
