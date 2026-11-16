@@ -72,6 +72,7 @@ export function SchemaDiagram({ schema }: { schema: SchemaTable[] }) {
 
   if (schema.length === 0) return null;
   const columns = diagramColumns(schema);
+  const columnCount = Math.max(...columns.values()) + 1;
   const related = (name: string) =>
     focused !== null &&
     (focused === name ||
@@ -110,12 +111,18 @@ export function SchemaDiagram({ schema }: { schema: SchemaTable[] }) {
           />
         ))}
       </svg>
-      <ul className="diagram__grid" aria-label={t('terminal.diagram')}>
+      <ul
+        className="diagram__grid"
+        aria-label={t('terminal.diagram')}
+        style={{
+          gridTemplateColumns: `repeat(${columnCount}, minmax(220px, 260px))`,
+        }}
+      >
         {schema.map((table) => (
           <li
             key={table.name}
             className="diagram__table"
-            style={{ gridColumn: (columns.get(table.name) ?? 2) + 1 }}
+            style={{ gridColumn: (columns.get(table.name) ?? 0) + 1 }}
             data-related={related(table.name) || undefined}
             onPointerEnter={() => setFocused(table.name)}
             onPointerLeave={() => setFocused(null)}
@@ -144,9 +151,14 @@ export function SchemaDiagram({ schema }: { schema: SchemaTable[] }) {
                       {column.name}
                     </span>
                     {key ? (
-                      <span className="diagram__ref">
+                      <span
+                        className="diagram__ref"
+                        title={`${key.table}.${key.refColumn}`}
+                      >
                         <ArrowRight aria-hidden />
-                        {key.table}.{key.refColumn}
+                        <span className="diagram__ref-text">
+                          {key.table}.{key.refColumn}
+                        </span>
                       </span>
                     ) : (
                       <span className="diagram__type">
